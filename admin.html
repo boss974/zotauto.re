@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>ZOT AUTO — Éditeur du catalogue</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { background: var(--page); }
+    .adm-top { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+    .adm-top__in { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 20px; }
+    .adm-top__title { display: flex; align-items: center; gap: 12px; margin-right: auto; }
+    .adm-top__title img { height: 42px; }
+    .adm-top__title b { font-family: var(--font-display); font-size: 1.05rem; }
+    .adm-top__title small { display: block; color: var(--muted); font-size: 0.8rem; }
+    .adm-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 15px; border-radius: 10px; border: 1.5px solid var(--line-2); background: #fff; font-family: var(--font-display); font-weight: 600; font-size: 0.86rem; cursor: pointer; color: var(--ink); transition: all 0.2s; }
+    .adm-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .adm-btn--primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .adm-btn--primary:hover { background: var(--blue-600); color: #fff; }
+    .adm-btn--ghost { border-color: transparent; }
+
+    .adm-help { background: #eef2ff; border: 1px solid #d6e0ff; color: var(--ink-2); border-radius: 14px; padding: 14px 18px; margin: 18px auto; max-width: 1180px; font-size: 0.9rem; }
+    .adm-help b { color: var(--blue-700); }
+    .adm-help ol { margin: 8px 0 0; padding-left: 20px; }
+    .adm-help li { margin: 3px 0; }
+
+    .adm-wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
+    .adm-tabs { display: flex; gap: 8px; margin: 8px 0 18px; }
+    .adm-tab { padding: 11px 20px; border-radius: 999px; border: 1.5px solid var(--line-2); background: #fff; font-family: var(--font-display); font-weight: 600; cursor: pointer; color: var(--ink-2); }
+    .adm-tab.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+    .adm-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 22px; align-items: start; }
+    .adm-panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+    .adm-panel h2 { font-size: 1rem; font-family: var(--font-display); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+
+    .adm-list { display: grid; gap: 10px; max-height: 70vh; overflow: auto; }
+    .adm-item { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: all 0.15s; }
+    .adm-item.sel { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,82,224,0.12); }
+    .adm-item__thumb { width: 46px; height: 46px; flex: 0 0 auto; border-radius: 9px; background: var(--soft); display: grid; place-items: center; overflow: hidden; font-size: 1.5rem; }
+    .adm-item__thumb img { width: 100%; height: 100%; object-fit: contain; }
+    .adm-item__info { flex: 1; min-width: 0; }
+    .adm-item__name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .adm-item__meta { font-size: 0.78rem; color: var(--muted); }
+    .adm-item__acts { display: flex; gap: 4px; }
+    .adm-ic { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: 0.85rem; color: var(--ink-2); display: grid; place-items: center; }
+    .adm-ic:hover { border-color: var(--blue); color: var(--blue); }
+    .adm-ic--del:hover { border-color: var(--red); color: var(--red); }
+
+    .adm-field { display: grid; gap: 6px; margin-bottom: 13px; }
+    .adm-field label { font-family: var(--font-display); font-size: 0.82rem; font-weight: 600; color: var(--ink-2); }
+    .adm-field input, .adm-field select, .adm-field textarea { width: 100%; padding: 11px 13px; border: 1.5px solid var(--line-2); border-radius: 10px; background: #fff; font-size: 0.92rem; }
+    .adm-field input:focus, .adm-field select:focus, .adm-field textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,82,224,0.14); }
+    .adm-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .adm-check { display: flex; align-items: center; gap: 9px; }
+    .adm-check input { width: auto; }
+    .adm-hint { font-size: 0.78rem; color: var(--muted); }
+    .adm-imgrow { display: flex; gap: 8px; align-items: center; }
+    .adm-imgrow .adm-btn { padding: 9px 12px; }
+
+    .adm-preview { position: sticky; top: 90px; }
+    .adm-preview__label { font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .adm-preview__stage { background: var(--soft); border: 1px dashed var(--line-2); border-radius: 16px; padding: 24px; display: grid; place-items: center; }
+    .adm-preview__stage .product, .adm-preview__stage .service { width: 280px; }
+    .adm-empty { text-align: center; color: var(--muted); padding: 30px; }
+    @media (max-width: 820px) { .adm-grid { grid-template-columns: 1fr; } .adm-preview { position: static; } }
+  </style>
+</head>
+<body>
+
+  <div class="adm-top">
+    <div class="adm-top__in">
+      <div class="adm-top__title">
+        <img src="assets/brands/logo-zotauto.png" alt="ZOT AUTO" />
+        <span><b>Éditeur du catalogue</b><small>Ajoutez vos produits & services, sans code</small></span>
+      </div>
+      <button class="adm-btn" id="btnImport">📥 Importer</button>
+      <input type="file" id="fileImport" accept=".js,.json,application/json,text/javascript" hidden />
+      <button class="adm-btn" id="btnReset">↺ Réinitialiser</button>
+      <a class="adm-btn adm-btn--ghost" href="index.html" target="_blank">👁 Voir le site</a>
+      <button class="adm-btn" id="btnCopy">📋 Copier le code</button>
+      <button class="adm-btn adm-btn--primary" id="btnDownload">💾 Télécharger catalogue.js</button>
+    </div>
+  </div>
+
+  <div class="adm-help">
+    <b>Comment publier vos changements (3 étapes) :</b>
+    <ol>
+      <li>Modifiez vos produits / services ci-dessous — tout est sauvegardé automatiquement dans votre navigateur.</li>
+      <li>Cliquez sur <b>💾 Télécharger catalogue.js</b>.</li>
+      <li>Remplacez le fichier <b>data/catalogue.js</b> du site par celui téléchargé (glisser-déposer sur GitHub, ou via votre hébergeur). C'est tout&nbsp;! 🎉</li>
+    </ol>
+  </div>
+
+  <div class="adm-wrap">
+    <div class="adm-tabs">
+      <button class="adm-tab on" data-tab="products" id="tabProducts">Produits</button>
+      <button class="adm-tab" data-tab="services" id="tabServices">Services</button>
+    </div>
+
+    <div class="adm-grid">
+      <div class="adm-panel">
+        <h2 id="listTitle">Produits <button class="adm-btn adm-btn--primary" id="btnAdd">➕ Ajouter</button></h2>
+        <div class="adm-list" id="list"></div>
+      </div>
+
+      <div class="adm-panel">
+        <h2>Fiche</h2>
+        <form id="form" autocomplete="off"></form>
+        <div class="adm-empty" id="formEmpty" hidden>Sélectionnez un élément à gauche, ou cliquez sur « ➕ Ajouter ».</div>
+        <div class="adm-preview" id="previewWrap" style="margin-top:18px">
+          <div class="adm-preview__label">Aperçu en direct</div>
+          <div class="adm-preview__stage" id="preview"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data/catalogue.js"></script>
+  <script>
+  (function () {
+    "use strict";
+    var $ = function (s, c) { return (c || document).querySelector(s); };
+    var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+    var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+    var euro = function (n) { return Number(n || 0).toFixed(2).replace(".", ",") + " €"; };
+    var stars = function (n) { n = Math.max(0, Math.min(5, Math.round(n || 0))); return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n); };
+    var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+    var slug = function (s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 40) || "item"; };
+
+    var CATS = [["detailing", "Detailing & nettoyage"], ["outillage", "Outillage & atelier"], ["huiles", "Huiles & lubrifiants"], ["pieces", "Pièces & freinage"], ["accessoires", "Accessoires"]];
+    var DRAFT = "zotauto_catalogue_draft";
+    var SEED = (window.ZOTAUTO && clone(window.ZOTAUTO)) || { products: [], services: [] };
+
+    var state, tab = "products", sel = -1, toastTimer;
+    try { state = JSON.parse(localStorage.getItem(DRAFT)); } catch (e) {}
+    if (!state || !state.products || !state.services) state = clone(SEED);
+
+    function persist() { try { localStorage.setItem(DRAFT, JSON.stringify(state)); } catch (e) {} }
+    function toast(m) { var t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2400); }
+
+    function blankProduct() { return { id: "", name: "Nouveau produit", brand: "", category: "detailing", price: 0, oldPrice: null, stock: "in", badge: "", image: "", contain: true, rating: 5, reviews: 0 }; }
+    function blankService() { return { id: "", name: "Nouveau service", icon: "🔧", description: "", price: "", badge: "" }; }
+
+    /* ---------- Cartes d'aperçu (identiques au site) ---------- */
+    function productPreview(p) {
+      var promo = /%|^-/.test(p.badge || "");
+      var media = p.contain ? "product__media product__media--logo" : "product__media";
+      var badge = p.badge ? '<span class="product__badge' + (promo ? " product__badge--promo" : "") + '">' + esc(p.badge) + "</span>" : "";
+      var was = (p.oldPrice != null && p.oldPrice !== "") ? '<span class="was">' + euro(p.oldPrice) + "</span>" : "";
+      var img = p.image ? '<img src="' + esc(p.image) + '" alt="" />' : '<div style="color:#9aa7bd;font-size:.8rem;padding:20px;text-align:center">(pas d\'image)</div>';
+      return '<article class="product"><div class="' + media + '">' + badge + img + '</div><div class="product__body">' +
+        '<span class="product__brand">' + esc(p.brand || "Marque") + '</span><h3 class="product__name">' + esc(p.name) + '</h3>' +
+        '<div class="product__rating"><span class="stars">' + stars(p.rating) + '</span><small>(' + (p.reviews || 0) + ')</small></div>' +
+        '<div class="product__stock ' + (p.stock === "soon" ? "soon" : "in") + '">' + (p.stock === "soon" ? "Sur commande" : "En stock") + '</div>' +
+        '<div class="product__foot"><div class="product__price"><span class="now">' + euro(p.price) + '</span>' + was + '</div>' +
+        '<button class="btn-add" type="button">Ajouter</button></div></div></article>';
+    }
+    function servicePreview(s) {
+      var badge = s.badge ? '<span class="service__badge">' + esc(s.badge) + '</span>' : "";
+      var price = s.price ? '<span class="service__price">' + esc(s.price) + '</span>' : "<span></span>";
+      return '<article class="service"><div class="service__top"><span class="service__ic">' + esc(s.icon || "🔧") + '</span>' + badge + '</div>' +
+        '<h3 class="service__name">' + esc(s.name) + '</h3><p class="service__desc">' + esc(s.description) + '</p>' +
+        '<div class="service__foot">' + price + '<a class="service__btn" href="#">Demander →</a></div></article>';
+    }
+
+    /* ---------- Rendu ---------- */
+    function list() { return state[tab]; }
+    function renderList() {
+      var box = $("#list"), arr = list();
+      $("#listTitle").firstChild.textContent = (tab === "products" ? "Produits " : "Services ");
+      $("#tabProducts").textContent = "Produits (" + state.products.length + ")";
+      $("#tabServices").textContent = "Services (" + state.services.length + ")";
+      box.innerHTML = "";
+      arr.forEach(function (it, i) {
+        var row = document.createElement("div");
+        row.className = "adm-item" + (i === sel ? " sel" : "");
+        var thumb = tab === "products"
+          ? (it.image ? '<img src="' + esc(it.image) + '">' : "📦")
+          : esc(it.icon || "🔧");
+        var meta = tab === "products" ? (esc(it.brand || "—") + " · " + euro(it.price)) : esc(it.price || "—");
+        row.innerHTML = '<div class="adm-item__thumb">' + thumb + '</div>' +
+          '<div class="adm-item__info"><div class="adm-item__name">' + esc(it.name) + '</div><div class="adm-item__meta">' + meta + '</div></div>' +
+          '<div class="adm-item__acts">' +
+            '<button class="adm-ic" data-up="' + i + '" title="Monter">↑</button>' +
+            '<button class="adm-ic" data-down="' + i + '" title="Descendre">↓</button>' +
+            '<button class="adm-ic" data-dup="' + i + '" title="Dupliquer">⧉</button>' +
+            '<button class="adm-ic adm-ic--del" data-del="' + i + '" title="Supprimer">🗑</button>' +
+          '</div>';
+        row.addEventListener("click", function (e) { if (e.target.closest(".adm-ic")) return; sel = i; render(); });
+        box.appendChild(row);
+      });
+    }
+
+    function field(label, name, value, type, opts) {
+      type = type || "text";
+      if (type === "select") {
+        var o = (opts || []).map(function (x) { return '<option value="' + esc(x[0]) + '"' + (String(value) === String(x[0]) ? " selected" : "") + ">" + esc(x[1]) + "</option>"; }).join("");
+        return '<div class="adm-field"><label>' + label + '</label><select data-field="' + name + '">' + o + '</select></div>';
+      }
+      if (type === "textarea") return '<div class="adm-field"><label>' + label + '</label><textarea data-field="' + name + '" rows="3">' + esc(value) + '</textarea></div>';
+      return '<div class="adm-field"><label>' + label + '</label><input data-field="' + name + '" type="' + type + '" value="' + esc(value) + '"' + (type === "number" ? ' step="0.01"' : "") + '></div>';
+    }
+
+    function renderForm() {
+      var form = $("#form"), arr = list();
+      if (sel < 0 || !arr[sel]) { form.innerHTML = ""; $("#formEmpty").hidden = false; $("#previewWrap").hidden = true; return; }
+      $("#formEmpty").hidden = true; $("#previewWrap").hidden = false;
+      var it = arr[sel];
+      if (tab === "products") {
+        form.innerHTML =
+          field("Nom du produit", "name", it.name) +
+          '<div class="adm-row2">' + field("Marque", "brand", it.brand) + field("Catégorie", "category", it.category, "select", CATS) + "</div>" +
+          '<div class="adm-row2">' + field("Prix (€)", "price", it.price, "number") + field("Ancien prix (€, optionnel)", "oldPrice", it.oldPrice == null ? "" : it.oldPrice, "number") + "</div>" +
+          '<div class="adm-row2">' + field("Disponibilité", "stock", it.stock, "select", [["in", "En stock"], ["soon", "Sur commande"]]) + field("Badge (ex : -17%, Top)", "badge", it.badge) + "</div>" +
+          '<div class="adm-row2">' + field("Note (0 à 5)", "rating", it.rating, "number") + field("Nb d'avis", "reviews", it.reviews, "number") + "</div>" +
+          '<div class="adm-field"><label>Image (chemin ou lien)</label><div class="adm-imgrow"><input data-field="image" type="text" value="' + esc(it.image) + '" placeholder="assets/brands/... ou https://..."><button class="adm-btn" type="button" id="btnUpload">📷 Téléverser</button><input type="file" id="fileImg" accept="image/*" hidden></div><p class="adm-hint">Astuce : mettez vos photos dans le dossier <b>assets/</b> et indiquez le chemin. Le téléversement intègre l\'image dans le fichier (gardez-la légère).</p></div>' +
+          '<div class="adm-field"><label class="adm-check"><input data-field="contain" type="checkbox"' + (it.contain ? " checked" : "") + "> Image de type logo / petite image (affichée centrée)</label></div>";
+      } else {
+        form.innerHTML =
+          field("Nom du service", "name", it.name) +
+          '<div class="adm-row2">' + field("Icône (emoji)", "icon", it.icon) + field("Badge (optionnel)", "badge", it.badge) + "</div>" +
+          field("Description", "description", it.description, "textarea") +
+          field("Prix / mention (ex : Sur devis, Dès 39 €)", "price", it.price);
+      }
+    }
+
+    function renderPreview() {
+      var arr = list(); if (sel < 0 || !arr[sel]) { $("#preview").innerHTML = ""; return; }
+      $("#preview").innerHTML = tab === "products" ? productPreview(arr[sel]) : servicePreview(arr[sel]);
+    }
+
+    function render() { renderList(); renderForm(); renderPreview(); persist(); }
+
+    /* ---------- Édition en direct ---------- */
+    $("#form").addEventListener("input", function (e) {
+      var f = e.target.dataset.field; if (!f) return;
+      var it = list()[sel]; if (!it) return;
+      var v;
+      if (e.target.type === "checkbox") v = e.target.checked;
+      else if (e.target.type === "number") v = e.target.value === "" ? (f === "oldPrice" ? null : 0) : parseFloat(e.target.value);
+      else v = e.target.value;
+      it[f] = v;
+      if (!it.id) it.id = slug(it.name);
+      renderList(); renderPreview(); persist();
+    });
+
+    /* upload image → data URI */
+    $("#form").addEventListener("click", function (e) {
+      if (e.target.id === "btnUpload") $("#fileImg").click();
+    });
+    document.addEventListener("change", function (e) {
+      if (e.target.id !== "fileImg") return;
+      var file = e.target.files[0]; if (!file) return;
+      if (file.size > 600 * 1024 && !confirm("Cette image fait " + Math.round(file.size / 1024) + " Ko. Une image lourde alourdit le site. Continuer ?")) return;
+      var r = new FileReader();
+      r.onload = function () { var it = list()[sel]; if (it) { it.image = r.result; render(); toast("Image ajoutée"); } };
+      r.readAsDataURL(file);
+    });
+
+    /* actions liste */
+    $("#list").addEventListener("click", function (e) {
+      var arr = list(), b = e.target.closest(".adm-ic"); if (!b) return;
+      var up = b.dataset.up, down = b.dataset.down, dup = b.dataset.dup, del = b.dataset.del;
+      if (up != null && +up > 0) { var i = +up; arr.splice(i - 1, 0, arr.splice(i, 1)[0]); sel = i - 1; }
+      else if (down != null && +down < arr.length - 1) { var j = +down; arr.splice(j + 1, 0, arr.splice(j, 1)[0]); sel = j + 1; }
+      else if (dup != null) { var c = clone(arr[+dup]); c.id = slug(c.name) + "-copie"; c.name += " (copie)"; arr.splice(+dup + 1, 0, c); sel = +dup + 1; }
+      else if (del != null) { if (confirm("Supprimer « " + arr[+del].name + " » ?")) { arr.splice(+del, 1); sel = Math.min(sel, arr.length - 1); } }
+      render();
+    });
+
+    /* ajouter */
+    $("#btnAdd").addEventListener("click", function () {
+      var it = tab === "products" ? blankProduct() : blankService(); it.id = slug(it.name);
+      list().push(it); sel = list().length - 1; render();
+      var first = $("#form input"); if (first) { first.focus(); first.select(); }
+    });
+
+    /* onglets */
+    $$(".adm-tab").forEach(function (t) {
+      t.addEventListener("click", function () {
+        tab = t.dataset.tab; sel = list().length ? 0 : -1;
+        $$(".adm-tab").forEach(function (x) { x.classList.toggle("on", x === t); });
+        render();
+      });
+    });
+
+    /* export */
+    function exportText() {
+      var header = "/* ZOT AUTO — CATALOGUE (généré par admin.html)\n" +
+        "   Pour modifier facilement : ouvrez admin.html. Sinon, copiez un bloc { ... }.\n" +
+        "   category : detailing | outillage | huiles | pieces | accessoires\n" +
+        "   stock : in (En stock) | soon (Sur commande) · oldPrice : ancien prix ou null\n*/\n\n";
+      return header + "window.ZOTAUTO = " + JSON.stringify({ products: state.products, services: state.services }, null, 2) + ";\n";
+    }
+    $("#btnDownload").addEventListener("click", function () {
+      var blob = new Blob([exportText()], { type: "text/javascript;charset=utf-8" });
+      var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "catalogue.js";
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+      toast("Fichier catalogue.js téléchargé");
+    });
+    $("#btnCopy").addEventListener("click", function () {
+      var txt = exportText();
+      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast("Code copié !"); }, function () { fallbackCopy(txt); });
+      else fallbackCopy(txt);
+    });
+    function fallbackCopy(txt) { var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast("Code copié !"); } catch (e) { toast("Copie impossible"); } ta.remove(); }
+
+    /* import */
+    $("#btnImport").addEventListener("click", function () { $("#fileImport").click(); });
+    $("#fileImport").addEventListener("change", function (e) {
+      var file = e.target.files[0]; if (!file) return;
+      var r = new FileReader();
+      r.onload = function () {
+        try {
+          var t = r.result, i = t.indexOf("{"), j = t.lastIndexOf("}");
+          var obj = JSON.parse(t.slice(i, j + 1));
+          if (!obj.products || !obj.services) throw 0;
+          state = obj; sel = 0; persist(); render(); toast("Catalogue importé");
+        } catch (err) { alert("Fichier non reconnu. Choisissez un fichier catalogue.js valide."); }
+      };
+      r.readAsText(file); e.target.value = "";
+    });
+
+    /* reset */
+    $("#btnReset").addEventListener("click", function () {
+      if (!confirm("Revenir au catalogue d'origine ? Vos modifications non téléchargées seront perdues.")) return;
+      state = clone(SEED); sel = 0; persist(); render(); toast("Catalogue réinitialisé");
+    });
+
+    /* init */
+    sel = list().length ? 0 : -1;
+    render();
+  })();
+  </script>
+</body>
+</html>

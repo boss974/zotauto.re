@@ -6,21 +6,35 @@ extraites du logo : **bleu `#2a52e0` · rouge `#e01f2b` · jaune `#ffcb00`** (tr
 
 Site **statique** : aucun build, aucune dépendance. S'ouvre tel quel dans un navigateur.
 
+## 🛠️ Ajouter des produits / services SANS coder
+
+Ouvrez **`admin.html`** : éditeur visuel (formulaires + aperçu en direct).
+Vous ajoutez/modifiez produits et services, vous cliquez **💾 Télécharger catalogue.js**,
+puis vous remplacez `data/catalogue.js` par le fichier téléchargé. 👉 Voir **[GUIDE.md](GUIDE.md)**.
+
+> Le catalogue vit dans **`data/catalogue.js`**. Le site se remplit tout seul à partir de ce fichier.
+
 ## ✨ Fonctionnalités
 
-- **Sélecteur de véhicule** — recherche **par plaque d'immatriculation** (974) ou par marque/modèle ; renvoie vers WhatsApp avec les infos du véhicule (la fonction n°1 des grands sites de pièces).
+- **Catalogue éditable sans code** — `admin.html` (ajout/édition/réordonnancement, export du fichier).
+- **Sélecteur de véhicule** — recherche **par plaque d'immatriculation** (974) ou marque/modèle ; renvoie vers WhatsApp avec les infos du véhicule.
 - **Catalogue produits** — fiches avec marque, note, stock, prix (et prix barrés promo), filtres par rayon.
-- **Panier → WhatsApp** — ajout au panier, quantités, total, et **« Finaliser sur WhatsApp »** qui génère le message de commande tout prêt. Idéal pour une petite structure sans paiement en ligne. (Panier mémorisé via `localStorage`.)
-- **Barre de réassurance**, catégories, marques, avis, barre de paiement, footer complet.
+- **Section Services** — prestations (montage, vidange, detailing…), bouton « Demander » → WhatsApp.
+- **Panier → WhatsApp** — ajout, quantités, total, et **« Finaliser sur WhatsApp »** qui génère le message de commande tout prêt (panier mémorisé via `localStorage`).
+- **Réassurance**, catégories, marques, avis, barre de paiement, footer complet.
 - 100 % **responsive**, accessible, SEO de base (meta, Open Graph, favicon tricolore).
 
 ## 📁 Structure
 
 ```
 zotauto-site/
-├── index.html        ← la page
+├── index.html        ← la page (vitrine + boutique)
+├── admin.html        ← éditeur du catalogue (sans code)
 ├── styles.css        ← thème clair + tricolore marque
-├── script.js         ← sélecteur véhicule, filtres, panier, recherche
+├── script.js         ← rendu catalogue, sélecteur, filtres, panier
+├── GUIDE.md          ← mode d'emploi de l'éditeur
+├── data/
+│   └── catalogue.js  ← TOUS les produits & services (éditable)
 └── assets/
     ├── favicon.svg
     ├── brands/       ← logos marques + logo ZOT AUTO
@@ -32,20 +46,17 @@ zotauto-site/
 | Élément | Valeur actuelle (placeholder) | Où |
 |---|---|---|
 | Téléphone | `0692 00 00 00` | `index.html` |
-| WhatsApp | `262692000000` (variable `WA`) | en haut de `script.js` + liens `wa.me` |
+| WhatsApp | `262692000000` (variable `WA`) | en haut de `script.js` (+ `admin.html`) |
 | Email | `contact@zotauto.re` | footer |
 | Réseaux sociaux | liens `#` | header / footer |
-| Produits & prix | 8 produits **d'exemple** | section `#bestsellers` de `index.html` |
-| Avis clients | 3 avis d'exemple | section `#avis` |
+| Produits & prix | 8 produits **d'exemple** | via `admin.html` / `data/catalogue.js` |
+| Services | 4 services **d'exemple** | via `admin.html` / `data/catalogue.js` |
+| Avis clients | 3 avis d'exemple | section `#avis` de `index.html` |
 | Photos produits | logos de marque en attendant | remplacer par de vraies photos |
-
-> ⚠️ Le numéro `0692000000` venait du site d'origine (placeholder). Mettez le vrai numéro
-> partout : il suffit de changer la constante `WA` dans `script.js` + les `href="tel:"`.
 
 ## 🎨 Couleurs
 
 Centralisées en haut de `styles.css` (`:root`) : `--blue`, `--red`, `--yellow`.
-Le bleu domine, rouge = actions/promo, jaune = accents/notes — comme le logo.
 
 ## 🚀 Aperçu en local
 
@@ -55,6 +66,6 @@ Le bleu domine, rouge = actions/promo, jaune = accents/notes — comme le logo.
 ## ☁️ Mise en ligne (100 % statique)
 
 1. **Netlify / Vercel / Cloudflare Pages** — glisser-déposer le dossier.
-2. **Hébergement actuel (LWS) en FTP** — envoyer le contenu à la racine web.
+2. **Hébergement (FTP)** — envoyer le contenu à la racine web.
 
 Le domaine `zotauto.re` pourra ensuite pointer vers ce nouveau site.

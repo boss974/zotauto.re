@@ -269,6 +269,25 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 .btn-add:hover { background: var(--red-600); }
 .btn-add:active { transform: scale(0.95); }
 .products__note { text-align: center; color: var(--muted); font-size: 0.82rem; margin-top: 22px; }
+.products__empty { text-align: center; color: var(--muted); padding: 30px 0; }
+
+/* =========================================================
+   Services
+   ========================================================= */
+.shead__link { font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--blue); white-space: nowrap; }
+.shead__link:hover { text-decoration: underline; }
+.services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.service { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s; }
+.service:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: transparent; }
+.service__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.service__ic { font-size: 2rem; line-height: 1; }
+.service__badge { background: #fff5d6; color: var(--ink); border: 1px solid var(--yellow); font-family: var(--font-display); font-weight: 700; font-size: 0.7rem; padding: 4px 9px; border-radius: 999px; }
+.service__name { font-size: 1.08rem; margin-bottom: 8px; }
+.service__desc { color: var(--muted); font-size: 0.9rem; flex: 1; }
+.service__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; }
+.service__price { font-family: var(--font-display); font-weight: 800; color: var(--blue); font-size: 1rem; }
+.service__btn { font-family: var(--font-display); font-weight: 600; font-size: 0.86rem; color: #fff; background: var(--blue); padding: 9px 15px; border-radius: 10px; transition: background 0.2s; white-space: nowrap; }
+.service__btn:hover { background: var(--blue-600); }
 
 /* =========================================================
    Promo
@@ -402,6 +421,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
   .catnav a { padding: 13px 14px; border-radius: 9px; }
   .cats { grid-template-columns: repeat(2, 1fr); }
   .products { grid-template-columns: repeat(2, 1fr); }
+  .services { grid-template-columns: repeat(2, 1fr); }
   .assur__grid { grid-template-columns: 1fr 1fr; }
   .promo { grid-template-columns: 1fr; }
   .promo__media { min-height: 200px; }
@@ -417,6 +437,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 }
 @media (max-width: 420px) {
   .products { grid-template-columns: 1fr; }
+  .services { grid-template-columns: 1fr; }
 }
 
 @media (prefers-reduced-motion: reduce) {

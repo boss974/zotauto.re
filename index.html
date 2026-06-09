@@ -66,7 +66,7 @@
         <a href="#categories">Outillage &amp; atelier</a>
         <a href="#categories">Huiles &amp; lubrifiants</a>
         <a href="#categories">Pièces &amp; freinage</a>
-        <a href="#categories">Accessoires</a>
+        <a href="#services">Services</a>
         <a href="#marques">Marques</a>
         <a href="#promo" class="catnav__promo">🔥 Promos</a>
       </div>
@@ -149,23 +149,23 @@
           <div><span class="kicker">Nos rayons</span><h2>Achetez par catégorie</h2></div>
         </header>
         <div class="cats">
-          <a href="#bestsellers" class="cat reveal">
+          <a href="#bestsellers" class="cat reveal" data-gocat="detailing">
             <span class="cat__ic cat__ic--blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12c0-4 4-9 9-9s9 5 9 9-4 9-9 9c-2 0-3.5-1-3.5-2.5S9 16 9 14.5 7.5 12 6 12H3Z"/><circle cx="7" cy="14" r="1"/></svg></span>
             <h3>Detailing &amp; Nettoyage</h3><small>Koch-Chemie, microfibres, polish</small>
           </a>
-          <a href="#bestsellers" class="cat reveal">
+          <a href="#bestsellers" class="cat reveal" data-gocat="outillage">
             <span class="cat__ic cat__ic--red"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4l-6 6 2 2 6-6a4 4 0 0 0 5.4-5.4l-2.3 2.3-1.7-.3-.3-1.7 2.3-2.3Z"/></svg></span>
             <h3>Outillage &amp; Atelier</h3><small>Worcraft, Power Maxx</small>
           </a>
-          <a href="#bestsellers" class="cat reveal">
+          <a href="#bestsellers" class="cat reveal" data-gocat="huiles">
             <span class="cat__ic cat__ic--yellow"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h6l1 4-2 2v3l3 2v6H6v-6l3-2V9L7 7V3Z"/><path d="M14 8h3a2 2 0 0 1 2 2v4"/></svg></span>
             <h3>Huiles &amp; Lubrifiants</h3><small>Euroatlantic, vidange</small>
           </a>
-          <a href="#bestsellers" class="cat reveal">
+          <a href="#bestsellers" class="cat reveal" data-gocat="pieces">
             <span class="cat__ic cat__ic--blue"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
             <h3>Pièces &amp; Freinage</h3><small>Valeo, plaquettes, embrayage</small>
           </a>
-          <a href="#bestsellers" class="cat reveal">
+          <a href="#bestsellers" class="cat reveal" data-gocat="accessoires">
             <span class="cat__ic cat__ic--red"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
             <h3>Accessoires</h3><small>Confort, sécurité, entretien</small>
           </a>
@@ -177,134 +177,35 @@
       </div>
     </section>
 
-    <!-- ░░ Meilleures ventes ░░ -->
+    <!-- ░░ Meilleures ventes (rempli depuis data/catalogue.js) ░░ -->
     <section class="section section--soft" id="bestsellers">
       <div class="container">
         <header class="shead">
-          <div><span class="kicker">Sélection</span><h2>Meilleures ventes</h2></div>
+          <div><span class="kicker">Sélection</span><h2>Nos produits</h2></div>
           <div class="chips" role="tablist" aria-label="Filtrer">
             <button class="chip is-active" data-filter="all">Tout</button>
             <button class="chip" data-filter="detailing">Detailing</button>
             <button class="chip" data-filter="outillage">Outillage</button>
             <button class="chip" data-filter="huiles">Huiles</button>
             <button class="chip" data-filter="pieces">Pièces</button>
+            <button class="chip" data-filter="accessoires">Accessoires</button>
           </div>
         </header>
 
-        <div class="products" id="products">
-          <article class="product reveal" data-cat="huiles" data-name="Huile moteur 5W-40 — 5L" data-price="34.90" data-brand="Euroatlantic">
-            <div class="product__media"><span class="product__badge product__badge--promo">-17%</span><img src="assets/brands/euroatlantic.jpg" alt="Huile moteur Euroatlantic 5W-40 5L" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Euroatlantic</span>
-              <h3 class="product__name">Huile moteur 5W-40 — 5L</h3>
-              <div class="product__rating"><span class="stars">★★★★★</span><small>(24)</small></div>
-              <div class="product__stock in">En stock</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">34,90 €</span><span class="was">42,00 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product reveal" data-cat="outillage" data-name="Visseuse sans-fil 20V Brushless" data-price="89.90" data-brand="Worcraft">
-            <div class="product__media"><span class="product__badge">Top</span><img src="assets/img/worcraft-tool.webp" alt="Visseuse sans-fil Worcraft 20V" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Worcraft</span>
-              <h3 class="product__name">Visseuse sans-fil 20V Brushless</h3>
-              <div class="product__rating"><span class="stars">★★★★★</span><small>(58)</small></div>
-              <div class="product__stock in">En stock</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">89,90 €</span><span class="was">109,90 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product reveal" data-cat="detailing" data-name="Shampoing auto Green Star — 1L" data-price="14.50" data-brand="Koch-Chemie">
-            <div class="product__media product__media--logo"><img src="assets/brands/koch-chemie.webp" alt="Koch-Chemie Green Star" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Koch-Chemie</span>
-              <h3 class="product__name">Shampoing auto Green Star — 1L</h3>
-              <div class="product__rating"><span class="stars">★★★★☆</span><small>(31)</small></div>
-              <div class="product__stock in">En stock</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">14,50 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product reveal" data-cat="pieces" data-name="Balais d'essuie-glace (paire)" data-price="19.90" data-brand="Valeo">
-            <div class="product__media product__media--logo"><img src="assets/brands/valeo.png" alt="Valeo essuie-glaces" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Valeo</span>
-              <h3 class="product__name">Balais d'essuie-glace (paire)</h3>
-              <div class="product__rating"><span class="stars">★★★★★</span><small>(12)</small></div>
-              <div class="product__stock in">En stock</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">19,90 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product reveal" data-cat="detailing" data-name="Lot de 5 microfibres premium" data-price="12.90" data-brand="Koch-Chemie">
-            <div class="product__media product__media--logo"><img src="assets/brands/koch-chemie.webp" alt="Microfibres premium" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Koch-Chemie</span>
-              <h3 class="product__name">Lot de 5 microfibres premium</h3>
-              <div class="product__rating"><span class="stars">★★★★★</span><small>(40)</small></div>
-              <div class="product__stock in">En stock</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">12,90 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product reveal" data-cat="outillage" data-name="Meuleuse d'angle 125mm 900W" data-price="49.90" data-brand="Power Maxx">
-            <div class="product__media product__media--logo"><img src="assets/brands/power-maxx.png" alt="Meuleuse Power Maxx" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Power Maxx</span>
-              <h3 class="product__name">Meuleuse d'angle 125mm — 900W</h3>
-              <div class="product__rating"><span class="stars">★★★★☆</span><small>(19)</small></div>
-              <div class="product__stock soon">Sur commande</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">49,90 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product reveal" data-cat="pieces" data-name="Plaquettes de frein avant" data-price="29.90" data-brand="Valeo">
-            <div class="product__media product__media--logo"><img src="assets/brands/valeo.png" alt="Plaquettes de frein Valeo" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Valeo</span>
-              <h3 class="product__name">Plaquettes de frein — avant</h3>
-              <div class="product__rating"><span class="stars">★★★★★</span><small>(27)</small></div>
-              <div class="product__stock in">En stock</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">29,90 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-
-          <article class="product reveal" data-cat="huiles" data-name="Huile moteur 5W-30 — 5L" data-price="36.90" data-brand="Euroatlantic">
-            <div class="product__media"><img src="assets/brands/euroatlantic.jpg" alt="Huile moteur Euroatlantic 5W-30 5L" loading="lazy" /></div>
-            <div class="product__body">
-              <span class="product__brand">Euroatlantic</span>
-              <h3 class="product__name">Huile moteur 5W-30 — 5L</h3>
-              <div class="product__rating"><span class="stars">★★★★★</span><small>(16)</small></div>
-              <div class="product__stock in">En stock</div>
-              <div class="product__foot">
-                <div class="product__price"><span class="now">36,90 €</span></div>
-                <button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>
-              </div>
-            </div>
-          </article>
-        </div>
+        <div class="products" id="products"><!-- généré automatiquement --></div>
+        <p class="products__empty" id="productsEmpty" hidden>Aucun produit dans cette catégorie pour le moment.</p>
         <p class="products__note">Prix &amp; stocks donnés à titre indicatif — confirmation à la commande.</p>
+      </div>
+    </section>
+
+    <!-- ░░ Services (rempli depuis data/catalogue.js) ░░ -->
+    <section class="section" id="services">
+      <div class="container">
+        <header class="shead">
+          <div><span class="kicker">Nos services</span><h2>Pas que des produits</h2></div>
+          <a class="shead__link" href="https://wa.me/262692000000" target="_blank" rel="noopener">Demander un service →</a>
+        </header>
+        <div class="services" id="servicesGrid"><!-- généré automatiquement --></div>
       </div>
     </section>
 
@@ -382,7 +283,7 @@
           <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5a6.5 6.5 0 0 1-5-2.3V16a5 5 0 1 1-5-5v3a2 2 0 1 0 2 2V2h3a6.5 6.5 0 0 0 5 4z"/></svg></a>
         </div>
       </div>
-      <div class="footer__col"><h4>Rayons</h4><a href="#categories">Detailing &amp; nettoyage</a><a href="#categories">Outillage &amp; atelier</a><a href="#categories">Huiles &amp; lubrifiants</a><a href="#categories">Pièces &amp; freinage</a><a href="#categories">Accessoires</a></div>
+      <div class="footer__col"><h4>Rayons</h4><a href="#categories">Detailing &amp; nettoyage</a><a href="#categories">Outillage &amp; atelier</a><a href="#categories">Huiles &amp; lubrifiants</a><a href="#categories">Pièces &amp; freinage</a><a href="#services">Services</a></div>
       <div class="footer__col"><h4>Marques</h4><a href="#marques">Koch-Chemie</a><a href="#marques">Worcraft</a><a href="#marques">Valeo</a><a href="#marques">Euroatlantic</a><a href="#marques">Power Maxx</a></div>
       <div class="footer__col"><h4>Aide</h4><a href="https://wa.me/262692000000" target="_blank" rel="noopener">Commander</a><a href="#avis">Avis clients</a><a href="tel:+262692000000">0692 00 00 00</a><a href="mailto:contact@zotauto.re">contact@zotauto.re</a></div>
     </div>
@@ -430,6 +331,7 @@
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3Zm-8.5 18c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.9 9.9 0 0 1 2 12c0-5.5 4.5-10 10-10 2.7 0 5.2 1 7.1 2.9A9.9 9.9 0 0 1 22 12c0 5.5-4.5 10-10 10Zm5.5-7.5c-.3-.2-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1a8.1 8.1 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2c-.2-.3 0-.5.1-.6l.5-.5.3-.5c.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.5-.3Z"/></svg>
   </a>
 
+  <script src="data/catalogue.js" defer></script>
   <script src="script.js" defer></script>
 </body>
 </html>
