@@ -31,6 +31,24 @@ Même principe : importez le dépôt, **aucune commande de build**, dossier raci
 - Créez la **fiche Google Business Profile** (pour apparaître sur Maps / recherche locale).
 - Vérifiez l'aperçu de partage (image OG) avec l'outil de debug de Facebook / le validateur de votre choix.
 
+## 🚘 Activer la recherche par plaque (optionnel — Niveau 2)
+
+La recherche **par VIN fonctionne déjà** (gratuite, API publique NHTSA, 100 % côté client) : complète pour les véhicules vendus aux USA, partielle pour beaucoup d'européens (souvent constructeur + année) — avec repli WhatsApp.
+
+La recherche **par plaque** (SIV français) nécessite un fournisseur **payant** + le proxy serveur (déjà codé dans `netlify/functions/decode-plate.js`, inactif tant qu'aucune clé n'est posée). Pour l'activer :
+
+1. Créez un compte chez un fournisseur SIV (recommandé : **apiplaqueimmatriculation.com**, ou un fournisseur **RapidAPI**) et récupérez la clé/token.
+2. Dans **Netlify → Site settings → Environment variables** (jamais dans le dépôt) :
+   - `SIV_API_KEY` = votre clé
+   - `SIV_API_HOST` = l'hôte RapidAPI (seulement si vous passez par RapidAPI)
+   - `ALLOWED_ORIGIN` = `https://zotauto.re`
+3. **Re-déployez** (une variable d'env n'est lue qu'après un nouveau déploiement).
+4. Faites un appel test et ajustez si besoin le mapping des champs dans `decode-plate.js` (voir commentaire « ajuster… »).
+5. Dans `vehicle-lookup.js`, passez `CONFIG.PLATE_PROXY_URL = "/api/decode-plate"`. La plaque devient réelle, sans aucune autre modification d'UI.
+
+> Sans clé, l'onglet plaque reste en **mode démonstration + repli WhatsApp** — déjà livrable et honnête. La fonction verrouille l'origine, limite le débit (5 req/min/IP) et valide le format avant tout appel payant.
+> ⚠️ Pensez à remplacer le numéro `WA = "262692000000"` dans **`script.js`** ET **`vehicle-lookup.js`**, et à compléter le nom du sous-traitant plaque dans `confidentialite.html`.
+
 ## ⚙️ Détails techniques
 
 - **PWA** : `manifest.json` + `sw.js` (mode hors-ligne, installable). Pensez à incrémenter `CACHE` dans `sw.js` après une grosse mise à jour pour forcer le rafraîchissement.

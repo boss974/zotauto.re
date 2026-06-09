@@ -437,19 +437,8 @@
     plate.value = out;
   });
 
-  var panelPlate = $("#panelPlate"), panelModel = $("#panelModel");
-  if (panelPlate) panelPlate.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var p = plate.value.trim();
-    var msg = p ? "Bonjour ZOT AUTO, je cherche des pièces/produits pour le véhicule immatriculé " + p + " (974)."
-                : "Bonjour ZOT AUTO, je cherche des pièces pour mon véhicule. Voici ma carte grise :";
-    window.open(wa(msg), "_blank", "noopener");
-  });
-  if (panelModel) panelModel.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var vals = $$("select", panelModel).map(function (s) { return s.value; }).filter(Boolean);
-    window.open(wa("Bonjour ZOT AUTO, je cherche des pièces pour : " + (vals.join(" · ") || "mon véhicule") + "."), "_blank", "noopener");
-  });
+  // La recherche véhicule (plaque / VIN / marque-modèle + carte résultat)
+  // est désormais gérée par vehicle-lookup.js (chargé après script.js).
 
   /* =========================================================
      Panier

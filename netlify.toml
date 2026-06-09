@@ -2,6 +2,11 @@
 [build]
   publish = "."
 
+# Fonctions serverless (proxy plaque SIV — Niveau 2, actif seulement avec une clé)
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # En-têtes de sécurité (toutes les pages)
 [[headers]]
   for = "/*"
@@ -28,5 +33,11 @@
   from = "/admin"
   to = "/admin.html"
   status = 301
+
+# Proxy d'identification par plaque (Niveau 2)
+[[redirects]]
+  from = "/api/decode-plate"
+  to = "/.netlify/functions/decode-plate"
+  status = 200
 
 # (Netlify sert automatiquement 404.html pour les pages introuvables)

@@ -141,21 +141,31 @@
             <div><strong>Trouvez vos pièces &amp; produits</strong><small>Identifiez votre véhicule, on s'occupe du reste.</small></div>
           </div>
 
-          <div class="finder__tabs" role="tablist">
-            <button class="finder__tab is-active" data-tab="plate" role="tab" aria-selected="true">Par plaque</button>
-            <button class="finder__tab" data-tab="model" role="tab" aria-selected="false">Par marque / modèle</button>
+          <div class="finder__tabs" role="tablist" aria-label="Méthode de recherche">
+            <button class="finder__tab is-active" id="tab-plate" data-tab="plate" role="tab" aria-selected="true" aria-controls="panelPlate">Par plaque</button>
+            <button class="finder__tab" id="tab-vin" data-tab="vin" role="tab" aria-selected="false" aria-controls="panelVin">Par VIN</button>
+            <button class="finder__tab" id="tab-model" data-tab="model" role="tab" aria-selected="false" aria-controls="panelModel">Marque / modèle</button>
           </div>
 
-          <form class="finder__panel is-active" id="panelPlate" data-panel="plate">
+          <form class="finder__panel is-active" id="panelPlate" data-panel="plate" role="tabpanel" aria-labelledby="tab-plate">
             <div class="plate">
               <span class="plate__eu"><b class="plate__stars">★</b><span>F</span></span>
               <input class="plate__input" id="plateInput" placeholder="AB-123-CD" maxlength="9" inputmode="text" aria-label="Plaque d'immatriculation" />
               <span class="plate__dom">974</span>
             </div>
-            <button type="submit" class="btn btn--blue btn--block">Voir mes pièces</button>
+            <button type="submit" class="btn btn--blue btn--block">Identifier mon véhicule</button>
+            <small class="finder__hint">La plaque seule ne permet pas l'identification automatique en ligne ; pour une recherche précise, indiquez le VIN (case E de la carte grise).</small>
           </form>
 
-          <form class="finder__panel" id="panelModel" data-panel="model" hidden>
+          <form class="finder__panel" id="panelVin" data-panel="vin" role="tabpanel" aria-labelledby="tab-vin" hidden>
+            <div class="vinfield">
+              <input class="vinfield__input" id="vinInput" placeholder="VF1RFB00X66072370" maxlength="17" inputmode="latin" autocomplete="off" spellcheck="false" aria-label="Numéro VIN (17 caractères)" />
+              <small class="vinfield__hint">17 caractères — case E de la carte grise, ou en bas du pare-brise.</small>
+            </div>
+            <button type="submit" class="btn btn--blue btn--block">Identifier mon véhicule</button>
+          </form>
+
+          <form class="finder__panel" id="panelModel" data-panel="model" role="tabpanel" aria-labelledby="tab-model" hidden>
             <div class="finder__row">
               <select aria-label="Marque" required>
                 <option value="" selected disabled>Marque</option>
@@ -170,6 +180,28 @@
             </div>
             <button type="submit" class="btn btn--blue btn--block">Voir mes pièces</button>
           </form>
+
+          <!-- Zone résultat partagée (plaque / VIN) — pilotée par vehicle-lookup.js -->
+          <div class="finder__result" id="finderResult" data-state="idle" tabindex="-1">
+            <div class="finder__loading" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span> Recherche du véhicule…</div>
+            <div class="vcard">
+              <div class="vcard__head"><strong>Véhicule identifié</strong><span class="vcard__demo" id="vcDemo" hidden>Démonstration</span></div>
+              <dl class="vcard__specs">
+                <div><dt>Marque</dt><dd id="vcMake">—</dd></div>
+                <div><dt>Modèle</dt><dd id="vcModel">—</dd></div>
+                <div><dt>Année</dt><dd id="vcYear">—</dd></div>
+                <div><dt>Motorisation</dt><dd id="vcEngine">—</dd></div>
+              </dl>
+              <div class="vcard__actions">
+                <button class="btn btn--red btn--block" id="vcParts" type="button">Voir les pièces</button>
+                <a class="btn btn--wa btn--block" id="vcWa" href="#" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>
+              </div>
+            </div>
+            <div class="finder__error" role="alert">
+              <p id="finderErrText">Véhicule non reconnu. Vérifiez la saisie ou envoyez-nous votre carte grise.</p>
+              <a class="btn btn--wa btn--block" id="finderErrWa" href="#" target="_blank" rel="noopener">Envoyer ma carte grise sur WhatsApp</a>
+            </div>
+          </div>
 
           <p class="finder__note">Pas sûr de la référence ? <a href="https://wa.me/262692000000" target="_blank" rel="noopener">Envoyez-nous votre carte grise sur WhatsApp</a></p>
         </div>
@@ -458,6 +490,7 @@
 
   <script src="data/catalogue.js" defer></script>
   <script src="script.js" defer></script>
+  <script src="vehicle-lookup.js" defer></script>
   <script src="pwa.js" defer></script>
 </body>
 </html>
