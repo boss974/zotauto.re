@@ -1,0 +1,32 @@
+# Déploiement Netlify — site statique ZOT AUTO
+[build]
+  publish = "."
+
+# En-têtes de sécurité (toutes les pages)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Cache long pour les assets (images, icônes) — ils changent de nom si modifiés
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Le service worker ne doit pas être mis en cache trop longtemps
+[[headers]]
+  for = "/sw.js"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Joli raccourci vers l'éditeur
+[[redirects]]
+  from = "/admin"
+  to = "/admin.html"
+  status = 301
+
+# (Netlify sert automatiquement 404.html pour les pages introuvables)

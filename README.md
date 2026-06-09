@@ -22,23 +22,36 @@ puis vous remplacez `data/catalogue.js` par le fichier téléchargé. 👉 Voir 
 - **Section Services** — prestations (montage, vidange, detailing…), bouton « Demander » → WhatsApp.
 - **Panier → WhatsApp** — ajout, quantités, total, et **« Finaliser sur WhatsApp »** qui génère le message de commande tout prêt (panier mémorisé via `localStorage`).
 - **Réassurance**, catégories, marques, avis, barre de paiement, footer complet.
-- 100 % **responsive**, accessible, SEO de base (meta, Open Graph, favicon tricolore).
+- 100 % **responsive**, accessible.
+- **PWA** : site installable + mode hors-ligne (`manifest.json` + `sw.js`).
+- **SEO** : données structurées Schema.org (boutique + produits), Open Graph (image de partage `assets/og-image.png`), `sitemap.xml`, `robots.txt`.
+- **Pages légales** (mentions légales, CGV, confidentialité) + page **404**, à compléter (SIRET, hébergeur…).
+- **Déploiement prêt** : `netlify.toml` + guide **[DEPLOY.md](DEPLOY.md)** (Netlify / Vercel / Cloudflare).
 
 ## 📁 Structure
 
 ```
 zotauto-site/
-├── index.html        ← la page (vitrine + boutique)
-├── admin.html        ← éditeur du catalogue (sans code)
-├── styles.css        ← thème clair + tricolore marque
-├── script.js         ← rendu catalogue, sélecteur, filtres, panier
-├── GUIDE.md          ← mode d'emploi de l'éditeur
+├── index.html            ← la page (vitrine + boutique)
+├── admin.html            ← éditeur du catalogue (sans code)
+├── styles.css            ← thème clair + tricolore marque
+├── script.js             ← rendu catalogue, sélecteur, filtres, panier
+├── pwa.js                ← service worker + données structurées produits
+├── sw.js                 ← cache hors-ligne (PWA)
+├── manifest.json         ← PWA (installable)
+├── page.css              ← style des pages secondaires
+├── 404.html
+├── mentions-legales.html · cgv.html · confidentialite.html
+├── robots.txt · sitemap.xml
+├── netlify.toml · DEPLOY.md   ← mise en ligne
+├── GUIDE.md              ← mode d'emploi de l'éditeur
 ├── data/
-│   └── catalogue.js  ← TOUS les produits & services (éditable)
+│   └── catalogue.js      ← TOUS les produits & services (éditable)
 └── assets/
-    ├── favicon.svg
-    ├── brands/       ← logos marques + logo ZOT AUTO
-    └── img/          ← visuels produits
+    ├── favicon.svg · og-image.png
+    ├── icons/            ← icônes d'app (PWA)
+    ├── brands/           ← logos marques + logo ZOT AUTO
+    └── img/              ← visuels produits
 ```
 
 ## ✏️ À personnaliser avant mise en ligne

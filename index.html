@@ -6,11 +6,55 @@
   <title>ZOT AUTO — Pièces & produits auto à La Réunion · Livraison toute l'île</title>
   <meta name="description" content="ZOT AUTO Multiservices — pièces détachées, detailing, outillage et huiles à La Réunion. Trouvez vos pièces par plaque d'immatriculation. Koch-Chemie, Worcraft, Valeo, Euroatlantic. Livraison sur toute l'île (974)." />
   <meta name="theme-color" content="#2a52e0" />
+  <meta name="keywords" content="pièces auto Réunion, pièces détachées 974, detailing Réunion, outillage auto, huile moteur, Koch-Chemie, Worcraft, Valeo, Euroatlantic, ZOT AUTO, multiservices auto La Réunion" />
+  <meta name="author" content="ZOT AUTO MULTISERVICES" />
+  <meta name="robots" content="index, follow" />
+  <meta name="geo.region" content="RE" />
+  <meta name="geo.placename" content="La Réunion" />
+  <link rel="canonical" href="https://zotauto.re/" />
+
+  <!-- Open Graph / partage réseaux sociaux -->
   <meta property="og:title" content="ZOT AUTO — Tout pour l'auto à La Réunion" />
   <meta property="og:description" content="Pièces, detailing, outillage & huiles. Trouvez vos pièces par plaque. Livraison sur toute l'île." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="fr_FR" />
+  <meta property="og:url" content="https://zotauto.re/" />
+  <meta property="og:site_name" content="ZOT AUTO" />
+  <meta property="og:image" content="https://zotauto.re/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ZOT AUTO — Tout pour l'auto à La Réunion" />
+  <meta name="twitter:description" content="Pièces, detailing, outillage & huiles. Livraison sur toute La Réunion." />
+  <meta name="twitter:image" content="https://zotauto.re/assets/og-image.png" />
+
+  <!-- PWA / icônes -->
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" type="image/png" href="assets/icons/icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="ZOT AUTO" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- Données structurées — SEO local -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoPartsStore",
+    "name": "ZOT AUTO MULTISERVICES",
+    "description": "Pièces détachées, detailing, outillage et huiles auto à La Réunion. Livraison sur toute l'île.",
+    "image": "https://zotauto.re/assets/og-image.png",
+    "url": "https://zotauto.re/",
+    "telephone": "+262692000000",
+    "priceRange": "€€",
+    "currenciesAccepted": "EUR",
+    "paymentAccepted": "Espèces, Carte bancaire, WhatsApp",
+    "areaServed": { "@type": "AdministrativeArea", "name": "La Réunion (974)" },
+    "address": { "@type": "PostalAddress", "addressRegion": "La Réunion", "addressCountry": "RE" },
+    "sameAs": []
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -342,6 +386,11 @@
     <div class="tricolor" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="container footer__bottom">
       <span>© <span id="year">2026</span> ZOT AUTO MULTISERVICES — Tout pour l'auto · La Réunion (974)</span>
+      <nav class="footer__legal" aria-label="Informations légales">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="cgv.html">CGV</a>
+        <a href="confidentialite.html">Confidentialité</a>
+      </nav>
       <span class="footer__creole">Lé la pou zot 🌺</span>
     </div>
   </footer>
@@ -409,5 +458,6 @@
 
   <script src="data/catalogue.js" defer></script>
   <script src="script.js" defer></script>
+  <script src="pwa.js" defer></script>
 </body>
 </html>
