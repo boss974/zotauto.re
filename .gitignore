@@ -1,0 +1,24 @@
+# Dépendances (si un jour outillage npm)
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build / sortie
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / éditeurs
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Secrets / déploiement
+.env
+.env.*
+.deploy-ftp.env
