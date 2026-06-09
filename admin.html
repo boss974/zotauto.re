@@ -9,108 +9,288 @@
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* =========================================================
+       ÉDITEUR — styles propres au back-office (réutilise les
+       variables de marque de styles.css : --blue, --red, --yellow…)
+       ========================================================= */
     body { background: var(--page); }
-    .adm-top { position: sticky; top: 0; z-index: 50; background: #fff; border-bottom: 1px solid var(--line); box-shadow: var(--shadow-sm); }
-    .adm-top__in { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 12px 20px; }
-    .adm-top__title { display: flex; align-items: center; gap: 12px; margin-right: auto; }
-    .adm-top__title img { height: 42px; }
-    .adm-top__title b { font-family: var(--font-display); font-size: 1.05rem; }
-    .adm-top__title small { display: block; color: var(--muted); font-size: 0.8rem; }
-    .adm-btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 15px; border-radius: 10px; border: 1.5px solid var(--line-2); background: #fff; font-family: var(--font-display); font-weight: 600; font-size: 0.86rem; cursor: pointer; color: var(--ink); transition: all 0.2s; }
-    .adm-btn:hover { border-color: var(--blue); color: var(--blue); }
-    .adm-btn--primary { background: var(--blue); border-color: var(--blue); color: #fff; }
-    .adm-btn--primary:hover { background: var(--blue-600); color: #fff; }
-    .adm-btn--ghost { border-color: transparent; }
 
-    .adm-help { background: #eef2ff; border: 1px solid #d6e0ff; color: var(--ink-2); border-radius: 14px; padding: 14px 18px; margin: 18px auto; max-width: 1180px; font-size: 0.9rem; }
+    /* Barre d'outils collante */
+    .adm-top { position: sticky; top: 0; z-index: 60; background: #fff; border-bottom: 1px solid var(--line); box-shadow: var(--shadow-sm); }
+    .adm-top__in { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 20px; }
+    .adm-top__title { display: flex; align-items: center; gap: 12px; margin-right: auto; }
+    .adm-top__title img { height: 40px; }
+    .adm-top__title b { font-family: var(--font-display); font-size: 1.02rem; }
+    .adm-top__title small { display: block; color: var(--muted); font-size: 0.78rem; }
+
+    .adm-saved { display: inline-flex; align-items: center; gap: 7px; font-size: 0.8rem; font-weight: 600; color: var(--muted); font-family: var(--font-display); }
+    .adm-saved::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 3px rgba(21,163,74,0.18); }
+    .adm-saved.is-dirty { color: var(--warn); }
+    .adm-saved.is-dirty::before { background: var(--warn); box-shadow: 0 0 0 3px rgba(217,119,6,0.18); }
+
+    .adm-btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 13px; border-radius: 10px; border: 1.5px solid var(--line-2); background: #fff; font-family: var(--font-display); font-weight: 600; font-size: 0.84rem; cursor: pointer; color: var(--ink); transition: all 0.18s; }
+    .adm-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .adm-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+    .adm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .adm-btn:disabled:hover { border-color: var(--line-2); color: var(--ink); }
+    .adm-btn--primary { background: var(--blue); border-color: var(--blue); color: #fff; }
+    .adm-btn--primary:hover { background: var(--blue-600); color: #fff; border-color: var(--blue-600); }
+    .adm-btn--danger { border-color: var(--line-2); }
+    .adm-btn--danger:hover { border-color: var(--red); color: var(--red); }
+    .adm-btn--ghost { border-color: transparent; }
+    .adm-btn--sm { padding: 7px 11px; font-size: 0.8rem; }
+
+    /* Petit séparateur vertical dans la barre */
+    .adm-sep { width: 1px; align-self: stretch; background: var(--line); margin: 2px 2px; }
+
+    /* Menu déroulant (Plus…) */
+    .adm-menu { position: relative; }
+    .adm-menu__pop { position: absolute; right: 0; top: calc(100% + 6px); background: #fff; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 6px; min-width: 230px; display: none; z-index: 70; }
+    .adm-menu.open .adm-menu__pop { display: block; }
+    .adm-menu__pop button { display: flex; width: 100%; align-items: center; gap: 9px; padding: 9px 11px; border: none; background: transparent; border-radius: 8px; font-family: var(--font-display); font-weight: 600; font-size: 0.84rem; color: var(--ink); cursor: pointer; text-align: left; }
+    .adm-menu__pop button:hover { background: var(--soft); color: var(--blue); }
+    .adm-menu__sep { height: 1px; background: var(--line); margin: 5px 4px; }
+    .adm-menu__title { font-family: var(--font-display); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 6px 11px 2px; }
+
+    /* Bandeau d'aide */
+    .adm-help { background: var(--blue-050); border: 1px solid #d6e0ff; color: var(--ink-2); border-radius: 14px; padding: 14px 18px; margin: 18px auto 0; max-width: 1240px; font-size: 0.9rem; }
     .adm-help b { color: var(--blue-700); }
     .adm-help ol { margin: 8px 0 0; padding-left: 20px; }
     .adm-help li { margin: 3px 0; }
+    .adm-help__csv { margin-top: 8px; font-size: 0.84rem; color: var(--muted); }
+    .adm-help summary { cursor: pointer; font-family: var(--font-display); font-weight: 700; color: var(--blue-700); }
 
-    .adm-wrap { max-width: 1180px; margin: 0 auto; padding: 0 20px 60px; }
-    .adm-tabs { display: flex; gap: 8px; margin: 8px 0 18px; }
-    .adm-tab { padding: 11px 20px; border-radius: 999px; border: 1.5px solid var(--line-2); background: #fff; font-family: var(--font-display); font-weight: 600; cursor: pointer; color: var(--ink-2); }
+    .adm-wrap { max-width: 1240px; margin: 0 auto; padding: 0 20px 70px; }
+
+    /* Onglets */
+    .adm-tabs { display: flex; gap: 8px; margin: 16px 0 14px; }
+    .adm-tab { padding: 11px 20px; border-radius: 999px; border: 1.5px solid var(--line-2); background: #fff; font-family: var(--font-display); font-weight: 600; cursor: pointer; color: var(--ink-2); transition: all 0.18s; }
+    .adm-tab:hover { border-color: var(--blue); color: var(--blue); }
     .adm-tab.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+    .adm-tab.on:hover { color: #fff; }
 
-    .adm-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 22px; align-items: start; }
-    .adm-panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
-    .adm-panel h2 { font-size: 1rem; font-family: var(--font-display); margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .adm-grid { display: grid; grid-template-columns: 1fr 1.06fr; gap: 22px; align-items: start; }
+    .adm-panel { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .adm-panel h2 { font-size: 1rem; font-family: var(--font-display); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
 
-    .adm-list { display: grid; gap: 10px; max-height: 70vh; overflow: auto; }
-    .adm-item { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; transition: all 0.15s; }
+    /* Barre de recherche + filtre dans la liste */
+    .adm-tools { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-bottom: 10px; }
+    .adm-search { display: flex; align-items: center; gap: 8px; background: var(--soft); border: 1.5px solid var(--line); border-radius: 10px; padding: 0 12px; }
+    .adm-search:focus-within { border-color: var(--blue); background: #fff; box-shadow: 0 0 0 3px rgba(42,82,224,0.14); }
+    .adm-search input { flex: 1; border: none; background: transparent; outline: none; padding: 10px 0; font-size: 0.9rem; min-width: 0; }
+    .adm-search__clear { border: none; background: transparent; cursor: pointer; color: var(--muted); font-size: 1rem; padding: 4px; line-height: 1; }
+    .adm-search__clear:hover { color: var(--red); }
+    .adm-filter { border: 1.5px solid var(--line-2); border-radius: 10px; padding: 0 12px; background: #fff; font-size: 0.86rem; font-family: var(--font-display); font-weight: 600; color: var(--ink-2); }
+    .adm-filter:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,82,224,0.14); }
+
+    /* Barre d'actions groupées */
+    .adm-bulk { display: none; align-items: center; gap: 8px; flex-wrap: wrap; background: var(--ink); color: #fff; border-radius: 12px; padding: 8px 10px; margin-bottom: 10px; font-size: 0.84rem; }
+    .adm-bulk.show { display: flex; }
+    .adm-bulk b { font-family: var(--font-display); }
+    .adm-bulk select { border-radius: 8px; border: none; padding: 7px 9px; font-size: 0.82rem; font-family: var(--font-display); font-weight: 600; }
+    .adm-bulk .adm-btn { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); color: #fff; padding: 7px 10px; }
+    .adm-bulk .adm-btn:hover { background: rgba(255,255,255,0.2); border-color: #fff; color: #fff; }
+    .adm-bulk .adm-btn--del:hover { background: var(--red); border-color: var(--red); }
+    .adm-bulk__spacer { margin-left: auto; }
+    .adm-bulk__x { border: none; background: transparent; color: rgba(255,255,255,0.8); cursor: pointer; font-size: 1.1rem; line-height: 1; }
+    .adm-bulk__x:hover { color: #fff; }
+
+    /* Liste */
+    .adm-list { display: grid; gap: 9px; max-height: 64vh; overflow: auto; padding: 2px; }
+    .adm-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 12px; background: #fff; transition: border-color 0.15s, box-shadow 0.15s, opacity 0.15s; }
     .adm-item.sel { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,82,224,0.12); }
-    .adm-item__thumb { width: 46px; height: 46px; flex: 0 0 auto; border-radius: 9px; background: var(--soft); display: grid; place-items: center; overflow: hidden; font-size: 1.5rem; }
+    .adm-item.dragging { opacity: 0.4; }
+    .adm-item.drop-before { box-shadow: 0 -3px 0 0 var(--blue); }
+    .adm-item.drop-after { box-shadow: 0 3px 0 0 var(--blue); }
+    .adm-item__handle { cursor: grab; color: var(--muted-2); font-size: 1.05rem; padding: 4px 2px; flex: 0 0 auto; touch-action: none; user-select: none; }
+    .adm-item__handle:active { cursor: grabbing; }
+    .adm-item__handle:hover { color: var(--blue); }
+    .adm-item__check { flex: 0 0 auto; width: 17px; height: 17px; cursor: pointer; accent-color: var(--blue); }
+    .adm-item__thumb { width: 44px; height: 44px; flex: 0 0 auto; border-radius: 9px; background: var(--soft); display: grid; place-items: center; overflow: hidden; font-size: 1.4rem; }
     .adm-item__thumb img { width: 100%; height: 100%; object-fit: contain; }
-    .adm-item__info { flex: 1; min-width: 0; }
-    .adm-item__name { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .adm-item__meta { font-size: 0.78rem; color: var(--muted); }
-    .adm-item__acts { display: flex; gap: 4px; }
-    .adm-ic { width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: 0.85rem; color: var(--ink-2); display: grid; place-items: center; }
+    .adm-item__info { flex: 1; min-width: 0; cursor: pointer; }
+    .adm-item__name { font-weight: 600; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
+    .adm-item__meta { font-size: 0.76rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .adm-tag { display: inline-flex; align-items: center; gap: 3px; font-family: var(--font-display); font-weight: 700; font-size: 0.62rem; padding: 1px 6px; border-radius: 999px; letter-spacing: 0.02em; flex: 0 0 auto; }
+    .adm-tag--fav { background: #fff5d6; color: #8a6d00; border: 1px solid var(--yellow); }
+    .adm-tag--new { background: #fdeaeb; color: var(--red-600); border: 1px solid #f6c9cd; }
+    .adm-item__acts { display: flex; gap: 4px; flex: 0 0 auto; }
+    .adm-ic { width: 29px; height: 29px; border-radius: 8px; border: 1px solid var(--line); background: #fff; cursor: pointer; font-size: 0.82rem; color: var(--ink-2); display: grid; place-items: center; }
     .adm-ic:hover { border-color: var(--blue); color: var(--blue); }
+    .adm-ic:disabled { opacity: 0.35; cursor: not-allowed; }
+    .adm-ic:disabled:hover { border-color: var(--line); color: var(--ink-2); }
     .adm-ic--del:hover { border-color: var(--red); color: var(--red); }
+    .adm-list__empty { text-align: center; color: var(--muted); padding: 28px 10px; font-size: 0.9rem; }
 
-    .adm-field { display: grid; gap: 6px; margin-bottom: 13px; }
-    .adm-field label { font-family: var(--font-display); font-size: 0.82rem; font-weight: 600; color: var(--ink-2); }
-    .adm-field input, .adm-field select, .adm-field textarea { width: 100%; padding: 11px 13px; border: 1.5px solid var(--line-2); border-radius: 10px; background: #fff; font-size: 0.92rem; }
+    /* Formulaire */
+    .adm-field { display: grid; gap: 6px; margin-bottom: 12px; }
+    .adm-field > label { font-family: var(--font-display); font-size: 0.81rem; font-weight: 600; color: var(--ink-2); }
+    .adm-field .req { color: var(--red); }
+    .adm-field input, .adm-field select, .adm-field textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--line-2); border-radius: 10px; background: #fff; font-size: 0.9rem; }
+    .adm-field textarea { resize: vertical; min-height: 64px; line-height: 1.5; }
     .adm-field input:focus, .adm-field select:focus, .adm-field textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,82,224,0.14); }
+    .adm-field input.is-invalid, .adm-field textarea.is-invalid { border-color: var(--red); box-shadow: 0 0 0 3px rgba(224,31,43,0.12); }
     .adm-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .adm-check { display: flex; align-items: center; gap: 9px; }
-    .adm-check input { width: auto; }
-    .adm-hint { font-size: 0.78rem; color: var(--muted); }
+    .adm-checks { display: flex; flex-wrap: wrap; gap: 10px 16px; padding: 4px 0 2px; }
+    .adm-check { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 0.84rem; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+    .adm-check input { width: auto; accent-color: var(--blue); }
+    .adm-hint { font-size: 0.76rem; color: var(--muted); }
+    .adm-warn { font-size: 0.78rem; color: var(--warn); font-weight: 600; display: none; }
+    .adm-warn.show { display: block; }
     .adm-imgrow { display: flex; gap: 8px; align-items: center; }
-    .adm-imgrow .adm-btn { padding: 9px 12px; }
+    .adm-imgrow input { flex: 1; }
+    .adm-imgrow .adm-btn { padding: 9px 11px; white-space: nowrap; }
+    .adm-formfoot { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; padding-top: 12px; border-top: 1px dashed var(--line); }
 
-    .adm-preview { position: sticky; top: 90px; }
+    /* Aperçu en direct */
+    .adm-preview { margin-top: 18px; }
     .adm-preview__label { font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
     .adm-preview__stage { background: var(--soft); border: 1px dashed var(--line-2); border-radius: 16px; padding: 24px; display: grid; place-items: center; }
-    .adm-preview__stage .product, .adm-preview__stage .service { width: 280px; }
+    .adm-preview__stage .product, .adm-preview__stage .service { width: 270px; }
+
+    /* Badges enrichis dans l'aperçu (featured / nouveau) */
+    .pv-flags { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; gap: 6px; align-items: flex-end; z-index: 2; }
+    .pv-flag { font-family: var(--font-display); font-weight: 700; font-size: 0.66rem; padding: 4px 9px; border-radius: 999px; display: inline-flex; align-items: center; gap: 4px; box-shadow: var(--shadow-sm); }
+    .pv-flag--fav { background: var(--yellow); color: var(--ink); }
+    .pv-flag--new { background: var(--red); color: #fff; }
+    .product__media { position: relative; }
+    .pv-desc { color: var(--muted); font-size: 0.82rem; margin: 2px 0 10px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    .service .pv-flag--fav { position: static; box-shadow: none; }
+
     .adm-empty { text-align: center; color: var(--muted); padding: 30px; }
-    @media (max-width: 820px) { .adm-grid { grid-template-columns: 1fr; } .adm-preview { position: static; } }
+
+    /* Boîte de dialogue import CSV */
+    .adm-modal { position: fixed; inset: 0; z-index: 120; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .adm-modal.open { display: flex; }
+    .adm-modal__bg { position: absolute; inset: 0; background: rgba(14,27,51,0.5); }
+    .adm-modal__box { position: relative; background: #fff; border-radius: 16px; box-shadow: var(--shadow-lg); width: min(640px, 100%); max-height: 88vh; overflow: auto; padding: 22px; }
+    .adm-modal__box h3 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 6px; }
+    .adm-modal__box p { color: var(--ink-2); font-size: 0.88rem; margin-bottom: 12px; }
+    .adm-modal__close { position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 9px; border: none; background: var(--soft); cursor: pointer; font-size: 1rem; }
+    .adm-modal__close:hover { background: var(--line); }
+    .adm-drop { border: 2px dashed var(--line-2); border-radius: 12px; padding: 22px; text-align: center; color: var(--muted); cursor: pointer; transition: all 0.18s; background: var(--soft); }
+    .adm-drop.over { border-color: var(--blue); background: var(--blue-050); color: var(--blue-700); }
+    .adm-drop b { color: var(--blue); }
+    .adm-report { margin-top: 14px; font-size: 0.86rem; }
+    .adm-report__ok { color: var(--ok); font-weight: 600; }
+    .adm-report__warn { color: var(--warn); font-weight: 600; }
+    .adm-report ul { margin: 8px 0 0; padding-left: 18px; max-height: 160px; overflow: auto; }
+    .adm-report li { margin: 2px 0; color: var(--ink-2); }
+    .adm-modal__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .adm-modal pre { background: var(--ink); color: #d7e0f3; border-radius: 10px; padding: 12px; font-size: 0.78rem; overflow: auto; white-space: pre; margin: 8px 0 0; }
+
+    @media (max-width: 860px) {
+      .adm-grid { grid-template-columns: 1fr; }
+      .adm-top__title small { display: none; }
+      .adm-tools { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- ===================== Barre d'outils (sticky) ===================== -->
   <div class="adm-top">
     <div class="adm-top__in">
       <div class="adm-top__title">
         <img src="assets/brands/logo-zotauto.png" alt="ZOT AUTO" />
-        <span><b>Éditeur du catalogue</b><small>Ajoutez vos produits & services, sans code</small></span>
+        <span><b>Éditeur du catalogue</b><small>Ajoutez vos produits &amp; services, sans code</small></span>
       </div>
-      <button class="adm-btn" id="btnImport">📥 Importer</button>
-      <input type="file" id="fileImport" accept=".js,.json,application/json,text/javascript" hidden />
-      <button class="adm-btn" id="btnReset">↺ Réinitialiser</button>
-      <a class="adm-btn adm-btn--ghost" href="index.html" target="_blank">👁 Voir le site</a>
-      <button class="adm-btn" id="btnCopy">📋 Copier le code</button>
+
+      <span class="adm-saved" id="savedFlag" title="État du brouillon">Brouillon enregistré</span>
+
+      <button class="adm-btn" id="btnUndo" disabled title="Annuler la dernière action (Ctrl+Z)">↶ Annuler</button>
+      <div class="adm-sep" aria-hidden="true"></div>
+
+      <a class="adm-btn adm-btn--ghost" href="index.html" target="_blank" rel="noopener">👁 Voir le site</a>
+
+      <!-- Menu « Plus » : imports/exports secondaires + réinitialiser -->
+      <div class="adm-menu" id="moreMenu">
+        <button class="adm-btn" id="btnMore" aria-haspopup="true" aria-expanded="false">⋯ Outils</button>
+        <div class="adm-menu__pop" role="menu">
+          <div class="adm-menu__title">Catalogue (.js)</div>
+          <button id="btnImport" role="menuitem">📥 Importer catalogue.js</button>
+          <button id="btnCopy" role="menuitem">📋 Copier le code</button>
+          <div class="adm-menu__sep"></div>
+          <div class="adm-menu__title">Tableur (.csv)</div>
+          <button id="btnCsvExport" role="menuitem">📤 Exporter en CSV</button>
+          <button id="btnCsvImport" role="menuitem">📥 Importer un CSV</button>
+          <button id="btnCsvTemplate" role="menuitem">📄 Modèle CSV (exemple)</button>
+          <div class="adm-menu__sep"></div>
+          <button id="btnReset" role="menuitem">↺ Réinitialiser le catalogue</button>
+        </div>
+      </div>
+
       <button class="adm-btn adm-btn--primary" id="btnDownload">💾 Télécharger catalogue.js</button>
+
+      <!-- inputs fichiers (cachés) -->
+      <input type="file" id="fileImport" accept=".js,.json,application/json,text/javascript" hidden />
+      <input type="file" id="fileCsv" accept=".csv,text/csv,text/plain" hidden />
     </div>
   </div>
 
+  <!-- ===================== Aide ===================== -->
   <div class="adm-help">
     <b>Comment publier vos changements (3 étapes) :</b>
     <ol>
-      <li>Modifiez vos produits / services ci-dessous — tout est sauvegardé automatiquement dans votre navigateur.</li>
+      <li>Modifiez / ajoutez vos produits &amp; services ci-dessous — tout est <b>sauvegardé automatiquement</b> dans votre navigateur.</li>
       <li>Cliquez sur <b>💾 Télécharger catalogue.js</b>.</li>
       <li>Remplacez le fichier <b>data/catalogue.js</b> du site par celui téléchargé (glisser-déposer sur GitHub, ou via votre hébergeur). C'est tout&nbsp;! 🎉</li>
     </ol>
+    <details class="adm-help__csv">
+      <summary>💡 Astuce : ajouter beaucoup de produits d'un coup (CSV)</summary>
+      <div style="margin-top:6px">
+        Pour saisir vos produits dans Excel ou Google&nbsp;Sheets, utilisez <b>⋯ Outils → Exporter en CSV</b> (récupérer vos produits actuels) ou
+        <b>Modèle CSV</b> (fichier vierge d'exemple). Complétez-le, puis <b>Importer un CSV</b> pour tout ajouter / mettre à jour en une fois.
+        L'ordre de la liste (glisser-déposer 𝄜) définit l'ordre d'affichage sur le site.
+      </div>
+    </details>
   </div>
 
+  <!-- ===================== Contenu ===================== -->
   <div class="adm-wrap">
-    <div class="adm-tabs">
-      <button class="adm-tab on" data-tab="products" id="tabProducts">Produits</button>
-      <button class="adm-tab" data-tab="services" id="tabServices">Services</button>
+    <div class="adm-tabs" role="tablist">
+      <button class="adm-tab on" data-tab="products" id="tabProducts" role="tab" aria-selected="true">Produits</button>
+      <button class="adm-tab" data-tab="services" id="tabServices" role="tab" aria-selected="false">Services</button>
     </div>
 
     <div class="adm-grid">
+      <!-- Colonne liste -->
       <div class="adm-panel">
-        <h2 id="listTitle">Produits <button class="adm-btn adm-btn--primary" id="btnAdd">➕ Ajouter</button></h2>
+        <h2 id="listTitle">
+          <span id="listTitleTxt">Produits</span>
+          <button class="adm-btn adm-btn--primary adm-btn--sm" id="btnAdd">➕ Ajouter</button>
+        </h2>
+
+        <div class="adm-tools">
+          <label class="adm-search">
+            <span aria-hidden="true">🔎</span>
+            <input type="search" id="search" placeholder="Rechercher par nom, marque, référence…" aria-label="Rechercher dans la liste" />
+            <button class="adm-search__clear" id="searchClear" type="button" title="Effacer" hidden>✕</button>
+          </label>
+          <select class="adm-filter" id="filterCat" aria-label="Filtrer par catégorie">
+            <option value="">Toutes catégories</option>
+          </select>
+        </div>
+
+        <!-- Actions groupées -->
+        <div class="adm-bulk" id="bulkBar" role="region" aria-label="Actions groupées">
+          <b id="bulkCount">0 sélectionné(s)</b>
+          <div class="adm-bulk__spacer"></div>
+          <select id="bulkCat" aria-label="Catégorie cible" title="Changer la catégorie de la sélection"></select>
+          <button class="adm-btn adm-btn--sm" id="bulkApplyCat" type="button">Appliquer la catégorie</button>
+          <button class="adm-btn adm-btn--sm adm-btn--del" id="bulkDelete" type="button">🗑 Supprimer la sélection</button>
+          <button class="adm-bulk__x" id="bulkClear" type="button" title="Tout désélectionner">✕</button>
+        </div>
+
         <div class="adm-list" id="list"></div>
       </div>
 
+      <!-- Colonne fiche + aperçu -->
       <div class="adm-panel">
         <h2>Fiche</h2>
         <form id="form" autocomplete="off"></form>
         <div class="adm-empty" id="formEmpty" hidden>Sélectionnez un élément à gauche, ou cliquez sur « ➕ Ajouter ».</div>
-        <div class="adm-preview" id="previewWrap" style="margin-top:18px">
+        <div class="adm-preview" id="previewWrap">
           <div class="adm-preview__label">Aperçu en direct</div>
           <div class="adm-preview__stage" id="preview"></div>
         </div>
@@ -118,12 +298,24 @@
     </div>
   </div>
 
+  <!-- ===================== Modale (import CSV / modèle) ===================== -->
+  <div class="adm-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="adm-modal__bg" data-modal-close></div>
+    <div class="adm-modal__box">
+      <button class="adm-modal__close" id="modalClose" type="button" aria-label="Fermer">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <!-- Le catalogue est chargé via <script src> : aucun fetch (marche en file://) -->
   <script src="data/catalogue.js"></script>
   <script>
   (function () {
     "use strict";
+
+    /* ======================= Utilitaires ======================= */
     var $ = function (s, c) { return (c || document).querySelector(s); };
     var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
     var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
@@ -132,78 +324,265 @@
     var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
     var slug = function (s) { return String(s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "").slice(0, 40) || "item"; };
 
-    var CATS = [["detailing", "Detailing & nettoyage"], ["outillage", "Outillage & atelier"], ["huiles", "Huiles & lubrifiants"], ["pieces", "Pièces & freinage"], ["accessoires", "Accessoires"]];
+    // Catégories autorisées (clés FIGÉES + libellés lisibles)
+    var CATS = [
+      ["detailing", "Detailing & nettoyage"],
+      ["outillage", "Outillage & atelier"],
+      ["huiles", "Huiles & lubrifiants"],
+      ["pieces", "Pièces & freinage"],
+      ["accessoires", "Accessoires"]
+    ];
+    var CAT_KEYS = CATS.map(function (c) { return c[0]; });
+    var catLabel = function (k) { for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === k) return CATS[i][1]; return k; };
+
     var DRAFT = "zotauto_catalogue_draft";
     var SEED = (window.ZOTAUTO && clone(window.ZOTAUTO)) || { products: [], services: [] };
 
+    /* ======================= Normalisation (compat anciens fichiers) ======================= */
+    // Garantit la présence des nouveaux champs même si catalogue.js est ancien.
+    function normProduct(p) {
+      p = p || {};
+      var cat = CAT_KEYS.indexOf(p.category) >= 0 ? p.category : "detailing";
+      return {
+        id: p.id || "",
+        name: p.name != null ? String(p.name) : "",
+        brand: p.brand != null ? String(p.brand) : "",
+        category: cat,
+        reference: p.reference != null ? String(p.reference) : "",
+        price: Number(p.price) || 0,
+        oldPrice: (p.oldPrice == null || p.oldPrice === "") ? null : (Number(p.oldPrice) || null),
+        stock: p.stock === "soon" ? "soon" : "in",
+        featured: !!p.featured,
+        nouveau: !!p.nouveau,
+        badge: p.badge != null ? String(p.badge) : "",
+        description: p.description != null ? String(p.description) : "",
+        image: p.image != null ? String(p.image) : "",
+        contain: !!p.contain,
+        rating: (p.rating == null || p.rating === "") ? 5 : (Number(p.rating) || 0),
+        reviews: Number(p.reviews) || 0
+      };
+    }
+    function normService(s) {
+      s = s || {};
+      return {
+        id: s.id || "",
+        name: s.name != null ? String(s.name) : "",
+        icon: s.icon != null && s.icon !== "" ? String(s.icon) : "🔧",
+        description: s.description != null ? String(s.description) : "",
+        price: s.price != null ? String(s.price) : "",
+        badge: s.badge != null ? String(s.badge) : "",
+        featured: !!s.featured
+      };
+    }
+    function normalize(obj) {
+      obj = obj || {};
+      return {
+        products: (obj.products || []).map(normProduct),
+        services: (obj.services || []).map(normService)
+      };
+    }
+
+    /* ======================= État ======================= */
     var state, tab = "products", sel = -1, toastTimer;
+    var selected = { products: {}, services: {} }; // cases cochées (par id d'objet) -> on indexe par index courant via dataset
+    var query = "", filterCat = "";
+    var history = []; // pile d'annulation (instantanés de state)
+    var HISTORY_MAX = 25;
+    var dirty = false;
+
     try { state = JSON.parse(localStorage.getItem(DRAFT)); } catch (e) {}
     if (!state || !state.products || !state.services) state = clone(SEED);
+    state = normalize(state); // applique défauts/compat dès le chargement
 
-    function persist() { try { localStorage.setItem(DRAFT, JSON.stringify(state)); } catch (e) {} }
-    function toast(m) { var t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2400); }
+    /* ======================= Brouillon + toast ======================= */
+    function setSaved(isDirty) {
+      dirty = isDirty;
+      var f = $("#savedFlag");
+      if (isDirty) { f.textContent = "Enregistrement…"; f.classList.add("is-dirty"); }
+      else { f.textContent = "Brouillon enregistré"; f.classList.remove("is-dirty"); }
+    }
+    function persist() {
+      setSaved(true);
+      try { localStorage.setItem(DRAFT, JSON.stringify(state)); } catch (e) {}
+      // petit délai visuel "enregistré"
+      clearTimeout(persist._t);
+      persist._t = setTimeout(function () { setSaved(false); }, 350);
+    }
+    function toast(m) {
+      var t = $("#toast"); t.textContent = m; t.classList.add("show");
+      clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove("show"); }, 2600);
+    }
 
-    function blankProduct() { return { id: "", name: "Nouveau produit", brand: "", category: "detailing", price: 0, oldPrice: null, stock: "in", badge: "", image: "", contain: true, rating: 5, reviews: 0 }; }
-    function blankService() { return { id: "", name: "Nouveau service", icon: "🔧", description: "", price: "", badge: "" }; }
+    /* ======================= Historique (Undo) ======================= */
+    // On enregistre un instantané AVANT chaque action destructive/lourde.
+    function snapshot(label) {
+      history.push({ state: clone(state), tab: tab, label: label || "" });
+      if (history.length > HISTORY_MAX) history.shift();
+      $("#btnUndo").disabled = false;
+    }
+    function undo() {
+      if (!history.length) return;
+      var snap = history.pop();
+      state = snap.state;
+      tab = snap.tab;
+      // resync onglets visuels
+      $$(".adm-tab").forEach(function (x) { var on = x.dataset.tab === tab; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+      clearSelection();
+      sel = list().length ? 0 : -1;
+      $("#btnUndo").disabled = history.length === 0;
+      render(); persist();
+      toast("Action annulée" + (snap.label ? " : " + snap.label : ""));
+    }
 
-    /* ---------- Cartes d'aperçu (identiques au site) ---------- */
+    /* ======================= Modèles d'objets ======================= */
+    function blankProduct() {
+      return { id: "", name: "Nouveau produit", brand: "", category: "detailing", reference: "", price: 0, oldPrice: null, stock: "in", featured: false, nouveau: false, badge: "", description: "", image: "", contain: true, rating: 5, reviews: 0 };
+    }
+    function blankService() {
+      return { id: "", name: "Nouveau service", icon: "🔧", description: "", price: "", badge: "", featured: false };
+    }
+
+    /* ======================= Cartes d'aperçu (identiques au site + flags) ======================= */
     function productPreview(p) {
       var promo = /%|^-/.test(p.badge || "");
       var media = p.contain ? "product__media product__media--logo" : "product__media";
       var badge = p.badge ? '<span class="product__badge' + (promo ? " product__badge--promo" : "") + '">' + esc(p.badge) + "</span>" : "";
       var was = (p.oldPrice != null && p.oldPrice !== "") ? '<span class="was">' + euro(p.oldPrice) + "</span>" : "";
       var img = p.image ? '<img src="' + esc(p.image) + '" alt="" />' : '<div style="color:#9aa7bd;font-size:.8rem;padding:20px;text-align:center">(pas d\'image)</div>';
-      return '<article class="product"><div class="' + media + '">' + badge + img + '</div><div class="product__body">' +
-        '<span class="product__brand">' + esc(p.brand || "Marque") + '</span><h3 class="product__name">' + esc(p.name) + '</h3>' +
-        '<div class="product__rating"><span class="stars">' + stars(p.rating) + '</span><small>(' + (p.reviews || 0) + ')</small></div>' +
-        '<div class="product__stock ' + (p.stock === "soon" ? "soon" : "in") + '">' + (p.stock === "soon" ? "Sur commande" : "En stock") + '</div>' +
-        '<div class="product__foot"><div class="product__price"><span class="now">' + euro(p.price) + '</span>' + was + '</div>' +
+      // Repères visuels "coup de cœur" + "nouveau"
+      var flags = "";
+      if (p.featured || p.nouveau) {
+        flags = '<div class="pv-flags">' +
+          (p.nouveau ? '<span class="pv-flag pv-flag--new">Nouveau</span>' : "") +
+          (p.featured ? '<span class="pv-flag pv-flag--fav">♥ Coup de cœur</span>' : "") +
+          "</div>";
+      }
+      var desc = p.description ? '<p class="pv-desc">' + esc(p.description) + "</p>" : "";
+      return '<article class="product"><div class="' + media + '">' + flags + badge + img + "</div><div class=\"product__body\">" +
+        '<span class="product__brand">' + esc(p.brand || "Marque") + '</span><h3 class="product__name">' + esc(p.name) + "</h3>" + desc +
+        '<div class="product__rating"><span class="stars">' + stars(p.rating) + "</span><small>(" + (p.reviews || 0) + ")</small></div>" +
+        '<div class="product__stock ' + (p.stock === "soon" ? "soon" : "in") + '">' + (p.stock === "soon" ? "Sur commande" : "En stock") + "</div>" +
+        '<div class="product__foot"><div class="product__price"><span class="now">' + euro(p.price) + "</span>" + was + "</div>" +
         '<button class="btn-add" type="button">Ajouter</button></div></div></article>';
     }
     function servicePreview(s) {
-      var badge = s.badge ? '<span class="service__badge">' + esc(s.badge) + '</span>' : "";
-      var price = s.price ? '<span class="service__price">' + esc(s.price) + '</span>' : "<span></span>";
-      return '<article class="service"><div class="service__top"><span class="service__ic">' + esc(s.icon || "🔧") + '</span>' + badge + '</div>' +
-        '<h3 class="service__name">' + esc(s.name) + '</h3><p class="service__desc">' + esc(s.description) + '</p>' +
+      var badge = s.badge ? '<span class="service__badge">' + esc(s.badge) + "</span>" : "";
+      var fav = s.featured ? '<span class="service__badge pv-flag--fav" style="background:var(--yellow);border-color:var(--yellow)">♥ En avant</span>' : "";
+      var top = badge || fav ? badge + (badge && fav ? " " : "") + fav : "";
+      var price = s.price ? '<span class="service__price">' + esc(s.price) + "</span>" : "<span></span>";
+      return '<article class="service"><div class="service__top"><span class="service__ic">' + esc(s.icon || "🔧") + "</span><span style=\"display:flex;gap:6px\">" + top + "</span></div>" +
+        '<h3 class="service__name">' + esc(s.name) + '</h3><p class="service__desc">' + esc(s.description) + "</p>" +
         '<div class="service__foot">' + price + '<a class="service__btn" href="#">Demander →</a></div></article>';
     }
 
-    /* ---------- Rendu ---------- */
+    /* ======================= Sélection / filtre ======================= */
     function list() { return state[tab]; }
-    function renderList() {
-      var box = $("#list"), arr = list();
-      $("#listTitle").firstChild.textContent = (tab === "products" ? "Produits " : "Services ");
-      $("#tabProducts").textContent = "Produits (" + state.products.length + ")";
-      $("#tabServices").textContent = "Services (" + state.services.length + ")";
-      box.innerHTML = "";
+    function clearSelection() { selected = { products: {}, services: {} }; }
+    function selMap() { return selected[tab]; }
+    function selCount() { var m = selMap(), n = 0; for (var k in m) if (m[k]) n++; return n; }
+
+    // Renvoie [{it, i}] filtré par recherche + catégorie (i = index réel dans state[tab])
+    function visibleItems() {
+      var arr = list(), q = query.toLowerCase().trim(), out = [];
       arr.forEach(function (it, i) {
-        var row = document.createElement("div");
-        row.className = "adm-item" + (i === sel ? " sel" : "");
-        var thumb = tab === "products"
-          ? (it.image ? '<img src="' + esc(it.image) + '">' : "📦")
-          : esc(it.icon || "🔧");
-        var meta = tab === "products" ? (esc(it.brand || "—") + " · " + euro(it.price)) : esc(it.price || "—");
-        row.innerHTML = '<div class="adm-item__thumb">' + thumb + '</div>' +
-          '<div class="adm-item__info"><div class="adm-item__name">' + esc(it.name) + '</div><div class="adm-item__meta">' + meta + '</div></div>' +
-          '<div class="adm-item__acts">' +
-            '<button class="adm-ic" data-up="' + i + '" title="Monter">↑</button>' +
-            '<button class="adm-ic" data-down="' + i + '" title="Descendre">↓</button>' +
-            '<button class="adm-ic" data-dup="' + i + '" title="Dupliquer">⧉</button>' +
-            '<button class="adm-ic adm-ic--del" data-del="' + i + '" title="Supprimer">🗑</button>' +
-          '</div>';
-        row.addEventListener("click", function (e) { if (e.target.closest(".adm-ic")) return; sel = i; render(); });
-        box.appendChild(row);
+        if (filterCat && tab === "products" && it.category !== filterCat) return;
+        if (q) {
+          var hay = (it.name + " " + (it.brand || "") + " " + (it.reference || "") + " " + (it.description || "")).toLowerCase();
+          if (hay.indexOf(q) < 0) return;
+        }
+        out.push({ it: it, i: i });
       });
+      return out;
     }
 
-    function field(label, name, value, type, opts) {
+    /* ======================= Rendu liste ======================= */
+    function renderList() {
+      var box = $("#list");
+      $("#listTitleTxt").textContent = (tab === "products" ? "Produits" : "Services");
+      $("#tabProducts").textContent = "Produits (" + state.products.length + ")";
+      $("#tabServices").textContent = "Services (" + state.services.length + ")";
+
+      // le filtre par catégorie n'a de sens que pour les produits (inerte sur l'onglet Services)
+      $("#filterCat").disabled = tab === "services";
+
+      var items = visibleItems();
+      box.innerHTML = "";
+
+      if (!items.length) {
+        box.innerHTML = '<div class="adm-list__empty">' +
+          (list().length ? "Aucun résultat pour ce filtre." : "Liste vide — cliquez sur « ➕ Ajouter ».") + "</div>";
+        renderBulkBar();
+        return;
+      }
+
+      var total = list().length;
+      items.forEach(function (entry) {
+        var it = entry.it, i = entry.i;
+        var row = document.createElement("div");
+        row.className = "adm-item" + (i === sel ? " sel" : "");
+        row.setAttribute("draggable", "true");
+        row.dataset.index = i;
+
+        var thumb = tab === "products"
+          ? (it.image ? '<img src="' + esc(it.image) + '" alt="">' : "📦")
+          : esc(it.icon || "🔧");
+
+        var tags = "";
+        if (it.featured) tags += '<span class="adm-tag adm-tag--fav" title="Coup de cœur">♥</span>';
+        if (tab === "products" && it.nouveau) tags += '<span class="adm-tag adm-tag--new" title="Nouveau">Nouveau</span>';
+
+        var meta = tab === "products"
+          ? esc(it.brand || "—") + " · " + euro(it.price) + (it.reference ? " · " + esc(it.reference) : "")
+          : esc(it.price || "—");
+
+        var checked = selMap()[i] ? " checked" : "";
+
+        row.innerHTML =
+          '<span class="adm-item__handle" title="Glisser pour réordonner" aria-hidden="true">𝄜</span>' +
+          '<input type="checkbox" class="adm-item__check" data-check="' + i + '"' + checked + ' aria-label="Sélectionner ' + esc(it.name) + '">' +
+          '<div class="adm-item__thumb">' + thumb + "</div>" +
+          '<div class="adm-item__info" data-open="' + i + '">' +
+            '<div class="adm-item__name">' + esc(it.name) + tags + "</div>" +
+            '<div class="adm-item__meta">' + meta + "</div>" +
+          "</div>" +
+          '<div class="adm-item__acts">' +
+            '<button class="adm-ic" data-up="' + i + '" title="Monter"' + (i === 0 ? " disabled" : "") + ">↑</button>" +
+            '<button class="adm-ic" data-down="' + i + '" title="Descendre"' + (i === total - 1 ? " disabled" : "") + ">↓</button>" +
+            '<button class="adm-ic" data-dup="' + i + '" title="Dupliquer">⧉</button>' +
+            '<button class="adm-ic adm-ic--del" data-del="' + i + '" title="Supprimer">🗑</button>' +
+          "</div>";
+        box.appendChild(row);
+      });
+
+      renderBulkBar();
+    }
+
+    function renderBulkBar() {
+      var bar = $("#bulkBar"), n = selCount();
+      bar.classList.toggle("show", n > 0);
+      $("#bulkCount").textContent = n + " sélectionné(s)";
+      // le "changer catégorie" n'a de sens que pour les produits
+      $("#bulkCat").style.display = tab === "products" ? "" : "none";
+      $("#bulkApplyCat").style.display = tab === "products" ? "" : "none";
+    }
+
+    /* ======================= Formulaire ======================= */
+    function field(label, name, value, type, opts, extra) {
       type = type || "text";
+      extra = extra || {};
+      var req = extra.required ? ' <span class="req" title="Champ requis">*</span>' : "";
       if (type === "select") {
         var o = (opts || []).map(function (x) { return '<option value="' + esc(x[0]) + '"' + (String(value) === String(x[0]) ? " selected" : "") + ">" + esc(x[1]) + "</option>"; }).join("");
-        return '<div class="adm-field"><label>' + label + '</label><select data-field="' + name + '">' + o + '</select></div>';
+        return '<div class="adm-field"><label>' + label + req + '</label><select data-field="' + name + '">' + o + "</select></div>";
       }
-      if (type === "textarea") return '<div class="adm-field"><label>' + label + '</label><textarea data-field="' + name + '" rows="3">' + esc(value) + '</textarea></div>';
-      return '<div class="adm-field"><label>' + label + '</label><input data-field="' + name + '" type="' + type + '" value="' + esc(value) + '"' + (type === "number" ? ' step="0.01"' : "") + '></div>';
+      if (type === "textarea") {
+        return '<div class="adm-field"><label>' + label + req + '</label><textarea data-field="' + name + '" rows="3"' + (extra.required ? " data-req" : "") + ">" + esc(value) + "</textarea></div>";
+      }
+      var attrs = ' type="' + type + '" value="' + esc(value) + '"';
+      if (type === "number") attrs += ' step="' + (extra.step || "0.01") + '"' + (extra.min != null ? ' min="' + extra.min + '"' : "");
+      if (extra.placeholder) attrs += ' placeholder="' + esc(extra.placeholder) + '"';
+      if (extra.required) attrs += " data-req";
+      return '<div class="adm-field"><label>' + label + req + '</label><input data-field="' + name + '"' + attrs + "></div>";
     }
 
     function renderForm() {
@@ -211,21 +590,58 @@
       if (sel < 0 || !arr[sel]) { form.innerHTML = ""; $("#formEmpty").hidden = false; $("#previewWrap").hidden = true; return; }
       $("#formEmpty").hidden = true; $("#previewWrap").hidden = false;
       var it = arr[sel];
+
       if (tab === "products") {
         form.innerHTML =
-          field("Nom du produit", "name", it.name) +
-          '<div class="adm-row2">' + field("Marque", "brand", it.brand) + field("Catégorie", "category", it.category, "select", CATS) + "</div>" +
-          '<div class="adm-row2">' + field("Prix (€)", "price", it.price, "number") + field("Ancien prix (€, optionnel)", "oldPrice", it.oldPrice == null ? "" : it.oldPrice, "number") + "</div>" +
+          field("Nom du produit", "name", it.name, "text", null, { required: true }) +
+          '<div class="adm-row2">' + field("Marque", "brand", it.brand) + field("Référence / SKU", "reference", it.reference, "text", null, { placeholder: "ex : KC-GS-1L" }) + "</div>" +
+          field("Catégorie", "category", it.category, "select", CATS) +
+          '<div class="adm-row2">' + field("Prix (€)", "price", it.price, "number", null, { required: true, min: 0 }) + field("Ancien prix (€, optionnel)", "oldPrice", it.oldPrice == null ? "" : it.oldPrice, "number", null, { min: 0 }) + "</div>" +
           '<div class="adm-row2">' + field("Disponibilité", "stock", it.stock, "select", [["in", "En stock"], ["soon", "Sur commande"]]) + field("Badge (ex : -17%, Top)", "badge", it.badge) + "</div>" +
-          '<div class="adm-row2">' + field("Note (0 à 5)", "rating", it.rating, "number") + field("Nb d'avis", "reviews", it.reviews, "number") + "</div>" +
-          '<div class="adm-field"><label>Image (chemin ou lien)</label><div class="adm-imgrow"><input data-field="image" type="text" value="' + esc(it.image) + '" placeholder="assets/brands/... ou https://..."><button class="adm-btn" type="button" id="btnUpload">📷 Téléverser</button><input type="file" id="fileImg" accept="image/*" hidden></div><p class="adm-hint">Astuce : mettez vos photos dans le dossier <b>assets/</b> et indiquez le chemin. Le téléversement intègre l\'image dans le fichier (gardez-la légère).</p></div>' +
-          '<div class="adm-field"><label class="adm-check"><input data-field="contain" type="checkbox"' + (it.contain ? " checked" : "") + "> Image de type logo / petite image (affichée centrée)</label></div>";
+          '<div class="adm-row2">' + field("Note (0 à 5)", "rating", it.rating, "number", null, { step: "1", min: 0 }) + field("Nb d'avis", "reviews", it.reviews, "number", null, { step: "1", min: 0 }) + "</div>" +
+          field("Description", "description", it.description, "textarea", null, { }) +
+          '<div class="adm-field"><label>Image (chemin ou lien)</label><div class="adm-imgrow"><input data-field="image" type="text" value="' + esc(it.image) + '" placeholder="assets/brands/... ou https://..."><button class="adm-btn" type="button" id="btnUpload">📷 Téléverser</button><input type="file" id="fileImg" accept="image/*" hidden></div>' +
+            '<p class="adm-warn" id="imgWarn">⚠️ Aucune image : le produit s\'affichera sans visuel sur le site.</p>' +
+            '<p class="adm-hint">Astuce : mettez vos photos dans le dossier <b>assets/</b> et indiquez le chemin. Le téléversement intègre l\'image dans le fichier (gardez-la légère).</p></div>' +
+          '<div class="adm-checks">' +
+            '<label class="adm-check"><input data-field="contain" type="checkbox"' + (it.contain ? " checked" : "") + "> Logo / petite image (centrée)</label>" +
+            '<label class="adm-check"><input data-field="featured" type="checkbox"' + (it.featured ? " checked" : "") + "> ♥ Mettre en avant (Coup de cœur)</label>" +
+            '<label class="adm-check"><input data-field="nouveau" type="checkbox"' + (it.nouveau ? " checked" : "") + "> 🏷️ Badge « Nouveau »</label>" +
+          "</div>";
       } else {
         form.innerHTML =
-          field("Nom du service", "name", it.name) +
+          field("Nom du service", "name", it.name, "text", null, { required: true }) +
           '<div class="adm-row2">' + field("Icône (emoji)", "icon", it.icon) + field("Badge (optionnel)", "badge", it.badge) + "</div>" +
           field("Description", "description", it.description, "textarea") +
-          field("Prix / mention (ex : Sur devis, Dès 39 €)", "price", it.price);
+          field("Prix / mention (ex : Sur devis, Dès 39 €)", "price", it.price) +
+          '<div class="adm-checks">' +
+            '<label class="adm-check"><input data-field="featured" type="checkbox"' + (it.featured ? " checked" : "") + "> ♥ Mettre en avant</label>" +
+          "</div>";
+      }
+
+      // pied de fiche : dupliquer / supprimer rapides
+      form.innerHTML +=
+        '<div class="adm-formfoot">' +
+          '<button class="adm-btn adm-btn--sm" type="button" id="formDup">⧉ Dupliquer</button>' +
+          '<button class="adm-btn adm-btn--sm adm-btn--danger" type="button" id="formDel">🗑 Supprimer</button>' +
+        "</div>";
+
+      updateValidation();
+    }
+
+    // Signale champs requis vides + image manquante
+    function updateValidation() {
+      var it = list()[sel]; if (!it) return;
+      $$("#form [data-req]").forEach(function (el) {
+        var f = el.dataset.field;
+        // prix : champ numérique → vide seulement si null/"" (on tolère la valeur 0)
+        var empty = (f === "price")
+          ? (it.price == null || it.price === "")
+          : String(it[f] == null ? "" : it[f]).trim() === "";
+        el.classList.toggle("is-invalid", empty);
+      });
+      if (tab === "products") {
+        var w = $("#imgWarn"); if (w) w.classList.toggle("show", !String(it.image || "").trim());
       }
     }
 
@@ -236,7 +652,7 @@
 
     function render() { renderList(); renderForm(); renderPreview(); persist(); }
 
-    /* ---------- Édition en direct ---------- */
+    /* ======================= Édition en direct ======================= */
     $("#form").addEventListener("input", function (e) {
       var f = e.target.dataset.field; if (!f) return;
       var it = list()[sel]; if (!it) return;
@@ -244,97 +660,541 @@
       if (e.target.type === "checkbox") v = e.target.checked;
       else if (e.target.type === "number") v = e.target.value === "" ? (f === "oldPrice" ? null : 0) : parseFloat(e.target.value);
       else v = e.target.value;
+
+      // catégorie : on borne aux clés autorisées (sécurité)
+      if (f === "category" && CAT_KEYS.indexOf(v) < 0) v = "detailing";
+
       it[f] = v;
       if (!it.id) it.id = slug(it.name);
-      renderList(); renderPreview(); persist();
+      // re-render léger : liste (nom/tags/meta) + aperçu, sans reconstruire le form (préserve le focus)
+      renderList(); renderPreview(); updateValidation(); persist();
+    });
+
+    // formate le prix proprement quand on quitte le champ
+    $("#form").addEventListener("change", function (e) {
+      if (e.target.dataset.field === "price" || e.target.dataset.field === "oldPrice") {
+        var it = list()[sel]; if (it) renderPreview();
+      }
     });
 
     /* upload image → data URI */
     $("#form").addEventListener("click", function (e) {
       if (e.target.id === "btnUpload") $("#fileImg").click();
+      else if (e.target.id === "formDup") duplicateAt(sel);
+      else if (e.target.id === "formDel") deleteAt(sel);
     });
     document.addEventListener("change", function (e) {
       if (e.target.id !== "fileImg") return;
       var file = e.target.files[0]; if (!file) return;
-      if (file.size > 600 * 1024 && !confirm("Cette image fait " + Math.round(file.size / 1024) + " Ko. Une image lourde alourdit le site. Continuer ?")) return;
+      if (file.size > 600 * 1024 && !confirm("Cette image fait " + Math.round(file.size / 1024) + " Ko. Une image lourde alourdit le site. Continuer ?")) { e.target.value = ""; return; }
       var r = new FileReader();
       r.onload = function () { var it = list()[sel]; if (it) { it.image = r.result; render(); toast("Image ajoutée"); } };
       r.readAsDataURL(file);
+      e.target.value = "";
     });
 
-    /* actions liste */
-    $("#list").addEventListener("click", function (e) {
-      var arr = list(), b = e.target.closest(".adm-ic"); if (!b) return;
-      var up = b.dataset.up, down = b.dataset.down, dup = b.dataset.dup, del = b.dataset.del;
-      if (up != null && +up > 0) { var i = +up; arr.splice(i - 1, 0, arr.splice(i, 1)[0]); sel = i - 1; }
-      else if (down != null && +down < arr.length - 1) { var j = +down; arr.splice(j + 1, 0, arr.splice(j, 1)[0]); sel = j + 1; }
-      else if (dup != null) { var c = clone(arr[+dup]); c.id = slug(c.name) + "-copie"; c.name += " (copie)"; arr.splice(+dup + 1, 0, c); sel = +dup + 1; }
-      else if (del != null) { if (confirm("Supprimer « " + arr[+del].name + " » ?")) { arr.splice(+del, 1); sel = Math.min(sel, arr.length - 1); } }
+    /* ======================= Actions liste (clic) ======================= */
+    function selectIndex(i) { sel = i; renderList(); renderForm(); renderPreview(); }
+
+    function moveItem(from, to) {
+      var arr = list();
+      if (to < 0 || to >= arr.length || from === to) return;
+      snapshot("réordonnancement");
+      var moved = arr.splice(from, 1)[0];
+      arr.splice(to, 0, moved);
+      if (sel === from) sel = to;
+      clearSelection();
       render();
+    }
+    function duplicateAt(i) {
+      var arr = list(); if (!arr[i]) return;
+      snapshot("duplication");
+      var c = clone(arr[i]);
+      c.id = slug(c.name) + "-copie";
+      c.name += " (copie)";
+      arr.splice(i + 1, 0, c);
+      clearSelection(); // les index décalent après insertion
+      sel = i + 1; render(); toast("Élément dupliqué");
+    }
+    function deleteAt(i) {
+      var arr = list(); if (!arr[i]) return;
+      if (!confirm("Supprimer « " + (arr[i].name || "cet élément") + " » ?")) return;
+      snapshot("suppression");
+      arr.splice(i, 1);
+      sel = Math.min(sel, arr.length - 1);
+      clearSelection();
+      render(); toast("Élément supprimé — utilisez ↶ Annuler pour revenir");
+    }
+
+    $("#list").addEventListener("click", function (e) {
+      // sélection multiple
+      var chk = e.target.closest("[data-check]");
+      if (chk) { selMap()[+chk.dataset.check] = chk.checked; renderBulkBar(); return; }
+
+      // ouvrir la fiche
+      var open = e.target.closest("[data-open]");
+      if (open) { selectIndex(+open.dataset.open); return; }
+
+      var b = e.target.closest(".adm-ic"); if (!b) return;
+      if (b.dataset.up != null) moveItem(+b.dataset.up, +b.dataset.up - 1);
+      else if (b.dataset.down != null) moveItem(+b.dataset.down, +b.dataset.down + 1);
+      else if (b.dataset.dup != null) duplicateAt(+b.dataset.dup);
+      else if (b.dataset.del != null) deleteAt(+b.dataset.del);
     });
 
-    /* ajouter */
+    /* ======================= Glisser-déposer (HTML5 natif) ======================= */
+    var dragFrom = null;
+    var listEl = $("#list");
+    listEl.addEventListener("dragstart", function (e) {
+      var row = e.target.closest(".adm-item"); if (!row) return;
+      dragFrom = +row.dataset.index;
+      row.classList.add("dragging");
+      try { e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", String(dragFrom)); } catch (err) {}
+    });
+    listEl.addEventListener("dragend", function () {
+      dragFrom = null;
+      $$(".adm-item", listEl).forEach(function (r) { r.classList.remove("dragging", "drop-before", "drop-after"); });
+    });
+    listEl.addEventListener("dragover", function (e) {
+      if (dragFrom == null) return;
+      e.preventDefault(); e.dataTransfer.dropEffect = "move";
+      var row = e.target.closest(".adm-item");
+      $$(".adm-item", listEl).forEach(function (r) { r.classList.remove("drop-before", "drop-after"); });
+      if (!row || +row.dataset.index === dragFrom) return;
+      var rect = row.getBoundingClientRect();
+      var after = (e.clientY - rect.top) > rect.height / 2;
+      row.classList.add(after ? "drop-after" : "drop-before");
+    });
+    listEl.addEventListener("drop", function (e) {
+      if (dragFrom == null) return;
+      e.preventDefault();
+      var row = e.target.closest(".adm-item");
+      if (!row) return;
+      var to = +row.dataset.index;
+      var rect = row.getBoundingClientRect();
+      var after = (e.clientY - rect.top) > rect.height / 2;
+      var from = dragFrom;
+      // index de destination ajusté
+      if (after) to = to + 1;
+      if (from < to) to -= 1; // compense le retrait de l'élément d'origine
+      moveItem(from, to);
+    });
+
+    /* ======================= Recherche / filtre ======================= */
+    $("#search").addEventListener("input", function () {
+      query = this.value;
+      $("#searchClear").hidden = !query;
+      renderList();
+    });
+    $("#searchClear").addEventListener("click", function () {
+      query = ""; $("#search").value = ""; this.hidden = true; renderList(); $("#search").focus();
+    });
+    $("#filterCat").addEventListener("change", function () { filterCat = this.value; renderList(); });
+
+    /* ======================= Actions groupées ======================= */
+    function selectedIndexes() {
+      var m = selMap(), out = [];
+      for (var k in m) if (m[k]) out.push(+k);
+      return out.sort(function (a, b) { return a - b; });
+    }
+    $("#bulkClear").addEventListener("click", function () { selected[tab] = {}; renderList(); });
+    $("#bulkDelete").addEventListener("click", function () {
+      var idx = selectedIndexes(); if (!idx.length) return;
+      if (!confirm("Supprimer définitivement " + idx.length + " élément(s) sélectionné(s) ?")) return;
+      snapshot("suppression multiple");
+      // suppression de la fin vers le début pour garder les index valides
+      for (var k = idx.length - 1; k >= 0; k--) list().splice(idx[k], 1);
+      selected[tab] = {};
+      sel = list().length ? 0 : -1;
+      render(); toast(idx.length + " élément(s) supprimé(s)");
+    });
+    $("#bulkApplyCat").addEventListener("click", function () {
+      if (tab !== "products") return;
+      var idx = selectedIndexes(); if (!idx.length) return;
+      var cat = $("#bulkCat").value;
+      if (CAT_KEYS.indexOf(cat) < 0) return;
+      snapshot("changement de catégorie");
+      idx.forEach(function (i) { if (list()[i]) list()[i].category = cat; });
+      render(); toast(idx.length + " produit(s) → " + catLabel(cat));
+    });
+
+    /* ======================= Ajouter ======================= */
     $("#btnAdd").addEventListener("click", function () {
-      var it = tab === "products" ? blankProduct() : blankService(); it.id = slug(it.name);
-      list().push(it); sel = list().length - 1; render();
+      snapshot("ajout");
+      var it = tab === "products" ? blankProduct() : blankService();
+      it.id = slug(it.name);
+      // si une catégorie est filtrée, le nouvel article hérite de cette catégorie (pratique)
+      if (tab === "products" && filterCat) it.category = filterCat;
+      list().push(it);
+      clearSelection();
+      sel = list().length - 1;
+      // on vide la recherche pour que le nouvel élément soit forcément visible dans la liste
+      query = ""; $("#search").value = ""; $("#searchClear").hidden = true;
+      render();
       var first = $("#form input"); if (first) { first.focus(); first.select(); }
     });
 
-    /* onglets */
+    /* ======================= Onglets ======================= */
     $$(".adm-tab").forEach(function (t) {
       t.addEventListener("click", function () {
-        tab = t.dataset.tab; sel = list().length ? 0 : -1;
-        $$(".adm-tab").forEach(function (x) { x.classList.toggle("on", x === t); });
+        tab = t.dataset.tab;
+        $$(".adm-tab").forEach(function (x) { var on = x === t; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+        sel = list().length ? 0 : -1;
+        query = ""; $("#search").value = ""; $("#searchClear").hidden = true;
+        filterCat = ""; $("#filterCat").value = "";
         render();
       });
     });
 
-    /* export */
+    /* ======================= Export catalogue.js ======================= */
     function exportText() {
       var header = "/* ZOT AUTO — CATALOGUE (généré par admin.html)\n" +
         "   Pour modifier facilement : ouvrez admin.html. Sinon, copiez un bloc { ... }.\n" +
         "   category : detailing | outillage | huiles | pieces | accessoires\n" +
-        "   stock : in (En stock) | soon (Sur commande) · oldPrice : ancien prix ou null\n*/\n\n";
-      return header + "window.ZOTAUTO = " + JSON.stringify({ products: state.products, services: state.services }, null, 2) + ";\n";
+        "   stock : in (En stock) | soon (Sur commande) · oldPrice : ancien prix ou null\n" +
+        "   featured : true = Coup de cœur · nouveau : true = badge Nouveau\n*/\n\n";
+      // on ré-normalise à l'export pour garantir un schéma propre et complet
+      var out = normalize(state);
+      return header + "window.ZOTAUTO = " + JSON.stringify(out, null, 2) + ";\n";
+    }
+    function downloadFile(name, text, mime) {
+      var blob = new Blob([text], { type: (mime || "text/plain") + ";charset=utf-8" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
     }
     $("#btnDownload").addEventListener("click", function () {
-      var blob = new Blob([exportText()], { type: "text/javascript;charset=utf-8" });
-      var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "catalogue.js";
-      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+      downloadFile("catalogue.js", exportText(), "text/javascript");
       toast("Fichier catalogue.js téléchargé");
     });
     $("#btnCopy").addEventListener("click", function () {
+      closeMenu();
       var txt = exportText();
-      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast("Code copié !"); }, function () { fallbackCopy(txt); });
+      if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(txt).then(function () { toast("Code copié !"); }, function () { fallbackCopy(txt); });
       else fallbackCopy(txt);
     });
-    function fallbackCopy(txt) { var ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast("Code copié !"); } catch (e) { toast("Copie impossible"); } ta.remove(); }
+    function fallbackCopy(txt) {
+      var ta = document.createElement("textarea"); ta.value = txt;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); toast("Code copié !"); } catch (e) { toast("Copie impossible"); }
+      ta.remove();
+    }
 
-    /* import */
-    $("#btnImport").addEventListener("click", function () { $("#fileImport").click(); });
+    /* ======================= Import catalogue.js ======================= */
+    $("#btnImport").addEventListener("click", function () { closeMenu(); $("#fileImport").click(); });
     $("#fileImport").addEventListener("change", function (e) {
       var file = e.target.files[0]; if (!file) return;
       var r = new FileReader();
       r.onload = function () {
         try {
           var t = r.result, i = t.indexOf("{"), j = t.lastIndexOf("}");
+          if (i < 0 || j < 0) throw 0;
           var obj = JSON.parse(t.slice(i, j + 1));
-          if (!obj.products || !obj.services) throw 0;
-          state = obj; sel = 0; persist(); render(); toast("Catalogue importé");
-        } catch (err) { alert("Fichier non reconnu. Choisissez un fichier catalogue.js valide."); }
+          if (!obj.products && !obj.services) throw 0;
+          snapshot("import catalogue.js");
+          state = normalize(obj); // compat : ajoute les nouveaux champs si absents
+          clearSelection(); sel = 0; tab = "products";
+          $$(".adm-tab").forEach(function (x) { var on = x.dataset.tab === "products"; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+          render(); toast("Catalogue importé");
+        } catch (err) { alert("Fichier non reconnu. Choisissez un fichier catalogue.js valide (window.ZOTAUTO = { products:[…], services:[…] }).") ; }
       };
       r.readAsText(file); e.target.value = "";
     });
 
-    /* reset */
+    /* ======================= Réinitialiser ======================= */
     $("#btnReset").addEventListener("click", function () {
+      closeMenu();
       if (!confirm("Revenir au catalogue d'origine ? Vos modifications non téléchargées seront perdues.")) return;
-      state = clone(SEED); sel = 0; persist(); render(); toast("Catalogue réinitialisé");
+      snapshot("réinitialisation");
+      state = normalize(clone(SEED)); clearSelection(); sel = 0; tab = "products";
+      $$(".adm-tab").forEach(function (x) { var on = x.dataset.tab === "products"; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+      render(); toast("Catalogue réinitialisé");
     });
 
-    /* init */
+    /* ======================= CSV : colonnes ======================= */
+    // Colonnes produits exportées/importées (ordre du modèle)
+    var CSV_COLS = ["id", "name", "brand", "category", "reference", "price", "oldPrice", "stock", "featured", "nouveau", "badge", "description", "image", "contain", "rating", "reviews"];
+    // En-têtes acceptés en import (synonymes -> champ)
+    var CSV_ALIASES = {
+      id: "id", identifiant: "id",
+      name: "name", nom: "name", produit: "name", libelle: "name", "libellé": "name",
+      brand: "brand", marque: "brand",
+      category: "category", categorie: "category", "catégorie": "category",
+      reference: "reference", "référence": "reference", ref: "reference", sku: "reference",
+      price: "price", prix: "price",
+      oldprice: "oldPrice", "ancienprix": "oldPrice", "ancien_prix": "oldPrice", "prixbarre": "oldPrice", "prix_barre": "oldPrice",
+      stock: "stock", dispo: "stock", disponibilite: "stock", "disponibilité": "stock",
+      featured: "featured", "miseenavant": "featured", "mise_en_avant": "featured", coupdecoeur: "featured", "coup_de_coeur": "featured", "coupdecœur": "featured",
+      nouveau: "nouveau", new: "nouveau", neuf: "nouveau",
+      badge: "badge", etiquette: "badge", "étiquette": "badge",
+      description: "description", desc: "description",
+      image: "image", img: "image", photo: "image", visuel: "image",
+      contain: "contain", logo: "contain",
+      rating: "rating", note: "rating",
+      reviews: "reviews", avis: "reviews", "nb_avis": "reviews", nbavis: "reviews"
+    };
+    function normHeader(h) {
+      return String(h || "").trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "");
+    }
+    function parseBool(v) {
+      var s = String(v == null ? "" : v).trim().toLowerCase();
+      return s === "1" || s === "true" || s === "vrai" || s === "oui" || s === "yes" || s === "x" || s === "o";
+    }
+    function parseNum(v) {
+      if (v == null || v === "") return null;
+      // tolère "34,90", "1 234,50 €", "1234.5"
+      var s = String(v).replace(/\s/g, "").replace(/€/g, "");
+      if (s.indexOf(",") >= 0 && s.indexOf(".") >= 0) s = s.replace(/\./g, "").replace(",", ".");
+      else s = s.replace(",", ".");
+      var n = parseFloat(s);
+      return isNaN(n) ? null : n;
+    }
+
+    /* ======================= CSV : export ======================= */
+    function csvCell(v) {
+      var s = String(v == null ? "" : v);
+      // échappe si séparateur, guillemet, ou saut de ligne
+      if (/[";\n\r]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
+      return s;
+    }
+    function exportCsv() {
+      var rows = [CSV_COLS.join(";")];
+      state.products.forEach(function (p) {
+        p = normProduct(p);
+        rows.push(CSV_COLS.map(function (c) {
+          var v = p[c];
+          if (c === "featured" || c === "nouveau" || c === "contain") v = v ? "oui" : "non";
+          if (c === "oldPrice" && v == null) v = "";
+          return csvCell(v);
+        }).join(";"));
+      });
+      // BOM pour Excel (accents) + séparateur ; (FR)
+      return "﻿" + rows.join("\r\n") + "\r\n";
+    }
+    $("#btnCsvExport").addEventListener("click", function () {
+      closeMenu();
+      if (!state.products.length) { toast("Aucun produit à exporter"); return; }
+      downloadFile("zotauto-produits.csv", exportCsv(), "text/csv");
+      toast("CSV des produits téléchargé");
+    });
+    $("#btnCsvTemplate").addEventListener("click", function () {
+      closeMenu();
+      var sample = [
+        CSV_COLS.join(";"),
+        ['', 'Disque de frein avant', 'Brembo', 'pieces', 'BR-DF-AV', '49,90', '59,90', 'in', 'oui', 'non', '-17%', 'Disque ventilé haute performance, vendu à l\'unité.', 'assets/brands/brembo.png', 'non', '5', '8'].map(csvCell).join(";"),
+        ['', 'Cire de protection céramique', 'Koch-Chemie', 'detailing', 'KC-CER', '24,90', '', 'in', 'non', 'oui', '', 'Protection céramique longue durée, finition brillante.', '', 'oui', '4', '3'].map(csvCell).join(";")
+      ].join("\r\n");
+      downloadFile("zotauto-modele.csv", "﻿" + sample + "\r\n", "text/csv");
+      toast("Modèle CSV téléchargé");
+    });
+
+    /* ======================= CSV : parseur maison (robuste) ======================= */
+    // Détecte le séparateur (; , ou tab) puis parse en gérant guillemets & retours ligne.
+    function detectDelim(text) {
+      var firstLine = text.split(/\r?\n/, 1)[0] || "";
+      // on ne compte pas ce qui est entre guillemets (approche simple : compare hors-quotes)
+      function countOutside(line, ch) {
+        var n = 0, q = false;
+        for (var i = 0; i < line.length; i++) {
+          var c = line[i];
+          if (c === '"') q = !q;
+          else if (c === ch && !q) n++;
+        }
+        return n;
+      }
+      var semi = countOutside(firstLine, ";"), comma = countOutside(firstLine, ","), tab = countOutside(firstLine, "\t");
+      if (tab > semi && tab > comma) return "\t";
+      if (semi >= comma) return ";"; // priorité au point-virgule (Excel FR)
+      return ",";
+    }
+    function parseCsv(text, delim) {
+      var rows = [], row = [], field = "", q = false, i = 0, c, n;
+      // ignore BOM
+      if (text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
+      while (i < text.length) {
+        c = text[i];
+        if (q) {
+          if (c === '"') {
+            n = text[i + 1];
+            if (n === '"') { field += '"'; i += 2; continue; } // guillemet échappé
+            q = false; i++; continue;
+          }
+          field += c; i++; continue;
+        }
+        if (c === '"') { q = true; i++; continue; }
+        if (c === delim) { row.push(field); field = ""; i++; continue; }
+        if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
+        if (c === "\r") { i++; continue; } // géré au \n
+        field += c; i++;
+      }
+      // dernier champ / dernière ligne
+      if (field.length || row.length) { row.push(field); rows.push(row); }
+      // retire les lignes entièrement vides
+      return rows.filter(function (r) { return r.some(function (x) { return String(x).trim() !== ""; }); });
+    }
+
+    /* ======================= CSV : import (mise à jour / ajout en masse) ======================= */
+    $("#btnCsvImport").addEventListener("click", function () { closeMenu(); $("#fileCsv").click(); });
+    $("#fileCsv").addEventListener("change", function (e) {
+      var file = e.target.files[0]; if (!file) return;
+      var r = new FileReader();
+      r.onload = function () { handleCsvText(r.result); };
+      r.readAsText(file, "UTF-8");
+      e.target.value = "";
+    });
+
+    function handleCsvText(text) {
+      var delim = detectDelim(text);
+      var rows;
+      try { rows = parseCsv(text, delim); } catch (err) { alert("Impossible de lire ce CSV."); return; }
+      if (rows.length < 2) { alert("CSV vide ou sans données (il faut une ligne d'en-tête + au moins une ligne)."); return; }
+
+      // mappe les en-têtes -> champs du schéma
+      var header = rows[0].map(normHeader);
+      var map = header.map(function (h) { return CSV_ALIASES[h] || null; });
+      if (map.indexOf("name") < 0) {
+        alert("Le CSV doit contenir une colonne « name » (ou « nom »). Colonnes détectées : " + rows[0].join(", "));
+        return;
+      }
+
+      var report = { added: 0, updated: 0, skipped: [], delim: delim === "\t" ? "tabulation" : delim };
+      var byId = {};
+      state.products.forEach(function (p, idx) { if (p.id) byId[p.id] = idx; });
+
+      var toApply = [];
+      for (var r2 = 1; r2 < rows.length; r2++) {
+        var cells = rows[r2];
+        var obj = {};
+        map.forEach(function (field, ci) { if (field) obj[field] = cells[ci]; });
+
+        if (!obj.name || String(obj.name).trim() === "") { report.skipped.push("Ligne " + (r2 + 1) + " : nom vide — ignorée"); continue; }
+
+        // typage / validation
+        var p = normProduct({
+          id: (obj.id || "").trim(),
+          name: String(obj.name).trim(),
+          brand: obj.brand,
+          category: obj.category,
+          reference: obj.reference,
+          price: parseNum(obj.price) != null ? parseNum(obj.price) : 0,
+          oldPrice: parseNum(obj.oldPrice),
+          stock: obj.stock,
+          featured: parseBool(obj.featured),
+          nouveau: parseBool(obj.nouveau),
+          badge: obj.badge,
+          description: obj.description,
+          image: obj.image,
+          contain: parseBool(obj.contain),
+          rating: obj.rating != null && obj.rating !== "" ? parseNum(obj.rating) : 5,
+          reviews: obj.reviews != null && obj.reviews !== "" ? (parseNum(obj.reviews) || 0) : 0
+        });
+
+        // catégorie invalide -> defaut + note
+        if (obj.category && CAT_KEYS.indexOf(slugCat(obj.category)) < 0) {
+          report.skipped.push("Ligne " + (r2 + 1) + " (" + p.name + ") : catégorie « " + obj.category + " » inconnue → « detailing »");
+        }
+        p.category = slugCat(obj.category) || "detailing";
+
+        // stock normalisé (accepte "en stock", "sur commande", "soon", "in"…)
+        p.stock = parseStock(obj.stock);
+
+        if (!p.id) p.id = slug(p.name);
+        toApply.push(p);
+      }
+
+      if (!toApply.length) {
+        showImportReport(report, true);
+        return;
+      }
+
+      // applique : si l'id existe -> mise à jour, sinon -> ajout à la fin
+      snapshot("import CSV");
+      toApply.forEach(function (p) {
+        if (p.id && byId[p.id] != null) { state.products[byId[p.id]] = p; report.updated++; }
+        else { state.products.push(p); byId[p.id] = state.products.length - 1; report.added++; }
+      });
+
+      tab = "products";
+      $$(".adm-tab").forEach(function (x) { var on = x.dataset.tab === "products"; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+      clearSelection(); query = ""; $("#search").value = ""; $("#searchClear").hidden = true; filterCat = ""; $("#filterCat").value = "";
+      sel = state.products.length ? 0 : -1;
+      render();
+      showImportReport(report, false);
+    }
+
+    function slugCat(v) {
+      // mappe un libellé/clé vers une clé autorisée
+      var s = String(v == null ? "" : v).trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+      if (CAT_KEYS.indexOf(s) >= 0) return s;
+      if (/detail|nettoy|lavage/.test(s)) return "detailing";
+      if (/outil|atelier/.test(s)) return "outillage";
+      if (/huile|lubrifi/.test(s)) return "huiles";
+      if (/piece|pièce|frein/.test(s)) return "pieces";
+      if (/accessoir/.test(s)) return "accessoires";
+      return "";
+    }
+    function parseStock(v) {
+      var s = String(v == null ? "" : v).trim().toLowerCase();
+      if (/soon|command|commande|rupture|épuis|epuis/.test(s)) return "soon";
+      return "in";
+    }
+
+    function showImportReport(report, nothing) {
+      var html = '<h3>📥 Import CSV terminé</h3>';
+      if (nothing) {
+        html += '<p class="adm-report__warn">Aucune ligne valide n\'a pu être importée.</p>';
+      } else {
+        html += '<p class="adm-report__ok">✓ ' + report.added + " ajout(s), " + report.updated + " mise(s) à jour (séparateur détecté : « " + report.delim + " »).</p>";
+      }
+      if (report.skipped.length) {
+        html += '<div class="adm-report"><span class="adm-report__warn">⚠️ ' + report.skipped.length + " remarque(s) :</span><ul>" +
+          report.skipped.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ul></div>";
+      }
+      html += '<div class="adm-modal__actions"><button class="adm-btn adm-btn--primary" id="modalOk" type="button">OK</button></div>';
+      openModal(html);
+      var ok = $("#modalOk"); if (ok) ok.addEventListener("click", closeModal);
+    }
+
+    /* ======================= Modale + zone de dépôt CSV ======================= */
+    var modal = $("#modal");
+    function openModal(html) { $("#modalBody").innerHTML = html; modal.classList.add("open"); }
+    function closeModal() { modal.classList.remove("open"); $("#modalBody").innerHTML = ""; }
+    $("#modalClose").addEventListener("click", closeModal);
+    $$("[data-modal-close]").forEach(function (el) { el.addEventListener("click", closeModal); });
+
+    /* ======================= Menu « Outils » ======================= */
+    var menu = $("#moreMenu"), menuBtn = $("#btnMore");
+    function closeMenu() { menu.classList.remove("open"); menuBtn.setAttribute("aria-expanded", "false"); }
+    menuBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      var open = menu.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(open));
+    });
+    document.addEventListener("click", function (e) { if (!menu.contains(e.target)) closeMenu(); });
+
+    /* ======================= Undo (bouton + clavier) ======================= */
+    $("#btnUndo").addEventListener("click", undo);
+    document.addEventListener("keydown", function (e) {
+      // Ctrl/Cmd+Z : annuler (sauf si on tape dans un champ texte, pour ne pas gêner la saisie)
+      var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || ""));
+      if ((e.ctrlKey || e.metaKey) && (e.key === "z" || e.key === "Z") && !typing) { e.preventDefault(); undo(); }
+      if (e.key === "Escape") { closeModal(); closeMenu(); }
+    });
+
+    /* ======================= Remplissage des <select> de catégories ======================= */
+    function fillCatSelects() {
+      var optsAll = '<option value="">Toutes catégories</option>' + CATS.map(function (c) { return '<option value="' + c[0] + '">' + esc(c[1]) + "</option>"; }).join("");
+      $("#filterCat").innerHTML = optsAll;
+      $("#bulkCat").innerHTML = CATS.map(function (c) { return '<option value="' + c[0] + '">' + esc(c[1]) + "</option>"; }).join("");
+    }
+
+    /* ======================= Init ======================= */
+    fillCatSelects();
     sel = list().length ? 0 : -1;
     render();
+    setSaved(false);
   })();
   </script>
 </body>

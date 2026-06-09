@@ -61,11 +61,11 @@
 
     <nav class="catnav" id="catnav" aria-label="Catégories">
       <div class="container catnav__inner">
-        <a href="#categories" class="catnav__all"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg> Tous les rayons</a>
-        <a href="#categories">Detailing &amp; nettoyage</a>
-        <a href="#categories">Outillage &amp; atelier</a>
-        <a href="#categories">Huiles &amp; lubrifiants</a>
-        <a href="#categories">Pièces &amp; freinage</a>
+        <a href="#bestsellers" class="catnav__all" data-gocat="all"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg> Tous les rayons</a>
+        <a href="#bestsellers" data-gocat="detailing">Detailing &amp; nettoyage</a>
+        <a href="#bestsellers" data-gocat="outillage">Outillage &amp; atelier</a>
+        <a href="#bestsellers" data-gocat="huiles">Huiles &amp; lubrifiants</a>
+        <a href="#bestsellers" data-gocat="pieces">Pièces &amp; freinage</a>
         <a href="#services">Services</a>
         <a href="#marques">Marques</a>
         <a href="#promo" class="catnav__promo">🔥 Promos</a>
@@ -142,6 +142,17 @@
       </div>
     </section>
 
+    <!-- ░░ Coups de cœur (rempli depuis data/catalogue.js — produits featured) ░░ -->
+    <section class="section section--featured" id="coupsdecoeur" hidden>
+      <div class="container">
+        <header class="shead">
+          <div><span class="kicker kicker--heart">❤ Notre sélection</span><h2>Nos coups de cœur</h2></div>
+          <a class="shead__link" href="#bestsellers">Tout voir →</a>
+        </header>
+        <div class="featured" id="featuredGrid"><!-- généré automatiquement --></div>
+      </div>
+    </section>
+
     <!-- ░░ Catégories ░░ -->
     <section class="section" id="categories">
       <div class="container">
@@ -182,7 +193,7 @@
       <div class="container">
         <header class="shead">
           <div><span class="kicker">Sélection</span><h2>Nos produits</h2></div>
-          <div class="chips" role="tablist" aria-label="Filtrer">
+          <div class="chips" role="tablist" aria-label="Filtrer par rayon">
             <button class="chip is-active" data-filter="all">Tout</button>
             <button class="chip" data-filter="detailing">Detailing</button>
             <button class="chip" data-filter="outillage">Outillage</button>
@@ -192,8 +203,45 @@
           </div>
         </header>
 
+        <!-- Barre d'outils : recherche active + compteur + tri -->
+        <div class="ptools">
+          <div class="ptools__left">
+            <p class="ptools__count" id="resultsCount" aria-live="polite"></p>
+            <!-- Pastille de recherche active (affichée si une recherche est en cours) -->
+            <button class="ptools__search" id="searchTag" type="button" hidden>
+              <span>Recherche : « <span id="searchTagText"></span> »</span>
+              <span class="ptools__search-x" aria-hidden="true">✕</span>
+              <span class="sr-only">Effacer la recherche</span>
+            </button>
+          </div>
+          <label class="ptools__sort">
+            <span>Trier par</span>
+            <select id="sortSelect" aria-label="Trier les produits">
+              <option value="relevance">Nouveautés / Pertinence</option>
+              <option value="price-asc">Prix croissant</option>
+              <option value="price-desc">Prix décroissant</option>
+              <option value="name-asc">Nom A → Z</option>
+            </select>
+          </label>
+        </div>
+
         <div class="products" id="products"><!-- généré automatiquement --></div>
-        <p class="products__empty" id="productsEmpty" hidden>Aucun produit dans cette catégorie pour le moment.</p>
+
+        <!-- État « aucun résultat » avec repli WhatsApp -->
+        <div class="products__empty" id="productsEmpty" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <p id="emptyText">Aucun produit ne correspond à votre recherche.</p>
+          <a class="btn btn--wa" id="emptyWa" href="https://wa.me/262692000000" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3Z"/></svg>
+            Pas trouvé ? Demander sur WhatsApp
+          </a>
+        </div>
+
+        <!-- Pagination « Voir plus » -->
+        <div class="products__more" id="productsMore" hidden>
+          <button class="btn btn--light btn--lg" id="moreBtn" type="button">Voir plus de produits</button>
+        </div>
+
         <p class="products__note">Prix &amp; stocks donnés à titre indicatif — confirmation à la commande.</p>
       </div>
     </section>
@@ -297,6 +345,34 @@
       <span class="footer__creole">Lé la pou zot 🌺</span>
     </div>
   </footer>
+
+  <!-- ░░ Aperçu rapide produit (modale, remplie par script.js) ░░ -->
+  <div class="qv" id="quickView" aria-hidden="true">
+    <div class="qv__overlay" data-qv-close></div>
+    <div class="qv__dialog" role="dialog" aria-modal="true" aria-labelledby="qvName">
+      <button class="qv__close" data-qv-close aria-label="Fermer l'aperçu">✕</button>
+      <div class="qv__media">
+        <span class="qv__badges" id="qvBadges"></span>
+        <img id="qvImg" alt="" />
+      </div>
+      <div class="qv__body">
+        <span class="qv__brand" id="qvBrand"></span>
+        <h3 class="qv__name" id="qvName"></h3>
+        <p class="qv__ref" id="qvRef" hidden></p>
+        <div class="qv__rating"><span class="stars" id="qvStars"></span><small id="qvReviews"></small></div>
+        <p class="qv__desc" id="qvDesc"></p>
+        <div class="qv__stock" id="qvStock"></div>
+        <div class="qv__price"><span class="now" id="qvNow"></span><span class="was" id="qvWas" hidden></span></div>
+        <div class="qv__actions">
+          <button class="btn btn--red btn--lg" id="qvAdd" type="button">Ajouter au panier</button>
+          <a class="btn btn--wa btn--lg" id="qvWa" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3Z"/></svg>
+            Commander sur WhatsApp
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ░░ Panier (drawer) ░░ -->
   <div class="cart" id="cart" aria-hidden="true">

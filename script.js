@@ -7,6 +7,9 @@
 
   var WA = "262692000000"; // numéro WhatsApp (à remplacer)
   var DATA = window.ZOTAUTO || { products: [], services: [] };
+  var PRODUCTS = (DATA.products || []).slice(); // copie de travail
+  var SERVICES = (DATA.services || []).slice();
+  var PAGE_SIZE = 8; // nb de produits affichés par lot ("Voir plus")
   var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
@@ -14,29 +17,71 @@
   var euro = function (n) { return Number(n).toFixed(2).replace(".", ",") + " €"; };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var stars = function (n) { n = Math.max(0, Math.min(5, Math.round(n || 0))); return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n); };
+  // normalisation pour la recherche (insensible à la casse et aux accents)
+  var norm = function (s) {
+    s = String(s == null ? "" : s).toLowerCase();
+    if (s.normalize) s = s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+    return s;
+  };
 
   /* =========================================================
-     Génération du catalogue
+     Cartes produits / services (génération HTML)
      ========================================================= */
-  function productCard(p) {
+  function badgesHtml(p) {
+    // empilement des badges : promo / libre + "Nouveau" + "Coup de cœur"
+    var html = "";
     var promo = /%|^-/.test(p.badge || "");
+    if (p.badge) html += '<span class="pbadge' + (promo ? " pbadge--promo" : "") + '">' + esc(p.badge) + "</span>";
+    if (p.nouveau) html += '<span class="pbadge pbadge--new">Nouveau</span>';
+    if (p.featured) html += '<span class="pbadge pbadge--heart" title="Coup de cœur" aria-label="Coup de cœur">❤</span>';
+    return html ? '<span class="product__badges">' + html + "</span>" : "";
+  }
+
+  function productCard(p) {
     var media = p.contain ? "product__media product__media--logo" : "product__media";
-    var badge = p.badge ? '<span class="product__badge' + (promo ? " product__badge--promo" : "") + '">' + esc(p.badge) + "</span>" : "";
     var was = (p.oldPrice != null && p.oldPrice !== "") ? '<span class="was">' + euro(p.oldPrice) + "</span>" : "";
     var stockLabel = p.stock === "soon" ? "Sur commande" : "En stock";
+    var ref = p.reference ? '<span class="product__ref">Réf. ' + esc(p.reference) + "</span>" : "";
     return (
-      '<article class="product reveal" data-cat="' + esc(p.category) + '" data-name="' + esc(p.name) + '" data-price="' + esc(p.price) + '" data-brand="' + esc(p.brand) + '">' +
-        '<div class="' + media + '">' + badge +
+      '<article class="product reveal' + (p.featured ? " is-featured" : "") + '" data-id="' + esc(p.id) + '"' +
+        ' data-cat="' + esc(p.category) + '" data-name="' + esc(p.name) + '" data-price="' + esc(p.price) + '" data-brand="' + esc(p.brand) + '">' +
+        '<button class="product__open" type="button" aria-label="Aperçu rapide : ' + esc(p.name) + '"></button>' +
+        '<div class="' + media + '">' + badgesHtml(p) +
           '<img src="' + esc(p.image) + '" alt="' + esc(p.brand + " " + p.name) + '" loading="lazy" />' +
         "</div>" +
         '<div class="product__body">' +
           '<span class="product__brand">' + esc(p.brand) + "</span>" +
           '<h3 class="product__name">' + esc(p.name) + "</h3>" +
+          ref +
           '<div class="product__rating"><span class="stars">' + stars(p.rating) + "</span><small>(" + (p.reviews || 0) + ")</small></div>" +
           '<div class="product__stock ' + (p.stock === "soon" ? "soon" : "in") + '">' + stockLabel + "</div>" +
           '<div class="product__foot">' +
             '<div class="product__price"><span class="now">' + euro(p.price) + "</span>" + was + "</div>" +
-            '<button class="btn-add" data-add aria-label="Ajouter au panier">Ajouter</button>' +
+            '<button class="btn-add" data-add aria-label="Ajouter ' + esc(p.name) + ' au panier">Ajouter</button>' +
+          "</div>" +
+        "</div>" +
+      "</article>"
+    );
+  }
+
+  // Carte "coup de cœur" (rangée de mise en avant, format compact horizontal)
+  function featuredCard(p) {
+    var was = (p.oldPrice != null && p.oldPrice !== "") ? '<span class="was">' + euro(p.oldPrice) + "</span>" : "";
+    return (
+      '<article class="fcard reveal" data-id="' + esc(p.id) + '">' +
+        '<button class="fcard__open" type="button" aria-label="Aperçu rapide : ' + esc(p.name) + '"></button>' +
+        '<span class="fcard__heart" aria-hidden="true">❤</span>' +
+        '<div class="fcard__media' + (p.contain ? " fcard__media--logo" : "") + '">' +
+          (p.nouveau ? '<span class="pbadge pbadge--new">Nouveau</span>' : "") +
+          '<img src="' + esc(p.image) + '" alt="' + esc(p.brand + " " + p.name) + '" loading="lazy" />' +
+        "</div>" +
+        '<div class="fcard__body">' +
+          '<span class="fcard__brand">' + esc(p.brand) + "</span>" +
+          '<h3 class="fcard__name">' + esc(p.name) + "</h3>" +
+          '<div class="product__rating"><span class="stars">' + stars(p.rating) + "</span><small>(" + (p.reviews || 0) + ")</small></div>" +
+          '<div class="fcard__foot">' +
+            '<div class="product__price"><span class="now">' + euro(p.price) + "</span>" + was + "</div>" +
+            '<button class="btn-add" data-add-id="' + esc(p.id) + '" aria-label="Ajouter ' + esc(p.name) + ' au panier">Ajouter</button>' +
           "</div>" +
         "</div>" +
       "</article>"
@@ -45,11 +90,12 @@
 
   function serviceCard(s) {
     var badge = s.badge ? '<span class="service__badge">' + esc(s.badge) + "</span>" : "";
+    var star = s.featured ? '<span class="service__star" title="Service phare" aria-label="Service phare">★</span>' : "";
     var price = s.price ? '<span class="service__price">' + esc(s.price) + "</span>" : "<span></span>";
     var link = wa("Bonjour ZOT AUTO, je suis intéressé(e) par le service : " + s.name + ".");
     return (
-      '<article class="service reveal">' +
-        '<div class="service__top"><span class="service__ic">' + esc(s.icon || "🔧") + "</span>" + badge + "</div>" +
+      '<article class="service reveal' + (s.featured ? " is-featured" : "") + '">' +
+        '<div class="service__top"><span class="service__ic">' + esc(s.icon || "🔧") + "</span>" + star + badge + "</div>" +
         '<h3 class="service__name">' + esc(s.name) + "</h3>" +
         '<p class="service__desc">' + esc(s.description) + "</p>" +
         '<div class="service__foot">' + price +
@@ -59,20 +105,309 @@
     );
   }
 
-  var productsWrap = $("#products");
-  if (productsWrap) productsWrap.innerHTML = (DATA.products || []).map(productCard).join("");
-  var servicesWrap = $("#servicesGrid");
-  if (servicesWrap) servicesWrap.innerHTML = (DATA.services || []).map(serviceCard).join("");
+  /* =========================================================
+     Coups de cœur (produits featured) + Services
+     ========================================================= */
+  var featuredWrap = $("#featuredGrid");
+  var featuredSection = $("#coupsdecoeur");
+  var featuredList = PRODUCTS.filter(function (p) { return p.featured; });
+  if (featuredWrap && featuredList.length) {
+    featuredWrap.innerHTML = featuredList.map(featuredCard).join("");
+    if (featuredSection) featuredSection.hidden = false;
+  }
 
-  /* ---- Année ---- */
+  var servicesWrap = $("#servicesGrid");
+  if (servicesWrap) {
+    // services "featured" affichés en premier (ordre stable conservé pour le reste)
+    var orderedServices = SERVICES.filter(function (s) { return s.featured; })
+      .concat(SERVICES.filter(function (s) { return !s.featured; }));
+    servicesWrap.innerHTML = orderedServices.map(serviceCard).join("");
+  }
+
+  /* =========================================================
+     ÉTAT unique : recherche + filtre catégorie + tri + pagination
+     ========================================================= */
+  var productsWrap = $("#products");
+  var productsEmpty = $("#productsEmpty");
+  var productsMore = $("#productsMore");
+  var moreBtn = $("#moreBtn");
+  var resultsCount = $("#resultsCount");
+  var emptyText = $("#emptyText");
+  var emptyWa = $("#emptyWa");
+  var sortSelect = $("#sortSelect");
+  var searchTag = $("#searchTag");
+  var searchTagText = $("#searchTagText");
+  var chips = $$(".chip");
+
+  var state = { query: "", filter: "all", sort: "relevance", shown: PAGE_SIZE };
+
+  // ordre "pertinence/nouveautés" : nouveautés puis coups de cœur, ordre catalogue préservé ensuite
+  var baseIndex = {};
+  PRODUCTS.forEach(function (p, i) { baseIndex[p.id] = i; });
+  function relevanceScore(p) { return (p.nouveau ? 0 : 1) * 100 + (p.featured ? 0 : 1) * 10; }
+
+  function computeList() {
+    var q = norm(state.query);
+    var list = PRODUCTS.filter(function (p) {
+      if (state.filter !== "all" && p.category !== state.filter) return false;
+      if (!q) return true;
+      var hay = norm([p.name, p.brand, p.reference, p.description, p.category].join(" "));
+      return hay.indexOf(q) !== -1;
+    });
+    list.sort(function (a, b) {
+      switch (state.sort) {
+        case "price-asc": return a.price - b.price;
+        case "price-desc": return b.price - a.price;
+        case "name-asc": return a.name.localeCompare(b.name, "fr", { sensitivity: "base" });
+        default: // relevance / nouveautés
+          var d = relevanceScore(a) - relevanceScore(b);
+          return d !== 0 ? d : baseIndex[a.id] - baseIndex[b.id];
+      }
+    });
+    return list;
+  }
+
+  function renderProducts() {
+    if (!productsWrap) return;
+    var list = computeList();
+    var total = list.length;
+    var visible = list.slice(0, state.shown);
+
+    productsWrap.innerHTML = visible.map(productCard).join("");
+    applyRevealTo(productsWrap);
+
+    // compteur de résultats
+    if (resultsCount) {
+      if (total === 0) resultsCount.textContent = "";
+      else resultsCount.textContent = total + (total > 1 ? " produits" : " produit") +
+        (state.shown < total ? " · " + visible.length + " affichés" : "");
+    }
+
+    // pastille de recherche active
+    if (searchTag) {
+      var has = !!state.query.trim();
+      searchTag.hidden = !has;
+      if (has && searchTagText) searchTagText.textContent = state.query.trim();
+    }
+
+    // état vide + repli WhatsApp
+    if (productsEmpty) {
+      productsEmpty.hidden = total > 0;
+      if (total === 0) {
+        if (emptyText) emptyText.textContent = state.query.trim()
+          ? 'Aucun produit ne correspond à « ' + state.query.trim() + ' ».'
+          : "Aucun produit dans ce rayon pour le moment.";
+        if (emptyWa) emptyWa.href = wa("Bonjour ZOT AUTO, je recherche : " + (state.query.trim() || "un produit") + ". Pouvez-vous m'aider ?");
+      }
+    }
+
+    // bouton "Voir plus"
+    if (productsMore) productsMore.hidden = state.shown >= total;
+  }
+
+  // ré-applique l'animation reveal aux cartes nouvellement injectées
+  function applyRevealTo(grid) {
+    var kids = Array.prototype.slice.call(grid.children);
+    if (prefersReduced || !("IntersectionObserver" in window)) {
+      kids.forEach(function (el) { el.classList.add("in"); });
+      return;
+    }
+    kids.forEach(function (el, i) {
+      el.style.transitionDelay = (i % 4) * 0.06 + "s";
+      io.observe(el);
+    });
+  }
+
+  // change l'état puis re-render (remet la pagination à zéro)
+  function update(partial, resetPage) {
+    for (var k in partial) state[k] = partial[k];
+    if (resetPage !== false) state.shown = PAGE_SIZE;
+    syncChips();
+    renderProducts();
+  }
+
+  function syncChips() {
+    chips.forEach(function (c) { c.classList.toggle("is-active", c.dataset.filter === state.filter); });
+  }
+
+  function scrollToProducts() {
+    var target = $("#bestsellers");
+    if (target) target.scrollIntoView({ behavior: prefersReduced ? "auto" : "smooth", block: "start" });
+  }
+
+  /* =========================================================
+     IntersectionObserver (reveal) — initialisé avant le 1er render
+     ========================================================= */
+  var io = ("IntersectionObserver" in window) ? new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("in"); obs.unobserve(entry.target); } });
+  }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" }) : null;
+
+  // décalage d'animation sur les grilles statiques
+  if (!prefersReduced && io) {
+    $$(".cats, .featured, .services, .reviews").forEach(function (grid) {
+      Array.prototype.forEach.call(grid.children, function (child, i) { child.style.transitionDelay = (i % 4) * 0.07 + "s"; });
+    });
+  }
+  // observe les .reveal statiques (hors #products, géré à part)
+  $$(".reveal").forEach(function (el) {
+    if (el.closest("#products")) return;
+    if (prefersReduced || !io) el.classList.add("in"); else io.observe(el);
+  });
+
+  // premier rendu de la grille produits
+  renderProducts();
+
+  /* ---- Filtres : chips ---- */
+  chips.forEach(function (chip) {
+    chip.addEventListener("click", function () { update({ filter: chip.dataset.filter }); });
+  });
+
+  /* ---- Filtres : cartes "rayons" + liens catnav (data-gocat) ---- */
+  $$("[data-gocat]").forEach(function (el) {
+    el.addEventListener("click", function () {
+      update({ filter: el.dataset.gocat, query: "" }); // un clic catégorie efface la recherche
+      if (searchInput) searchInput.value = "";
+      scrollToProducts();
+    });
+  });
+
+  /* ---- Tri ---- */
+  if (sortSelect) sortSelect.addEventListener("change", function () { update({ sort: sortSelect.value }); });
+
+  /* ---- "Voir plus" ---- */
+  if (moreBtn) moreBtn.addEventListener("click", function () {
+    state.shown += PAGE_SIZE;
+    renderProducts();
+  });
+
+  /* =========================================================
+     Recherche LIVE (filtre la grille au lieu d'ouvrir WhatsApp)
+     ========================================================= */
+  var searchForm = $("#searchForm"), searchInput = $("#searchInput");
+  var searchDebounce;
+  function runSearch(scroll) {
+    var q = (searchInput.value || "");
+    update({ query: q });
+    if (scroll && q.trim()) scrollToProducts();
+  }
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      clearTimeout(searchDebounce);
+      searchDebounce = setTimeout(function () { runSearch(false); }, 120);
+    });
+  }
+  if (searchForm) searchForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    clearTimeout(searchDebounce);
+    runSearch(true); // sur "Entrée" : on filtre et on défile vers les produits
+  });
+  // effacer la recherche via la pastille
+  if (searchTag) searchTag.addEventListener("click", function () {
+    if (searchInput) searchInput.value = "";
+    update({ query: "" });
+    if (searchInput) searchInput.focus();
+  });
+
+  /* =========================================================
+     Aperçu rapide (modale)
+     ========================================================= */
+  var qv = $("#quickView");
+  var qvEls = {
+    img: $("#qvImg"), badges: $("#qvBadges"), brand: $("#qvBrand"), name: $("#qvName"),
+    ref: $("#qvRef"), starsEl: $("#qvStars"), reviews: $("#qvReviews"), desc: $("#qvDesc"),
+    stock: $("#qvStock"), now: $("#qvNow"), was: $("#qvWas"), add: $("#qvAdd"), wa: $("#qvWa")
+  };
+  var qvCurrent = null; // produit en cours d'aperçu
+  var qvLastFocus = null; // élément à re-focus à la fermeture
+
+  function byId(id) { for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) return PRODUCTS[i]; return null; }
+
+  function openQuickView(p) {
+    if (!qv || !p) return;
+    qvCurrent = p;
+    qvLastFocus = document.activeElement;
+
+    qvEls.img.src = p.image || "";
+    qvEls.img.alt = (p.brand || "") + " " + (p.name || "");
+    qvEls.img.parentNode.classList.toggle("qv__media--logo", !!p.contain);
+    qvEls.badges.innerHTML = badgesHtml(p);
+    qvEls.brand.textContent = p.brand || "";
+    qvEls.name.textContent = p.name || "";
+    if (p.reference) { qvEls.ref.textContent = "Réf. " + p.reference; qvEls.ref.hidden = false; }
+    else qvEls.ref.hidden = true;
+    qvEls.starsEl.textContent = stars(p.rating);
+    qvEls.reviews.textContent = "(" + (p.reviews || 0) + " avis)";
+    qvEls.desc.textContent = p.description || "";
+    qvEls.stock.className = "qv__stock " + (p.stock === "soon" ? "soon" : "in");
+    qvEls.stock.textContent = p.stock === "soon" ? "Sur commande" : "En stock";
+    qvEls.now.textContent = euro(p.price);
+    if (p.oldPrice != null && p.oldPrice !== "") { qvEls.was.textContent = euro(p.oldPrice); qvEls.was.hidden = false; }
+    else qvEls.was.hidden = true;
+    qvEls.wa.href = wa("Bonjour ZOT AUTO, je suis intéressé(e) par : " + p.name + (p.reference ? " (réf. " + p.reference + ")" : "") + " à " + euro(p.price) + ".");
+
+    qv.classList.add("open");
+    qv.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    // focus sur le bouton de fermeture pour l'accessibilité
+    var closeBtn = qv.querySelector(".qv__close");
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function closeQuickView() {
+    if (!qv) return;
+    qv.classList.remove("open");
+    qv.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    qvCurrent = null;
+    if (qvLastFocus && qvLastFocus.focus) qvLastFocus.focus();
+  }
+
+  if (qv) {
+    $$("[data-qv-close]", qv).forEach(function (el) { el.addEventListener("click", closeQuickView); });
+    // bouton "Ajouter" dans la modale
+    if (qvEls.add) qvEls.add.addEventListener("click", function () {
+      if (qvCurrent) { addToCart({ name: qvCurrent.name, brand: qvCurrent.brand, price: qvCurrent.price }); }
+    });
+    // piège à focus simple (Tab reste dans la modale)
+    qv.addEventListener("keydown", function (e) {
+      if (e.key !== "Tab" || !qv.classList.contains("open")) return;
+      var f = $$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', qv)
+        .filter(function (el) { return el.offsetParent !== null; });
+      if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+  }
+
+  // ouverture de la modale : clic sur la carte produit (hors bouton "Ajouter")
+  if (productsWrap) productsWrap.addEventListener("click", function (e) {
+    if (e.target.closest("[data-add]")) return; // géré par le panier
+    var card = e.target.closest(".product");
+    if (!card) return;
+    var p = byId(card.dataset.id);
+    if (p) openQuickView(p);
+  });
+  // ouverture depuis les cartes "coup de cœur"
+  if (featuredWrap) featuredWrap.addEventListener("click", function (e) {
+    if (e.target.closest("[data-add-id]")) return;
+    var card = e.target.closest(".fcard");
+    if (!card) return;
+    var p = byId(card.dataset.id);
+    if (p) openQuickView(p);
+  });
+
+  /* =========================================================
+     Année / header sticky / menu mobile / sélecteur véhicule
+     ========================================================= */
   var y = $("#year"); if (y) y.textContent = new Date().getFullYear();
 
-  /* ---- Header sticky ---- */
   var header = $(".header");
-  var onScroll = function () { header.classList.toggle("is-stuck", window.scrollY > 8); };
-  onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
+  if (header) {
+    var onScroll = function () { header.classList.toggle("is-stuck", window.scrollY > 8); };
+    onScroll(); window.addEventListener("scroll", onScroll, { passive: true });
+  }
 
-  /* ---- Menu mobile ---- */
   var burger = $("#burger"), catnav = $("#catnav");
   if (burger && catnav) {
     burger.addEventListener("click", function () {
@@ -85,7 +420,6 @@
     });
   }
 
-  /* ---- Sélecteur véhicule : onglets ---- */
   $$(".finder__tab").forEach(function (tab) {
     tab.addEventListener("click", function () {
       var name = tab.dataset.tab;
@@ -94,7 +428,6 @@
     });
   });
 
-  /* ---- Plaque (AB-123-CD) ---- */
   var plate = $("#plateInput");
   if (plate) plate.addEventListener("input", function () {
     var v = plate.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -104,7 +437,6 @@
     plate.value = out;
   });
 
-  /* ---- Sélecteur → WhatsApp ---- */
   var panelPlate = $("#panelPlate"), panelModel = $("#panelModel");
   if (panelPlate) panelPlate.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -117,33 +449,6 @@
     e.preventDefault();
     var vals = $$("select", panelModel).map(function (s) { return s.value; }).filter(Boolean);
     window.open(wa("Bonjour ZOT AUTO, je cherche des pièces pour : " + (vals.join(" · ") || "mon véhicule") + "."), "_blank", "noopener");
-  });
-
-  /* ---- Recherche ---- */
-  var searchForm = $("#searchForm"), searchInput = $("#searchInput");
-  if (searchForm) searchForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var q = (searchInput.value || "").trim();
-    if (!q) { searchInput.focus(); return; }
-    window.open(wa("Bonjour ZOT AUTO, je recherche : " + q), "_blank", "noopener");
-  });
-
-  /* ---- Filtres produits ---- */
-  var chips = $$(".chip"), productsEmpty = $("#productsEmpty");
-  function applyFilter(f) {
-    chips.forEach(function (c) { c.classList.toggle("is-active", c.dataset.filter === f); });
-    var visible = 0;
-    $$(".product").forEach(function (p) {
-      var show = f === "all" || p.dataset.cat === f;
-      p.classList.toggle("is-hidden", !show);
-      if (show) visible++;
-    });
-    if (productsEmpty) productsEmpty.hidden = visible > 0;
-  }
-  chips.forEach(function (chip) { chip.addEventListener("click", function () { applyFilter(chip.dataset.filter); }); });
-  // Cartes catégories → filtre + scroll
-  $$("[data-gocat]").forEach(function (card) {
-    card.addEventListener("click", function () { applyFilter(card.dataset.gocat); });
   });
 
   /* =========================================================
@@ -205,11 +510,17 @@
     renderCart(); showToast("Ajouté au panier");
   }
 
-  // délégation : boutons "Ajouter" (produits générés dynamiquement)
+  // délégation : boutons "Ajouter" sur les cartes produits (générées dynamiquement)
   if (productsWrap) productsWrap.addEventListener("click", function (e) {
     var btn = e.target.closest("[data-add]"); if (!btn) return;
     var card = btn.closest(".product");
     addToCart({ name: card.dataset.name, brand: card.dataset.brand, price: parseFloat(card.dataset.price) });
+  });
+  // boutons "Ajouter" sur les cartes "coup de cœur" (résolus par id)
+  if (featuredWrap) featuredWrap.addEventListener("click", function (e) {
+    var btn = e.target.closest("[data-add-id]"); if (!btn) return;
+    var p = byId(btn.getAttribute("data-add-id"));
+    if (p) addToCart({ name: p.name, brand: p.brand, price: p.price });
   });
 
   if (cartItems) cartItems.addEventListener("click", function (e) {
@@ -223,20 +534,13 @@
   var cartOpenBtn = $("#cartOpen");
   if (cartOpenBtn) cartOpenBtn.addEventListener("click", openCart);
   $$("[data-cart-close]").forEach(function (el) { el.addEventListener("click", closeCart); });
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeCart(); });
+
+  // Échap : ferme la modale en priorité, sinon le panier
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    if (qv && qv.classList.contains("open")) { closeQuickView(); return; }
+    closeCart();
+  });
   renderCart();
 
-  /* ---- Scroll reveal ---- */
-  var reveals = $$(".reveal");
-  if (prefersReduced || !("IntersectionObserver" in window)) {
-    reveals.forEach(function (el) { el.classList.add("in"); });
-  } else {
-    $$(".cats, .products, .services, .reviews").forEach(function (grid) {
-      Array.prototype.forEach.call(grid.children, function (child, i) { child.style.transitionDelay = (i % 4) * 0.07 + "s"; });
-    });
-    var io = new IntersectionObserver(function (entries, obs) {
-      entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add("in"); obs.unobserve(entry.target); } });
-    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
-    reveals.forEach(function (el) { io.observe(el); });
-  }
 })();
