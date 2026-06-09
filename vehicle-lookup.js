@@ -20,7 +20,13 @@
   /* ----- Configuration ----- */
   var WA = "262692000000"; // ⚠️ même numéro que script.js (à remplacer pour la prod)
   var CONFIG = {
-    PLATE_PROXY_URL: "" // vide => plaque en DÉMO/WhatsApp ; ex "/api/decode-plate" => identification réelle
+    // (Recommandé en prod) proxy serveur Netlify — le token reste caché côté serveur :
+    PLATE_PROXY_URL: "",   // ex "/api/decode-plate"
+    // (Pour TEST sur hébergement statique type GitHub Pages) appel DIRECT à l'API
+    // avec un token d'ESSAI apiplaqueimmatriculation.com.
+    // ⚠️ Ce token est VISIBLE dans le code public : n'utilisez qu'un token d'essai
+    //    limité, JAMAIS une clé de production (préférez alors PLATE_PROXY_URL).
+    PLATE_API_TOKEN: ""
   };
   // Jeu de démonstration (plaques fictives) — actif quand aucun proxy n'est configuré.
   var MOCK = {
@@ -84,7 +90,26 @@
         })
         .catch(function () { clearTimeout(t); return { ok: false }; });
     }
-    // Mode démonstration (aucun proxy)
+    // (Test sur hébergement statique) appel DIRECT avec un token d'essai — token visible !
+    if (CONFIG.PLATE_API_TOKEN) {
+      var c2 = new AbortController();
+      var t2 = setTimeout(function () { c2.abort(); }, 8000);
+      return fetch("https://api.apiplaqueimmatriculation.com/plaque?immatriculation=" + encodeURIComponent(plate) + "&token=" + encodeURIComponent(CONFIG.PLATE_API_TOKEN) + "&pays=FR",
+        { method: "POST", headers: { "Accept": "application/json" }, signal: c2.signal })
+        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+        .then(function (j) {
+          clearTimeout(t2);
+          var d = (j.data && j.data[0]) || j.data || {};
+          var data = {
+            make: d.marque || "", model: d.modele || d.version || "",
+            year: d.annee || (d.date1erCir_fr ? String(d.date1erCir_fr).slice(-4) : "") || "",
+            fuel: d.energie || "", cc: d.ccm ? (Math.round(d.ccm / 100) / 10 + " L") : (d.cylindree || ""), vin: d.vin || ""
+          };
+          return { ok: !!(data.make || data.model), data: data };
+        })
+        .catch(function () { clearTimeout(t2); return { ok: false }; });
+    }
+    // Mode démonstration (aucun proxy ni token)
     if (MOCK[plate]) return Promise.resolve({ ok: true, demo: true, data: MOCK[plate] });
     return Promise.resolve({ ok: false, demo: true });
   }

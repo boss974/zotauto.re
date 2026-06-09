@@ -46,6 +46,8 @@ La recherche **par plaque** (SIV français) nécessite un fournisseur **payant**
 4. Faites un appel test et ajustez si besoin le mapping des champs dans `decode-plate.js` (voir commentaire « ajuster… »).
 5. Dans `vehicle-lookup.js`, passez `CONFIG.PLATE_PROXY_URL = "/api/decode-plate"`. La plaque devient réelle, sans aucune autre modification d'UI.
 
+**Variante TEST rapide (hébergement statique, ex. GitHub Pages — sans serverless) :** renseignez directement `CONFIG.PLATE_API_TOKEN = "<token d'essai>"` dans `vehicle-lookup.js`. La plaque marche immédiatement via un appel direct à apiplaqueimmatriculation.com. ⚠️ Le token est alors **visible** dans le code public : à réserver à un **token d'essai limité**. Pour la production, repassez par `PLATE_PROXY_URL` (token caché côté serveur).
+
 > Sans clé, l'onglet plaque reste en **mode démonstration + repli WhatsApp** — déjà livrable et honnête. La fonction verrouille l'origine, limite le débit (5 req/min/IP) et valide le format avant tout appel payant.
 > ⚠️ Pensez à remplacer le numéro `WA = "262692000000"` dans **`script.js`** ET **`vehicle-lookup.js`**, et à compléter le nom du sous-traitant plaque dans `confidentialite.html`.
 
