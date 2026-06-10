@@ -557,6 +557,34 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Hero typewriter ──
+  (function () {
+    var el = document.getElementById('heroSubtitle');
+    if (!el) return;
+    var phrases = [
+      "Pièces auto pour tous véhicules à La Réunion 🏝️",
+      "Huiles, batteries, filtres aux meilleurs prix 974 💰",
+      "Livraison rapide Saint-Denis → Saint-Pierre 🚚"
+    ];
+    var phraseIndex = 0, charIndex = 0, isDeleting = false;
+    var SPEED_TYPE = 80, SPEED_DEL = 40, PAUSE_END = 2000, PAUSE_START = 400;
+    function tick() {
+      var current = phrases[phraseIndex];
+      if (!isDeleting) {
+        el.textContent = current.slice(0, charIndex + 1);
+        charIndex++;
+        if (charIndex === current.length) { isDeleting = true; setTimeout(tick, PAUSE_END); return; }
+        setTimeout(tick, SPEED_TYPE);
+      } else {
+        el.textContent = current.slice(0, charIndex - 1);
+        charIndex--;
+        if (charIndex === 0) { isDeleting = false; phraseIndex = (phraseIndex + 1) % phrases.length; setTimeout(tick, PAUSE_START); return; }
+        setTimeout(tick, SPEED_DEL);
+      }
+    }
+    setTimeout(tick, 600);
+  }());
+
   // ── Social proof notifications ──
   (function () {
     var notifications = [

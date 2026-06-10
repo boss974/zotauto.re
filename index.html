@@ -138,6 +138,23 @@
     </nav>
   </header>
 
+  <div class="delivery-strip">
+  <div class="delivery-strip__item">
+    <span class="delivery-strip__icon">🚚</span>
+    <span class="delivery-strip__text">Livraison 974 en <strong>24-72h</strong></span>
+  </div>
+  <div class="delivery-strip__sep" aria-hidden="true"></div>
+  <div class="delivery-strip__item">
+    <span class="delivery-strip__icon">✅</span>
+    <span class="delivery-strip__text">Pièces compatibles <strong>garanties</strong></span>
+  </div>
+  <div class="delivery-strip__sep" aria-hidden="true"></div>
+  <div class="delivery-strip__item">
+    <span class="delivery-strip__icon">📞</span>
+    <span class="delivery-strip__text">Conseil expert : <strong>0693 05 70 12</strong></span>
+  </div>
+</div>
+
   <main id="main">
 
     <!-- ░░ Hero + sélecteur véhicule ░░ -->
@@ -147,7 +164,7 @@
         <div class="hero__text reveal">
           <span class="hero__eyebrow">🌺 Le multiservices auto péi</span>
           <h1>Tout pour l'auto,<br /><span class="hl-yellow">livré partout à La Réunion.</span></h1>
-          <p>Pièces détachées, detailing, outillage et huiles — les meilleures marques pro, au bon prix, avec les conseils en plus.</p>
+          <span id="heroSubtitle"></span>
           <ul class="hero__usp">
             <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Livraison sur toute l'île</li>
             <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Paiement sécurisé</li>
@@ -274,6 +291,38 @@
         <div class="stat"><strong class="stat__n">4,9<span>★</span></strong><span>note clients</span></div>
       </div>
     </section>
+
+    <!-- ░░ Pourquoi ZOT AUTO ░░ -->
+    <section class="why-us">
+  <div class="container">
+    <div class="section-header">
+      <h2>Pourquoi choisir ZOT AUTO ?</h2>
+      <p>Des pièces de qualité, un service fiable, livré depuis La Réunion</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🏆</div>
+        <h3>Marques premium</h3>
+        <p>Valeo, Mann, Gates, Monroe, NGK, Varta — uniquement des références certifiées d'origine.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔍</div>
+        <h3>Référence exacte</h3>
+        <p>Identification précise par VIN, plaque d'immatriculation ou référence OEM constructeur.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <h3>Stock local 974</h3>
+        <p>Pièces disponibles immédiatement en stock à La Réunion — pas d'attente longue durée.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💬</div>
+        <h3>Support WhatsApp</h3>
+        <p>Réponse en moins de 2h, 7j/7. Notre équipe vous guide dans votre choix de pièces.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
     <!-- ░░ Coups de cœur (rempli depuis data/catalogue.js — produits featured) ░░ -->
     <section class="section section--featured" id="coupsdecoeur" hidden>
@@ -641,6 +690,17 @@
   </main>
 
   <!-- ░░ Footer ░░ -->
+  <section class="trust-banner">
+  <h2 class="trust-banner__title">Ils nous font confiance</h2>
+  <div class="trust-banner__badges">
+    <div class="trust-badge"><span class="trust-badge__icon">🛡️</span><span class="trust-badge__label">Paiement sécurisé</span></div>
+    <div class="trust-badge"><span class="trust-badge__icon">🔄</span><span class="trust-badge__label">Retours 30 jours</span></div>
+    <div class="trust-badge"><span class="trust-badge__icon">📦</span><span class="trust-badge__label">Emballage soigné</span></div>
+    <div class="trust-badge"><span class="trust-badge__icon">⭐</span><span class="trust-badge__label">4.9/5 avis clients</span></div>
+    <div class="trust-badge"><span class="trust-badge__icon">🇷🇪</span><span class="trust-badge__label">Boutique réunionnaise</span></div>
+  </div>
+</section>
+
   <footer class="footer">
     <div class="container footer__top">
       <div class="footer__brand">
