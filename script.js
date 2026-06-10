@@ -557,6 +557,51 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Progress bar + IntersectionObserver fade-in-up ──
+  (function () {
+    var bar = document.getElementById('pageProgress');
+    if (bar) {
+      bar.addEventListener('animationend', function () {
+        bar.classList.add('done');
+        bar.addEventListener('transitionend', function () { bar.remove(); }, { once: true });
+      }, { once: true });
+    }
+    var cards = document.querySelectorAll('.why-card, .testimonial-card, .blog-card');
+    cards.forEach(function (el) { el.classList.add('anim-ready'); });
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.remove('anim-ready');
+            entry.target.classList.add('fade-in-up');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      cards.forEach(function (el) { observer.observe(el); });
+    } else {
+      cards.forEach(function (el) { el.classList.remove('anim-ready'); });
+    }
+  }());
+
+  // ── WA Bubble ──
+  (function () {
+    var STORAGE_KEY = 'wa_bubble_closed';
+    if (localStorage.getItem(STORAGE_KEY) === '1') return;
+    var bubble = document.getElementById('waBubble');
+    var closeBtn = document.getElementById('waBubbleClose');
+    if (!bubble || !closeBtn) return;
+    setTimeout(function () {
+      bubble.classList.add('wa-bubble--visible');
+      bubble.setAttribute('aria-hidden', 'false');
+    }, 4000);
+    closeBtn.addEventListener('click', function () {
+      bubble.classList.remove('wa-bubble--visible');
+      bubble.setAttribute('aria-hidden', 'true');
+      localStorage.setItem(STORAGE_KEY, '1');
+    });
+  }());
+
   // ── Sticky promo banner ──
   (function () {
     'use strict';

@@ -61,6 +61,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<div id="pageProgress"></div>
 <div class="sticky-promo" id="sticky-promo" role="alert" aria-live="polite">
   <span class="sticky-promo__text">🔥 Promo d'ouverture — Huiles Euroatlantic à prix péi !</span>
   <a href="#promo" class="sticky-promo__btn" aria-label="Voir les promos">Voir →</a>
@@ -324,6 +325,35 @@
         <div class="why-icon">💬</div>
         <h3>Support WhatsApp</h3>
         <p>Réponse en moins de 2h, 7j/7. Notre équipe vous guide dans votre choix de pièces.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+    <!-- ░░ Partenaires ░░ -->
+    <section class="partners">
+  <div class="partners__inner">
+    <h2 class="partners__title">Nos équipementiers partenaires</h2>
+    <div class="partners__grid">
+      <div class="partners__card partners__card--valeo">
+        <span class="partners__card-name">VALEO</span>
+        <span class="partners__card-sub">Freinage &amp; Éclairage</span>
+      </div>
+      <div class="partners__card partners__card--mann">
+        <span class="partners__card-name">MANN+HUMMEL</span>
+        <span class="partners__card-sub">Filtration</span>
+      </div>
+      <div class="partners__card partners__card--gates">
+        <span class="partners__card-name">GATES</span>
+        <span class="partners__card-sub">Distribution</span>
+      </div>
+      <div class="partners__card partners__card--monroe">
+        <span class="partners__card-name">MONROE</span>
+        <span class="partners__card-sub">Suspension</span>
+      </div>
+      <div class="partners__card partners__card--ngk">
+        <span class="partners__card-name">NGK</span>
+        <span class="partners__card-sub">Allumage</span>
       </div>
     </div>
   </div>
@@ -668,6 +698,61 @@
   </div>
 </section>
 
+    <!-- ░░ Blog / Conseils ░░ -->
+    <section class="blog-preview">
+  <div class="blog-preview__inner">
+    <h2 class="blog-preview__title">Conseils &amp; Actualités</h2>
+    <div class="blog-preview__grid">
+
+      <article class="blog-card">
+        <div class="blog-card__image" style="background-color:#2a52e0;">
+          <span class="blog-card__emoji">🔧</span>
+        </div>
+        <div class="blog-card__body">
+          <span class="blog-card__tag blog-card__tag--entretien">Entretien</span>
+          <h3 class="blog-card__heading">Comment choisir ses plaquettes de frein à La Réunion&nbsp;?</h3>
+          <p class="blog-card__excerpt">Le climat humide et les routes en pente du 974 usent plus vite les freins. Nos conseils pour bien choisir.</p>
+          <div class="blog-card__footer">
+            <time class="blog-card__date">15 mai 2025</time>
+            <a href="#" class="blog-card__link">Lire →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="blog-card">
+        <div class="blog-card__image" style="background-color:#1a1a2e;">
+          <span class="blog-card__emoji">🛢️</span>
+        </div>
+        <div class="blog-card__body">
+          <span class="blog-card__tag blog-card__tag--huile">Huile</span>
+          <h3 class="blog-card__heading">Quelle huile moteur pour les fortes chaleurs réunionnaises&nbsp;?</h3>
+          <p class="blog-card__excerpt">Températures élevées, stop-and-go Saint-Denis… on vous explique quelle viscosité choisir.</p>
+          <div class="blog-card__footer">
+            <time class="blog-card__date">28 avril 2025</time>
+            <a href="#" class="blog-card__link">Lire →</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="blog-card">
+        <div class="blog-card__image" style="background-color:#e01f2b;">
+          <span class="blog-card__emoji">🔋</span>
+        </div>
+        <div class="blog-card__body">
+          <span class="blog-card__tag blog-card__tag--batterie">Batterie</span>
+          <h3 class="blog-card__heading">Batterie à plat : les bons réflexes en 974</h3>
+          <p class="blog-card__excerpt">Chaleur, humidité saline, véhicules peu utilisés : pourquoi les batteries tombent plus vite sur l'île.</p>
+          <div class="blog-card__footer">
+            <time class="blog-card__date">10 avril 2025</time>
+            <a href="#" class="blog-card__link">Lire →</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
     <section class="faq" id="faq">
       <div class="container">
         <p class="section-kicker">FAQ</p>
@@ -898,6 +983,12 @@
   </button>
 
   <!-- WhatsApp flottant -->
+  <div class="wa-bubble" id="waBubble" role="dialog" aria-label="Message WhatsApp" aria-hidden="true">
+  <button class="wa-bubble__close" id="waBubbleClose" aria-label="Fermer">&#x2715;</button>
+  <p class="wa-bubble__text">&#x1F44B; Bonjour&nbsp;! Besoin d'aide pour trouver une pièce&nbsp;?</p>
+  <a class="wa-bubble__btn" href="https://wa.me/262693057012" target="_blank" rel="noopener noreferrer">Contacter →</a>
+  <span class="wa-bubble__arrow" aria-hidden="true"></span>
+</div>
   <a class="fab-wa" href="https://wa.me/262693057012" target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp">
     <span class="fab-wa__ring" aria-hidden="true"></span>
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3Zm-8.5 18c-1.8 0-3.6-.5-5.1-1.4l-.4-.2-3.7 1 1-3.6-.2-.4A9.9 9.9 0 0 1 2 12c0-5.5 4.5-10 10-10 2.7 0 5.2 1 7.1 2.9A9.9 9.9 0 0 1 22 12c0 5.5-4.5 10-10 10Zm5.5-7.5c-.3-.2-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.1-.2.2-.3.2-.6.1a8.1 8.1 0 0 1-2.4-1.5 9 9 0 0 1-1.7-2c-.2-.3 0-.5.1-.6l.5-.5.3-.5c.1-.2 0-.4 0-.5l-1-2.3c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.6-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.2-.5-.3Z"/></svg>
