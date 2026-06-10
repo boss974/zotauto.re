@@ -161,6 +161,22 @@
   </div>
 </div>
 
+  <section class="search-bar-section">
+  <div class="search-bar-inner">
+    <form class="search-bar-form" id="searchBarForm" action="#bestsellers">
+      <div class="search-bar-group">
+        <input type="search" class="search-bar-input" id="searchBarInput" placeholder="Rechercher une pièce, une marque, une référence..." autocomplete="off" />
+        <button type="submit" class="search-bar-btn">Rechercher</button>
+      </div>
+    </form>
+    <div class="search-bar-pills">
+      <button class="search-pill" data-value="Plaquettes Valeo">Plaquettes Valeo</button>
+      <button class="search-pill" data-value="Filtre à huile Mann">Filtre à huile Mann</button>
+      <button class="search-pill" data-value="Batterie Varta">Batterie Varta</button>
+    </div>
+  </div>
+</section>
+
   <main id="main">
 
     <!-- ░░ Hero + sélecteur véhicule ░░ -->
@@ -589,6 +605,13 @@
       </div>
     </section>
 
+    <!-- ░░ Flash sale ░░ -->
+    <section class="flash-sale">
+  <span class="flash-sale__label">⚡ Offre Flash — Kit distribution Gates à -15%</span>
+  <span class="flash-sale__timer">Se termine dans&nbsp;: <span id="flash-countdown">--:--:--</span></span>
+  <a href="#promo" class="flash-sale__btn">Je profite →</a>
+</section>
+
     <!-- ░░ Marques ░░ -->
     <section class="section section--soft" id="marques">
       <div class="container">
@@ -851,6 +874,76 @@
   </main>
 
   <!-- ░░ Footer ░░ -->
+  <!-- ░░ Zones de livraison ░░ -->
+  <section class="delivery-zones">
+  <div class="delivery-zones__container">
+    <div class="delivery-zones__text">
+      <span class="delivery-zones__kicker">Livraison partout</span>
+      <h2 class="delivery-zones__title">Nous livrons dans toute La Réunion</h2>
+      <p class="delivery-zones__desc">De Saint-Denis à Saint-Pierre, de Saint-Paul à Saint-Benoît — nos transporteurs partenaires couvrent l'ensemble des 24 communes de l'île. Commande avant 11h = expédition le jour même.</p>
+      <ul class="delivery-zones__list">
+        <li class="zone-item"><span class="zone-item__dot" style="background:var(--blue)"></span>Saint-Denis</li>
+        <li class="zone-item"><span class="zone-item__dot" style="background:var(--red)"></span>Saint-Paul</li>
+        <li class="zone-item"><span class="zone-item__dot" style="background:var(--yellow)"></span>Saint-Pierre</li>
+        <li class="zone-item"><span class="zone-item__dot" style="background:var(--blue)"></span>Le Tampon</li>
+        <li class="zone-item"><span class="zone-item__dot" style="background:var(--red)"></span>Saint-André</li>
+        <li class="zone-item"><span class="zone-item__dot" style="background:var(--yellow)"></span>Sainte-Rose</li>
+      </ul>
+      <div class="delivery-zones__badge">⏱ Délai : 24-72h</div>
+    </div>
+    <div class="delivery-zones__visual">
+      <div class="reunion-map">
+        <svg class="reunion-shape" viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="mapGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#3a8c6e;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#2a6e8c;stop-opacity:1" />
+            </linearGradient>
+            <filter id="shadow"><feDropShadow dx="2" dy="4" stdDeviation="6" flood-color="rgba(0,0,0,0.25)"/></filter>
+          </defs>
+          <path d="M 60 80 C 55 55, 80 30, 115 25 C 145 20, 185 28, 205 50 C 225 70, 220 100, 210 120 C 198 142, 175 158, 148 162 C 118 167, 85 158, 68 140 C 50 122, 48 108, 60 80 Z" fill="url(#mapGrad)" filter="url(#shadow)"/>
+          <line x1="115" y1="25" x2="148" y2="162" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4,4"/>
+          <line x1="60" y1="80" x2="210" y2="120" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="4,4"/>
+          <circle class="pulse-dot" cx="130" cy="40" r="7" fill="#e01f2b"/>
+          <circle class="pulse-ring" cx="130" cy="40" r="7" fill="none" stroke="#e01f2b" stroke-width="2"/>
+          <circle class="pulse-dot" cx="72" cy="98" r="7" fill="#e01f2b"/>
+          <circle class="pulse-ring pulse-ring--delay1" cx="72" cy="98" r="7" fill="none" stroke="#e01f2b" stroke-width="2"/>
+          <circle class="pulse-dot" cx="148" cy="150" r="7" fill="#e01f2b"/>
+          <circle class="pulse-ring pulse-ring--delay2" cx="148" cy="150" r="7" fill="none" stroke="#e01f2b" stroke-width="2"/>
+          <text x="136" y="37" font-size="9" fill="white" font-family="sans-serif" font-weight="600">N</text>
+          <text x="78" y="95" font-size="9" fill="white" font-family="sans-serif" font-weight="600">O</text>
+          <text x="154" y="147" font-size="9" fill="white" font-family="sans-serif" font-weight="600">S</text>
+        </svg>
+        <p class="reunion-map__caption">24 communes couvertes</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- ░░ Newsletter WA ░░ -->
+  <section class="newsletter">
+  <div class="newsletter__inner">
+    <div class="newsletter__icon">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2 class="newsletter__title">Soyez alerté des promos et nouveautés</h2>
+    <p class="newsletter__desc">Laissez-nous votre numéro WhatsApp et recevez les offres exclusives ZOT AUTO en avant-première.</p>
+    <form class="newsletter__form" id="newsletterForm" novalidate>
+      <div class="newsletter__form-row">
+        <input class="newsletter__input" type="tel" id="newsletterTel" name="whatsapp" placeholder="Votre numéro WhatsApp (ex: 0693...)" autocomplete="tel" required />
+        <button class="newsletter__btn" type="submit">M'alerter →</button>
+      </div>
+      <p class="newsletter__disclaimer">✓ Pas de spam · Désabonnement en 1 message</p>
+    </form>
+    <div class="newsletter__confirm" id="newsletterConfirm" aria-live="polite">
+      ✅ Numéro enregistré ! Vous recevrez nos offres sur WhatsApp.
+    </div>
+  </div>
+</section>
+
   <section class="trust-banner">
   <h2 class="trust-banner__title">Ils nous font confiance</h2>
   <div class="trust-banner__badges">

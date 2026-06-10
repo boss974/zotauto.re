@@ -557,6 +557,72 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Search bar pills ──
+  (function () {
+    var form = document.getElementById('searchBarForm');
+    var input = document.getElementById('searchBarInput');
+    var pills = document.querySelectorAll('.search-pill');
+    if (!form || !input) return;
+    pills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        input.value = this.getAttribute('data-value') || this.textContent;
+        input.focus();
+      });
+    });
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var target = document.getElementById('bestsellers');
+      if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  }());
+
+  // ── Flash sale countdown ──
+  (function () {
+    var DURATION_MS = 24 * 60 * 60 * 1000;
+    var KEY = 'flash_sale_end';
+    var el = document.getElementById('flash-countdown');
+    if (!el) return;
+    function getEnd() {
+      var stored = localStorage.getItem(KEY);
+      var end = stored ? parseInt(stored, 10) : NaN;
+      if (isNaN(end) || end <= Date.now()) {
+        end = Date.now() + DURATION_MS;
+        localStorage.setItem(KEY, String(end));
+      }
+      return end;
+    }
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+    function tick() {
+      var end = getEnd();
+      var diff = end - Date.now();
+      if (diff <= 0) { localStorage.removeItem(KEY); diff = DURATION_MS; }
+      var h = Math.floor(diff / 3600000);
+      var m = Math.floor((diff % 3600000) / 60000);
+      var s = Math.floor((diff % 60000) / 1000);
+      el.textContent = pad(h) + ':' + pad(m) + ':' + pad(s);
+    }
+    tick();
+    setInterval(tick, 1000);
+  }());
+
+  // ── Newsletter form ──
+  (function () {
+    var form = document.getElementById('newsletterForm');
+    var confirm = document.getElementById('newsletterConfirm');
+    if (!form || !confirm) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = document.getElementById('newsletterTel');
+      var value = input ? input.value.trim() : '';
+      if (!value) {
+        if (input) { input.focus(); input.style.borderColor = '#e01f2b'; setTimeout(function () { input.style.borderColor = ''; }, 1500); }
+        return;
+      }
+      form.style.display = 'none';
+      confirm.classList.add('is-visible');
+    });
+  }());
+
   // ── Progress bar + IntersectionObserver fade-in-up ──
   (function () {
     var bar = document.getElementById('pageProgress');
