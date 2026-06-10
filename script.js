@@ -557,6 +557,37 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Sticky promo banner ──
+  (function () {
+    'use strict';
+    var STORAGE_KEY = 'sticky_promo_closed';
+    var SCROLL_THRESHOLD = 600;
+    var banner = document.getElementById('sticky-promo');
+    var closeBtn = document.getElementById('sticky-promo-close');
+    if (!banner || !closeBtn) return;
+    if (sessionStorage.getItem(STORAGE_KEY) === '1') { banner.style.display = 'none'; return; }
+    function showBanner() { banner.classList.add('is-visible'); document.body.classList.add('has-sticky'); }
+    function hideBanner() { banner.classList.remove('is-visible'); document.body.classList.remove('has-sticky'); }
+    function onScroll() {
+      var scrollY = window.scrollY || window.pageYOffset || 0;
+      if (scrollY >= SCROLL_THRESHOLD) { showBanner(); } else { hideBanner(); }
+    }
+    closeBtn.addEventListener('click', function () {
+      sessionStorage.setItem(STORAGE_KEY, '1');
+      hideBanner(); banner.style.display = 'none';
+      window.removeEventListener('scroll', onScroll);
+    });
+    var promoLink = banner.querySelector('.sticky-promo__btn');
+    if (promoLink) {
+      promoLink.addEventListener('click', function (e) {
+        var target = document.getElementById('promo');
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }());
+
   // ── Hero typewriter ──
   (function () {
     var el = document.getElementById('heroSubtitle');

@@ -61,6 +61,11 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<div class="sticky-promo" id="sticky-promo" role="alert" aria-live="polite">
+  <span class="sticky-promo__text">🔥 Promo d'ouverture — Huiles Euroatlantic à prix péi !</span>
+  <a href="#promo" class="sticky-promo__btn" aria-label="Voir les promos">Voir →</a>
+  <button class="sticky-promo__close" id="sticky-promo-close" aria-label="Fermer le bandeau promo">✕</button>
+</div>
 
   <a class="skip-link" href="#main">Aller au contenu</a>
 
@@ -320,6 +325,28 @@
         <h3>Support WhatsApp</h3>
         <p>Réponse en moins de 2h, 7j/7. Notre équipe vous guide dans votre choix de pièces.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+    <!-- ░░ Click & Collect ░░ -->
+    <section class="click-collect">
+  <div class="cc-container">
+    <div class="cc-text">
+      <span class="cc-badge">🆕 Nouveau</span>
+      <h2 class="cc-title">Commandez en ligne, retirez à Saint-Pierre</h2>
+      <p class="cc-desc">Passez votre commande sur WhatsApp ou via le site et récupérez vos pièces directement en boutique. Disponible dès le lendemain pour les pièces en stock.</p>
+      <a href="https://wa.me/262693057012" class="cc-btn">Commander sur WhatsApp →</a>
+    </div>
+    <div class="cc-visual">
+      <svg class="cc-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" aria-hidden="true">
+        <rect x="15" y="45" width="90" height="60" rx="6" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"/>
+        <path d="M15 58 L60 72 L105 58" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" fill="none"/>
+        <line x1="60" y1="72" x2="60" y2="105" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"/>
+        <path d="M38 45 L38 30 Q38 22 46 22 L74 22 Q82 22 82 30 L82 45" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.6)" stroke-width="2.5"/>
+        <rect x="48" y="22" width="24" height="14" rx="3" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+        <path d="M50 29 L57 35 L70 23" stroke="rgba(255,255,255,0.9)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
     </div>
   </div>
 </section>
@@ -592,6 +619,55 @@
     </section>
 
     <!-- ░░ FAQ accordion ░░ -->
+    <!-- ░░ Témoignages clients ░░ -->
+    <section class="testimonials">
+  <div class="testimonials-inner">
+    <h2 class="testimonials-title">Ce que disent nos clients</h2>
+    <div class="testimonials-grid">
+
+      <div class="testimonial-card">
+        <span class="testimonial-quote-bg">"</span>
+        <div class="testimonial-header">
+          <div class="testimonial-avatar" style="background:#2a52e0;color:#fff;">SM</div>
+          <div class="testimonial-meta">
+            <span class="testimonial-name">Sandra M.</span>
+            <span class="testimonial-city">Saint-Paul · 974</span>
+            <span class="testimonial-stars">★★★★★</span>
+          </div>
+        </div>
+        <blockquote class="testimonial-body">J'ai commandé des plaquettes Valeo sur WhatsApp, livrée le lendemain à Saint-Paul. Service rapide et pièces conformes, je reviendrai !</blockquote>
+      </div>
+
+      <div class="testimonial-card">
+        <span class="testimonial-quote-bg">"</span>
+        <div class="testimonial-header">
+          <div class="testimonial-avatar" style="background:#e01f2b;color:#fff;">BL</div>
+          <div class="testimonial-meta">
+            <span class="testimonial-name">Bertrand L.</span>
+            <span class="testimonial-city">Le Tampon · 974</span>
+            <span class="testimonial-stars">★★★★★</span>
+          </div>
+        </div>
+        <blockquote class="testimonial-body">Ils m'ont aidé à trouver la référence exacte pour ma Clio 4 par le numéro VIN. Professionnel et efficace, je recommande.</blockquote>
+      </div>
+
+      <div class="testimonial-card">
+        <span class="testimonial-quote-bg">"</span>
+        <div class="testimonial-header">
+          <div class="testimonial-avatar" style="background:#ffcb00;color:#111;">JK</div>
+          <div class="testimonial-meta">
+            <span class="testimonial-name">Johanne K.</span>
+            <span class="testimonial-city">Sainte-Marie · 974</span>
+            <span class="testimonial-stars">★★★★★</span>
+          </div>
+        </div>
+        <blockquote class="testimonial-body">La batterie Varta commandée le matin était disponible en boutique l'après-midi. Parfait pour un dépannage rapide !</blockquote>
+      </div>
+
+    </div>
+  </div>
+</section>
+
     <section class="faq" id="faq">
       <div class="container">
         <p class="section-kicker">FAQ</p>
@@ -710,7 +786,18 @@
           <svg viewBox="0 0 24 24" aria-hidden="true" class="footer__hours-icon"><circle cx="12" cy="12" r="9"/><polyline points="12 6 12 12 16 14"/></svg>
           <span><strong>Lun–Sam :</strong> 8h–18h &nbsp;·&nbsp; <strong>Dimanche :</strong> Fermé</span>
         </div>
-        <a class="footer__map-link" href="https://www.google.com/maps/search/ZOT+AUTO+Multiservices+Sainte-Rose+R%C3%A9union" target="_blank" rel="noopener">📍 Sainte-Rose, La Réunion</a>
+        <div class="footer__map">
+          <iframe
+            src="https://maps.google.com/maps?q=Saint-Pierre,+La+R%C3%A9union&output=embed"
+            width="100%"
+            height="180"
+            style="border:none;border-radius:10px;display:block;"
+            loading="lazy"
+            allowfullscreen
+            title="ZOT AUTO MULTISERVICES sur Google Maps"
+          ></iframe>
+          <a class="footer__map-link" href="https://maps.google.com/?q=Saint-Pierre+La+Reunion" target="_blank" rel="noopener">📍 Voir sur Google Maps →</a>
+        </div>
         <div class="socials">
           <a href="https://www.facebook.com/p/ZOT-AUTO-Multiservices-61572907222529/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
           <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2"/></svg></a>
