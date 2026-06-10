@@ -532,4 +532,29 @@
   });
   renderCart();
 
+  // ── Scroll-to-top ──────────────────────────────────────────────
+  (function () {
+    var btn = document.getElementById("scrollTop");
+    if (!btn) return;
+    window.addEventListener("scroll", function () {
+      btn.classList.toggle("is-visible", window.scrollY > 400);
+    }, { passive: true });
+    btn.addEventListener("click", function () {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }());
+
+  // ── Badge "Populaire" sur les services featured ─────────────────
+  (function () {
+    var grid = document.getElementById("servicesGrid");
+    if (!grid) return;
+    // Le grid est rempli après DOMContentLoaded — on observe avec MutationObserver
+    var mo = new MutationObserver(function () {
+      grid.querySelectorAll(".service.is-featured").forEach(function (card) {
+        card.setAttribute("data-popular", "");
+      });
+    });
+    mo.observe(grid, { childList: true });
+  }());
+
 })();

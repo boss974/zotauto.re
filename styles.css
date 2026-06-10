@@ -849,8 +849,106 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
   padding: 3px 12px; border-radius: 999px; margin: 8px 0 10px; line-height: 1.6;
 }
 
+/* =========================================================
+   Promo — ribbon + stock bars + réassurance
+   ========================================================= */
+.promo__ribbon {
+  position: absolute; top: 14px; left: 0; z-index: 2;
+  background: var(--red); color: #fff;
+  font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  padding: 6px 14px 6px 10px; border-radius: 0 4px 4px 0;
+  box-shadow: 2px 2px 6px rgba(224,31,43,.35); pointer-events: none;
+}
+.promo__stock-bar { margin: 1rem 0 1.25rem; }
+.promo__stock-label { display: block; font-size: .78rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .45rem; }
+.promo__stock-tracks { display: flex; flex-direction: column; gap: 6px; }
+.promo__stock-track { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.promo__stock-fill { height: 100%; background: linear-gradient(90deg, var(--red) 0%, var(--yellow) 100%); border-radius: 99px; animation: stockPulse 2.4s ease-in-out infinite alternate; }
+@keyframes stockPulse { from { opacity: 1; } to { opacity: .75; } }
+.promo__reassurance { margin-top: .9rem; font-size: .8rem; color: var(--muted); line-height: 1.5; }
+
+/* =========================================================
+   Services — cartes améliorées
+   ========================================================= */
+.services { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+.service {
+  background: #fff; border: 1.5px solid var(--line); border-radius: 16px;
+  padding: 28px 24px 22px; display: flex; flex-direction: column; position: relative;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s;
+}
+.service:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(42,82,224,0.13); border-color: transparent; }
+.service__ic { font-size: 1.7rem; width: 52px; height: 52px; border-radius: 14px; background: var(--blue-050); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
+.service.is-featured { border-color: var(--yellow); }
+.service[data-popular]::after {
+  content: "⭐ Populaire"; position: absolute; top: -10px; right: 14px;
+  background: var(--blue); color: #fff; font-family: var(--font-display);
+  font-weight: 700; font-size: 0.67rem; padding: 3px 10px; border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(42,82,224,.25);
+}
+
+/* =========================================================
+   Footer améliorations
+   ========================================================= */
+.footer__hours { display: flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--muted); font-size: 0.875rem; }
+.footer__hours-icon { width: 16px; height: 16px; flex-shrink: 0; fill: none; stroke: var(--blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.footer__map-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; color: var(--blue); font-size: 0.875rem; font-weight: 600; transition: opacity 0.2s; }
+.footer__map-link:hover { opacity: 0.75; text-decoration: underline; }
+.footer__pay-label { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--ink-2); font-size: 0.86rem; }
+.footer__pay-icon { width: 18px; height: 18px; flex-shrink: 0; fill: none; stroke: var(--blue); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.pays { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.pays-card {
+  font-style: normal; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: var(--font-display); font-weight: 700; font-size: 0.72rem; letter-spacing: 0.03em;
+  padding: 7px 14px; border-radius: 10px; background: #fff; border: 1.5px solid var(--line);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06); color: var(--ink-2); min-height: 40px;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.pays-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.10); transform: translateY(-2px); }
+.pays--wa { color: #075e2f !important; border-color: #b5f0c8 !important; background: #f0fdf4 !important; font-size: 0.78rem; }
+.pays--cash { color: #2a7a2a !important; border-color: #c8e6c8 !important; background: #f4fdf4 !important; font-size: 0.78rem; }
+.footer__copy { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.footer__https-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--blue-050); border: 1px solid #c5d1f7; color: var(--blue); font-size: 0.75rem; font-weight: 700; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+.footer__lock-icon { width: 12px; height: 12px; flex-shrink: 0; fill: none; stroke: var(--blue); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* =========================================================
+   UX — pulse WA + scroll-to-top + overlay produit
+   ========================================================= */
+.fab-wa { position: relative; }
+.fab-wa__ring { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; }
+.fab-wa__ring::before, .fab-wa__ring::after {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: var(--wa); opacity: 0;
+  animation: wa-pulse 2.4s ease-out infinite;
+}
+.fab-wa__ring::after { animation-delay: 1.2s; }
+@keyframes wa-pulse { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(2.2); opacity: 0; } }
+
+.scroll-top {
+  position: fixed; bottom: 5rem; right: 1.25rem; z-index: 900;
+  width: 2.75rem; height: 2.75rem; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--blue); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 4px 14px rgba(42,82,224,.35);
+  opacity: 0; transform: translateY(12px); pointer-events: none;
+  transition: opacity .3s, transform .3s;
+}
+.scroll-top svg { width: 1.2rem; height: 1.2rem; fill: currentColor; }
+.scroll-top.is-visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.scroll-top:hover { background: var(--blue-600); }
+
+.product__media::after {
+  content: '🔍 Aperçu rapide';
+  position: absolute; bottom: 0; left: 0; width: 100%;
+  padding: .6rem 0; text-align: center;
+  font-size: .8rem; font-weight: 600; color: #fff;
+  background: rgba(42,82,224,.75);
+  transform: translateY(100%); transition: transform .28s ease;
+  pointer-events: none;
+}
+.product:hover .product__media::after { transform: translateY(0); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }
-  .ticker__track, .brands-track { animation: none; }
+  .ticker__track, .brands-track, .fab-wa__ring::before, .fab-wa__ring::after { animation: none; }
 }
