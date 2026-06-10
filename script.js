@@ -557,4 +557,118 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Social proof notifications ──
+  (function () {
+    var notifications = [
+      { emoji: "🌺", name: "Matthieu", ville: "Saint-Pierre", produit: "Plaquettes Valeo" },
+      { emoji: "🔧", name: "Cindy", ville: "Saint-Denis", produit: "Filtre à huile Mann" },
+      { emoji: "🌺", name: "Dorian", ville: "Le Tampon", produit: "Kit distribution Gates" },
+      { emoji: "🔧", name: "Priscilla", ville: "Saint-Paul", produit: "Amortisseurs Monroe" },
+      { emoji: "🌺", name: "Kévin", ville: "Saint-André", produit: "Batterie Varta 60Ah" },
+      { emoji: "🔧", name: "Nathalie", ville: "Sainte-Marie", produit: "Courroie accessoires" },
+      { emoji: "🌺", name: "Damien", ville: "Saint-Leu", produit: "Disques de frein TRW" },
+      { emoji: "🔧", name: "Sandrine", ville: "Saint-Louis", produit: "Bougies NGK" }
+    ];
+    var el = document.getElementById("socialProof");
+    var textEl = document.getElementById("socialProofText");
+    var closeBtn = document.getElementById("socialProofClose");
+    if (!el || !textEl) return;
+    var lastIndex = -1;
+    var hideTimer = null;
+    var cycleTimer = null;
+    function pickNext() {
+      var idx;
+      do { idx = Math.floor(Math.random() * notifications.length); } while (idx === lastIndex);
+      lastIndex = idx;
+      return notifications[idx];
+    }
+    function show() {
+      var n = pickNext();
+      textEl.innerHTML = n.emoji + " <strong>" + n.name + " (" + n.ville + ")</strong> vient de commander <em>" + n.produit + "</em>";
+      el.classList.add("is-visible");
+      hideTimer = setTimeout(hide, 5000);
+    }
+    function hide() {
+      clearTimeout(hideTimer);
+      el.classList.remove("is-visible");
+    }
+    function scheduleNext() {
+      var delay = 12000 + Math.random() * 6000;
+      cycleTimer = setTimeout(function () { show(); scheduleNext(); }, delay);
+    }
+    closeBtn.addEventListener("click", function () { hide(); clearTimeout(cycleTimer); scheduleNext(); });
+    setTimeout(function () { show(); scheduleNext(); }, 6000);
+  }());
+
+  // ── Countdown promo J+7 ──
+  (function () {
+    var TARGET_KEY = 'zotauto_promo_end';
+    var MS_7_DAYS  = 7 * 24 * 60 * 60 * 1000;
+    function getTarget() {
+      var stored = localStorage.getItem(TARGET_KEY);
+      if (stored) { var ts = parseInt(stored, 10); if (!isNaN(ts) && ts > Date.now()) return ts; }
+      var ts = Date.now() + MS_7_DAYS;
+      try { localStorage.setItem(TARGET_KEY, String(ts)); } catch (e) {}
+      return ts;
+    }
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+    function tick(target) {
+      var diff = target - Date.now();
+      if (diff <= 0) {
+        document.getElementById('cdDays').textContent = '00';
+        document.getElementById('cdHours').textContent = '00';
+        document.getElementById('cdMins').textContent = '00';
+        return;
+      }
+      var days  = Math.floor(diff / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var mins  = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      document.getElementById('cdDays').textContent  = pad(days);
+      document.getElementById('cdHours').textContent = pad(hours);
+      document.getElementById('cdMins').textContent  = pad(mins);
+    }
+    var target = getTarget();
+    tick(target);
+    setInterval(function () { tick(target); }, 60000);
+  }());
+
+  // ── Mob-bar : Chercher + Panier + overlay ──
+  (function () {
+    var mobSearch  = document.getElementById("mobSearch");
+    var mobCart    = document.getElementById("mobCart");
+    var cartBtn    = document.getElementById("cartOpen");
+    var searchForm = document.getElementById("searchForm");
+    if (mobSearch && searchForm) {
+      mobSearch.addEventListener("click", function () {
+        searchForm.scrollIntoView({ behavior: "smooth", block: "center" });
+        var input = searchForm.querySelector("input[type='search'], input[type='text'], input");
+        if (input) { setTimeout(function () { input.focus(); }, 350); }
+      });
+    }
+    if (mobCart && cartBtn) { mobCart.addEventListener("click", function () { cartBtn.click(); }); }
+    // Overlay menu
+    var overlay = document.createElement("div");
+    overlay.className = "menu-overlay";
+    overlay.id = "menuOverlay";
+    document.body.appendChild(overlay);
+    var burger = document.getElementById("burger");
+    var catnav = document.getElementById("catnav");
+    function syncBodyClass() {
+      if (catnav && catnav.classList.contains("is-open")) {
+        document.body.classList.add("menu-open");
+      } else {
+        document.body.classList.remove("menu-open");
+      }
+    }
+    overlay.addEventListener("click", function () {
+      if (catnav) { catnav.classList.remove("is-open"); catnav.style.display = ""; }
+      if (burger) { burger.setAttribute("aria-expanded", "false"); }
+      document.body.classList.remove("menu-open");
+    });
+    if (catnav) {
+      var moMenu = new MutationObserver(syncBodyClass);
+      moMenu.observe(catnav, { attributes: true, attributeFilter: ["class"] });
+    }
+  }());
+
 })();

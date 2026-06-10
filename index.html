@@ -446,6 +446,25 @@
             <span class="promo__tag">🔥 Promo d'ouverture</span>
             <h2>Huiles <span class="hl-red">Euroatlantic</span> à prix péi</h2>
             <p>Tarifs spéciaux sur toute la gamme d'huiles moteur et lubrifiants pour l'ouverture de la boutique. Quantités limitées.</p>
+            <div class="promo__countdown" id="promoCountdown" aria-live="polite">
+              <p class="promo__countdown-label">Offre se termine dans</p>
+              <div class="promo__countdown-blocks">
+                <div class="promo__countdown-block">
+                  <span class="promo__countdown-num" id="cdDays">07</span>
+                  <span class="promo__countdown-unit">JOURS</span>
+                </div>
+                <div class="promo__countdown-sep">:</div>
+                <div class="promo__countdown-block">
+                  <span class="promo__countdown-num" id="cdHours">00</span>
+                  <span class="promo__countdown-unit">HEURES</span>
+                </div>
+                <div class="promo__countdown-sep">:</div>
+                <div class="promo__countdown-block">
+                  <span class="promo__countdown-num" id="cdMins">00</span>
+                  <span class="promo__countdown-unit">MIN</span>
+                </div>
+              </div>
+            </div>
             <div class="promo__stock-bar">
               <span class="promo__stock-label">Stock limité</span>
               <div class="promo__stock-tracks">
@@ -519,6 +538,78 @@
             <div class="stars">★★★★★</div>
             <blockquote>Visseuse Worcraft nickel, commande passée sur WhatsApp en 5 min, livraison rapide. Je recommande sans hésiter.</blockquote>
           </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ FAQ accordion ░░ -->
+    <section class="faq" id="faq">
+      <div class="container">
+        <p class="section-kicker">FAQ</p>
+        <h2 class="section-title">Questions fréquentes</h2>
+
+        <div class="faq__list">
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span>Livrez-vous partout à La Réunion&nbsp;?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__body">
+              <p>Oui, nous livrons dans toute l'île — de Saint-Denis à Saint-Pierre, en passant par Saint-Paul, Le Tampon ou encore Saint-Benoît. La livraison est assurée par nos transporteurs partenaires sous 24 à 72&nbsp;h selon votre secteur. Les commandes passées avant 11&nbsp;h sont traitées le jour même.</p>
+            </div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span>Comment trouver la bonne pièce pour mon véhicule&nbsp;?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__body">
+              <p>Utilisez notre moteur de recherche en indiquant la marque, le modèle, l'année et la motorisation de votre véhicule. Vous pouvez également nous transmettre la référence OEM (visible sur la pièce d'origine) ou votre numéro VIN via le formulaire de contact — notre équipe vous identifie la pièce compatible dans les meilleurs délais.</p>
+            </div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span>Quels sont vos délais de livraison&nbsp;?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__body">
+              <p>Les pièces disponibles en stock local sont expédiées sous 24&nbsp;h (jours ouvrés). Pour les références commandées à l'import (Europe ou Asie), comptez 5 à 10 jours ouvrés. Le délai exact est toujours affiché sur la fiche produit avant validation du panier.</p>
+            </div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span>Puis-je retourner une pièce si elle ne convient pas&nbsp;?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__body">
+              <p>Oui. Vous disposez de 30 jours à compter de la réception pour retourner un article non monté et dans son emballage d'origine. Contactez-nous par e-mail ou téléphone pour obtenir un bon de retour. Les frais de retour sont à votre charge sauf erreur de notre part. Le remboursement est effectué sous 5 jours ouvrés après réception et vérification de la pièce.</p>
+            </div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span>Comment passer commande&nbsp;?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__body">
+              <p>Parcourez notre catalogue en ligne, ajoutez les pièces souhaitées au panier et finalisez votre achat en quelques clics. Nous acceptons les paiements par carte bancaire (Visa, Mastercard), virement ou paiement à la livraison pour certaines zones. Vous pouvez aussi nous appeler directement pour passer commande par téléphone.</p>
+            </div>
+          </details>
+
+          <details class="faq__item">
+            <summary class="faq__question">
+              <span>Proposez-vous des pièces pour tous les types de véhicules&nbsp;?</span>
+              <span class="faq__icon" aria-hidden="true"></span>
+            </summary>
+            <div class="faq__body">
+              <p>Notre catalogue couvre les véhicules particuliers, utilitaires, 4×4 et pick-up des principales marques (japonaises, européennes, coréennes, américaines). Nous référençons aussi des pièces pour motos et quads. Si vous ne trouvez pas votre référence, contactez-nous : grâce à notre réseau de fournisseurs, nous pouvons sourcer des pièces rares ou hors catalogue sous quelques jours.</p>
+            </div>
+          </details>
+
         </div>
       </div>
     </section>
@@ -669,5 +760,27 @@
   <script src="script.js" defer></script>
   <script src="vehicle-lookup.js" defer></script>
   <script src="pwa.js" defer></script>
+<div class="social-proof" id="socialProof" role="status" aria-live="polite">
+  <div class="social-proof__icon">🛒</div>
+  <div class="social-proof__content">
+    <span class="social-proof__text" id="socialProofText"></span>
+    <span class="social-proof__time">à l'instant</span>
+  </div>
+  <button class="social-proof__close" id="socialProofClose" aria-label="Fermer">✕</button>
+</div>
+<div class="mob-bar" id="mobBar" aria-label="Navigation rapide mobile">
+  <button class="mob-bar__btn" id="mobSearch" aria-label="Chercher une pièce">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+    <span>Chercher</span>
+  </button>
+  <button class="mob-bar__btn" id="mobCart" aria-label="Voir le panier">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    <span>Panier</span>
+  </button>
+  <a class="mob-bar__btn mob-bar__btn--wa" href="https://wa.me/262693057012" target="_blank" rel="noopener" aria-label="Contacter sur WhatsApp">
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.122 1.533 5.858L.057 23.486a.5.5 0 00.611.665l5.794-1.519A11.946 11.946 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.799 9.799 0 01-5.001-1.374l-.358-.213-3.716.974.993-3.622-.234-.373A9.818 9.818 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+    <span>WhatsApp</span>
+  </a>
+</div>
 </body>
 </html>
