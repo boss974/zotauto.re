@@ -745,8 +745,112 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 .ava--red { background: var(--red); }
 .ava--yellow { background: var(--yellow); color: var(--ink) !important; }
 
+/* =========================================================
+   Hero — badge stock animé + bandeau de confiance + RGPD finder
+   ========================================================= */
+.hero__live-badge {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  margin-top: 1.25rem; padding: 0.45rem 1rem 0.45rem 0.75rem;
+  background: #fff8e1; border: 1.5px solid var(--yellow); border-radius: 999px;
+  font-size: 0.85rem; font-weight: 600; color: #7a5800;
+  box-shadow: 0 2px 8px rgba(255,203,0,0.18);
+  animation: badge-pulse 2.6s ease-in-out infinite;
+}
+.hero__live-badge__dot {
+  display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--red); flex-shrink: 0;
+  animation: dot-blink 1.3s ease-in-out infinite;
+}
+@keyframes badge-pulse {
+  0%,100% { box-shadow: 0 2px 8px rgba(255,203,0,0.18); }
+  50%      { box-shadow: 0 4px 18px rgba(255,203,0,0.42); }
+}
+@keyframes dot-blink {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50%     { opacity: 0.35; transform: scale(0.72); }
+}
+.hero__trust {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem 0;
+  margin-top: 1.1rem; padding: 0.7rem 1rem;
+  background: rgba(42,82,224,0.08); border: 1px solid rgba(42,82,224,0.15); border-radius: 10px;
+}
+.hero__trust-item {
+  display: flex; align-items: center; gap: 0.45rem;
+  flex: 1 1 auto; min-width: 0; padding: 0.2rem 0.5rem;
+  font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap;
+}
+.hero__trust-item svg { width: 17px; height: 17px; color: var(--yellow); flex-shrink: 0; }
+.hero__trust-sep { width: 1px; height: 22px; background: rgba(255,255,255,0.2); flex-shrink: 0; margin: 0 0.1rem; }
+.finder__rgpd {
+  display: flex; align-items: center; gap: 0.35rem;
+  margin-top: 0.5rem; font-size: 0.72rem; color: var(--muted); font-weight: 500;
+}
+.finder__rgpd svg { flex-shrink: 0; opacity: 0.7; }
+
+/* =========================================================
+   Catégories — layout vertical style Oscaro
+   ========================================================= */
+.cats { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.cat {
+  flex-direction: column; align-items: center; text-align: center; gap: 12px;
+  border-top: 4px solid var(--line);
+  padding: 28px 16px 22px; position: relative;
+}
+.cat:has(.cat__ic--blue)   { border-top-color: var(--blue); }
+.cat:has(.cat__ic--red)    { border-top-color: var(--red); }
+.cat:has(.cat__ic--yellow) { border-top-color: var(--yellow-600); }
+.cat:has(.cat__ic--green)  { border-top-color: var(--wa); }
+.cat__ic { width: 60px; height: 60px; border-radius: 16px; }
+.cat h3 { font-size: 0.95rem; line-height: 1.3; }
+.cat small { color: var(--muted); font-size: 0.8rem; line-height: 1.4; }
+.cat__arrow {
+  position: absolute; bottom: 12px; right: 14px;
+  font-size: 1rem; color: var(--muted-2);
+  transition: transform 0.22s var(--ease), color 0.22s;
+}
+.cat:hover .cat__arrow { transform: translateX(5px); color: var(--ink-2); }
+.cat--wa { border-top-style: solid; }
+
+/* =========================================================
+   Carrousel marques — auto-scroll
+   ========================================================= */
+.brands-carousel {
+  overflow: hidden; width: 100%; padding: 12px 0;
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+.brands-track {
+  display: inline-flex; align-items: center; gap: 20px;
+  width: max-content;
+  animation: brands-scroll 22s linear infinite;
+}
+.brands-carousel:hover .brands-track { animation-play-state: paused; }
+@keyframes brands-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* =========================================================
+   CTA band — gradient bleu + silhouette voiture + badge
+   ========================================================= */
+.ctaband .tricolor { margin-bottom: 0; }
+.ctaband__inner {
+  background: linear-gradient(135deg, #2a52e0 0%, #1e3fc2 50%, #16308f 100%);
+}
+.ctaband__inner::after { display: none; }
+.ctaband__car-deco {
+  position: absolute; right: -20px; bottom: 10px;
+  width: clamp(200px, 36vw, 380px); opacity: 0.07;
+  pointer-events: none; user-select: none;
+}
+.ctaband__badge {
+  display: inline-block; background: var(--yellow); color: var(--ink);
+  font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em;
+  padding: 3px 12px; border-radius: 999px; margin: 8px 0 10px; line-height: 1.6;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }
-  .ticker__track { animation: none; }
+  .ticker__track, .brands-track { animation: none; }
 }
