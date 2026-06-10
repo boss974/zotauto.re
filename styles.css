@@ -590,7 +590,163 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
   .services { grid-template-columns: 1fr; }
 }
 
+/* =========================================================
+   Ticker défilant
+   ========================================================= */
+.ticker {
+  background: var(--blue-600);
+  color: rgba(255,255,255,0.92);
+  font-size: 0.8rem;
+  font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 0;
+  letter-spacing: 0.01em;
+}
+.ticker__track {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5rem;
+  animation: ticker-scroll 35s linear infinite;
+}
+.ticker__dot { color: var(--yellow); font-weight: 800; }
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* =========================================================
+   Barre de stats
+   ========================================================= */
+.stats {
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-700) 100%);
+  color: #fff;
+  padding: 2.5rem 0;
+}
+.stats__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  text-align: center;
+}
+.stat { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.stat__n {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 800;
+  color: var(--yellow);
+  line-height: 1;
+}
+.stat__n span { font-size: 0.7em; }
+.stat > span { font-size: 0.875rem; opacity: 0.8; }
+@media (max-width: 600px) { .stats__grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
+
+/* =========================================================
+   Comment commander — 3 étapes
+   ========================================================= */
+.howto { background: var(--soft); }
+.steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 2.5rem 0 2rem;
+}
+.step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  position: relative;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+.step:hover { box-shadow: var(--shadow); transform: translateY(-4px); }
+.step__num {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--blue);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 0.85rem;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.step__ic { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.step h3 { font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--ink); }
+.step p { font-size: 0.9rem; color: var(--muted); line-height: 1.55; }
+.step__arrow {
+  flex: 0 0 auto;
+  align-self: center;
+  color: var(--blue);
+  opacity: 0.4;
+}
+.step__arrow svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.howto__cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+@media (max-width: 720px) {
+  .steps { flex-direction: column; align-items: stretch; }
+  .step__arrow { transform: rotate(90deg); align-self: center; }
+}
+
+/* =========================================================
+   Avis clients améliorés
+   ========================================================= */
+.reviews__score {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  max-width: 480px;
+}
+.reviews__big {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+}
+.stars--lg { font-size: 1.4rem; color: var(--yellow); margin-bottom: 4px; }
+.reviews__score p { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.75rem; }
+.reviews__bars { display: flex; flex-direction: column; gap: 5px; }
+.rbar { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--muted); }
+.rbar span { width: 22px; text-align: right; }
+.rbar__track { flex: 1; height: 7px; background: var(--line); border-radius: 999px; overflow: hidden; }
+.rbar__fill { height: 100%; background: var(--yellow); border-radius: 999px; }
+.rbar small { width: 28px; }
+.review {
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.review:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+.review__head { display: flex; align-items: center; gap: 12px; }
+.review__head div { display: flex; flex-direction: column; gap: 2px; }
+.review__head strong { font-size: 0.95rem; }
+.review__head small { font-size: 0.78rem; color: var(--muted); }
+.review .stars { font-size: 1rem; color: var(--yellow); letter-spacing: 1px; }
+.review blockquote { font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; font-style: normal; }
+.ava--blue { background: var(--blue); }
+.ava--red { background: var(--red); }
+.ava--yellow { background: var(--yellow); color: var(--ink) !important; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
   .reveal { opacity: 1; transform: none; }
+  .ticker__track { animation: none; }
 }

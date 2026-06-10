@@ -77,6 +77,27 @@
     <div class="tricolor" aria-hidden="true"><i></i><i></i><i></i></div>
   </div>
 
+  <!-- ░░ Ticker défilant ░░ -->
+  <div class="ticker" aria-label="Promotions et informations">
+    <div class="ticker__track" aria-hidden="true">
+      <span>🚚 Livraison sur toute La Réunion (974)</span>
+      <span class="ticker__dot">·</span>
+      <span>🔥 Promo d'ouverture — Huiles Euroatlantic</span>
+      <span class="ticker__dot">·</span>
+      <span>⚡ Réponse WhatsApp en moins d'1h</span>
+      <span class="ticker__dot">·</span>
+      <span>🌺 Koch-Chemie · Valeo · Worcraft · Power Maxx</span>
+      <span class="ticker__dot">·</span>
+      <span>🚚 Livraison sur toute La Réunion (974)</span>
+      <span class="ticker__dot">·</span>
+      <span>🔥 Promo d'ouverture — Huiles Euroatlantic</span>
+      <span class="ticker__dot">·</span>
+      <span>⚡ Réponse WhatsApp en moins d'1h</span>
+      <span class="ticker__dot">·</span>
+      <span>🌺 Koch-Chemie · Valeo · Worcraft · Power Maxx</span>
+    </div>
+  </div>
+
   <!-- ░░ Header ░░ -->
   <header class="header" id="top">
     <div class="container header__inner">
@@ -218,6 +239,16 @@
       </div>
     </section>
 
+    <!-- ░░ Stats ░░ -->
+    <section class="stats" aria-label="Chiffres clés ZOT AUTO">
+      <div class="container stats__grid">
+        <div class="stat"><strong class="stat__n">500<span>+</span></strong><span>références en stock</span></div>
+        <div class="stat"><strong class="stat__n">5</strong><span>marques professionnelles</span></div>
+        <div class="stat"><strong class="stat__n">974</strong><span>toute l'île livrée</span></div>
+        <div class="stat"><strong class="stat__n">4,9<span>★</span></strong><span>note clients</span></div>
+      </div>
+    </section>
+
     <!-- ░░ Coups de cœur (rempli depuis data/catalogue.js — produits featured) ░░ -->
     <section class="section section--featured" id="coupsdecoeur" hidden>
       <div class="container">
@@ -322,6 +353,44 @@
       </div>
     </section>
 
+    <!-- ░░ Comment commander ░░ -->
+    <section class="section howto" id="commander">
+      <div class="container">
+        <header class="shead shead--center">
+          <div><span class="kicker">Simple &amp; rapide</span><h2>Commander en 3 étapes</h2></div>
+        </header>
+        <div class="steps">
+          <div class="step reveal">
+            <span class="step__num">1</span>
+            <div class="step__ic">🔍</div>
+            <h3>Cherchez votre produit</h3>
+            <p>Par plaque, VIN ou en parcourant le catalogue. Ajoutez au panier en un clic.</p>
+          </div>
+          <div class="step__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div class="step reveal">
+            <span class="step__num">2</span>
+            <div class="step__ic">💬</div>
+            <h3>Envoyez sur WhatsApp</h3>
+            <p>Votre panier génère automatiquement un message complet, prêt à envoyer.</p>
+          </div>
+          <div class="step__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+          <div class="step reveal">
+            <span class="step__num">3</span>
+            <div class="step__ic">🚚</div>
+            <h3>Livraison partout en 974</h3>
+            <p>On confirme stock, prix et délai — livraison sur toute l'île.</p>
+          </div>
+        </div>
+        <div class="howto__cta">
+          <a class="btn btn--blue btn--lg" href="#bestsellers">Parcourir le catalogue</a>
+          <a class="btn btn--wa btn--lg" href="https://wa.me/262693057012" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11.9 11.9 0 0 0 12 0C5.4 0 0 5.4 0 12c0 2.1.6 4.2 1.6 6L0 24l6.2-1.6c1.7.9 3.7 1.4 5.8 1.4 6.6 0 12-5.4 12-12 0-3.2-1.2-6.2-3.5-8.3Z"/></svg>
+            Contacter directement
+          </a>
+        </div>
+      </div>
+    </section>
+
     <!-- ░░ Services (rempli depuis data/catalogue.js) ░░ -->
     <section class="section" id="services">
       <div class="container">
@@ -371,10 +440,34 @@
         <header class="shead shead--center">
           <div><span class="kicker">Ils nous font confiance</span><h2>Avis clients · <span class="hl-blue">4,9/5</span></h2></div>
         </header>
+        <div class="reviews__score reveal">
+          <div class="reviews__big">4,9</div>
+          <div>
+            <div class="stars stars--lg">★★★★★</div>
+            <p>Basé sur les avis clients</p>
+            <div class="reviews__bars">
+              <div class="rbar"><span>5★</span><div class="rbar__track"><div class="rbar__fill" style="width:92%"></div></div><small>92%</small></div>
+              <div class="rbar"><span>4★</span><div class="rbar__track"><div class="rbar__fill" style="width:6%"></div></div><small>6%</small></div>
+              <div class="rbar"><span>3★</span><div class="rbar__track"><div class="rbar__fill" style="width:2%"></div></div><small>2%</small></div>
+            </div>
+          </div>
+        </div>
         <div class="reviews">
-          <figure class="review reveal"><div class="stars">★★★★★</div><blockquote>« Pièces trouvées en 2 minutes avec ma plaque, livrées au Sud le lendemain. Top ! »</blockquote><figcaption><span class="ava">M</span> Mathieu R. · Saint-Pierre</figcaption></figure>
-          <figure class="review reveal"><div class="stars">★★★★★</div><blockquote>« Très bon conseil pour l'huile et le detailing. Bon prix et service au top. »</blockquote><figcaption><span class="ava">L</span> Laëtitia P. · Saint-Denis</figcaption></figure>
-          <figure class="review reveal"><div class="stars">★★★★★</div><blockquote>« Visseuse Worcraft nickel, commande passée sur WhatsApp en 5 min. Je recommande. »</blockquote><figcaption><span class="ava">J</span> Jean-Marc H. · Le Tampon</figcaption></figure>
+          <figure class="review reveal">
+            <div class="review__head"><span class="ava ava--blue">M</span><div><strong>Mathieu R.</strong><small>Saint-Pierre · il y a 2 semaines</small></div></div>
+            <div class="stars">★★★★★</div>
+            <blockquote>Pièces trouvées en 2 minutes avec ma plaque, livrées au Sud le lendemain. Service au top, je recommande !</blockquote>
+          </figure>
+          <figure class="review reveal">
+            <div class="review__head"><span class="ava ava--red">L</span><div><strong>Laëtitia P.</strong><small>Saint-Denis · il y a 1 mois</small></div></div>
+            <div class="stars">★★★★★</div>
+            <blockquote>Très bon conseil pour l'huile et le detailing. Les prix sont corrects et le service vraiment au top.</blockquote>
+          </figure>
+          <figure class="review reveal">
+            <div class="review__head"><span class="ava ava--yellow">J</span><div><strong>Jean-Marc H.</strong><small>Le Tampon · il y a 3 semaines</small></div></div>
+            <div class="stars">★★★★★</div>
+            <blockquote>Visseuse Worcraft nickel, commande passée sur WhatsApp en 5 min, livraison rapide. Je recommande sans hésiter.</blockquote>
+          </figure>
         </div>
       </div>
     </section>
