@@ -18,7 +18,7 @@
   "use strict";
 
   /* ----- Configuration ----- */
-  var WA = "262692000000"; // ⚠️ même numéro que script.js (à remplacer pour la prod)
+  var WA = "262693057012";
   var CONFIG = {
     // (Recommandé en prod) proxy serveur Netlify — le token reste caché côté serveur :
     PLATE_PROXY_URL: "",   // ex "/api/decode-plate"

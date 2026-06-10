@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var WA = "262692000000"; // numéro WhatsApp (à remplacer)
+  var WA = "262693057012";
   var DATA = window.ZOTAUTO || { products: [], services: [] };
   var PRODUCTS = (DATA.products || []).slice(); // copie de travail
   var SERVICES = (DATA.services || []).slice();
