@@ -557,6 +557,28 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Reading progress + scroll-top SVG ring ──
+  (function () {
+    var progressBar = document.getElementById('readingProgress');
+    var wrapper = document.getElementById('scrollTopWrapper');
+    var circle  = document.getElementById('scrollProgressCircle');
+    var CIRCUMFERENCE = 2 * Math.PI * 22;
+    var ticking = false;
+    function updateScrollUI() {
+      var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      var docHeight = (document.documentElement.scrollHeight || document.body.scrollHeight) - window.innerHeight;
+      var progress  = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+      if (progressBar) { progressBar.style.width = (progress * 100).toFixed(2) + '%'; }
+      if (wrapper) { wrapper.classList.toggle('visible', scrollTop > 300); }
+      if (circle) { circle.style.strokeDashoffset = (CIRCUMFERENCE * (1 - progress)).toFixed(3); }
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { requestAnimationFrame(updateScrollUI); ticking = true; }
+    }, { passive: true });
+    updateScrollUI();
+  }());
+
   // ── Search bar pills ──
   (function () {
     var form = document.getElementById('searchBarForm');
