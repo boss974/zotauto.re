@@ -557,6 +557,110 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Statut boutique ouvert/fermé (heure Réunion) ──
+  (function () {
+    var SCHEDULE = { 0: null, 1: [510,1050], 2: [510,1050], 3: [510,1050], 4: [510,1050], 5: [510,1050], 6: [510,750] };
+    var DAY_NAMES = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+    function getReunionNow() {
+      try {
+        var str = new Date().toLocaleString('fr-FR', { timeZone: 'Indian/Reunion' });
+        var m = str.match(/(\d{2})\/(\d{2})\/(\d{4})\D+(\d{2}):(\d{2})/);
+        if (!m) return null;
+        var d = new Date(+m[3], +m[2]-1, +m[1], +m[4], +m[5]);
+        return { day: d.getDay(), minutes: +m[4]*60 + +m[5] };
+      } catch (e) { return null; }
+    }
+    function formatTime(minutes) {
+      var h = Math.floor(minutes/60), mn = minutes%60;
+      return h + 'h' + (mn < 10 ? '0' : '') + mn;
+    }
+    function nextOpening(day, minutes) {
+      for (var i = 0; i < 7; i++) {
+        var d = (day + i) % 7;
+        var slot = SCHEDULE[d];
+        if (!slot) continue;
+        if (i === 0 && minutes >= slot[0]) continue;
+        var label = i === 0 ? "aujourd'hui" : (i === 1 ? 'demain' : DAY_NAMES[d]);
+        return label + ' ' + formatTime(slot[0]);
+      }
+      return null;
+    }
+    var card = document.querySelector('.hours-card');
+    if (!card) return;
+    var now = getReunionNow();
+    if (!now) return;
+    var rows = card.querySelectorAll('tr[data-days]');
+    rows.forEach(function (row) {
+      var spec = row.getAttribute('data-days');
+      if (!spec) return;
+      var match = spec.split(',').some(function (p) {
+        p = p.trim();
+        if (p.indexOf('-') > -1) {
+          var r = p.split('-');
+          return now.day >= +r[0] && now.day <= +r[1];
+        }
+        return +p === now.day;
+      });
+      if (match) row.classList.add('is-today');
+    });
+    var statusEl = document.getElementById('shopStatus');
+    if (!statusEl) return;
+    var slot = SCHEDULE[now.day];
+    var isOpen = !!slot && now.minutes >= slot[0] && now.minutes < slot[1];
+    if (isOpen) {
+      statusEl.textContent = '● Ouvert maintenant';
+      statusEl.classList.remove('is-closed');
+    } else {
+      var next = nextOpening(now.day, now.minutes);
+      statusEl.textContent = next ? '● Fermé — réouverture ' + next : '● Fermé';
+      statusEl.classList.add('is-closed');
+    }
+  }());
+
+  // ── Share FAB ──
+  (function () {
+    var fab = document.getElementById('shareFab');
+    if (!fab) return;
+    var btn = document.getElementById('shareFabBtn');
+    var wa = document.getElementById('shareWa');
+    var fb = document.getElementById('shareFb');
+    var copyBtn = document.getElementById('shareCopy');
+    var tooltip = document.getElementById('shareTooltip');
+    var shareTitle = 'ZOT AUTO Multiservices';
+    var shareText = "Pièces auto à La Réunion — livraison toute l'île !";
+    function refreshLinks() {
+      var url = location.href;
+      if (wa) wa.href = 'https://wa.me/?text=' + encodeURIComponent(shareText + ' ' + url);
+      if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+    }
+    refreshLinks();
+    if (btn) btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (navigator.share) {
+        navigator.share({ title: shareTitle, text: shareText, url: location.href }).catch(function () {});
+      } else {
+        refreshLinks();
+        var open = fab.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+    });
+    if (copyBtn) copyBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      navigator.clipboard.writeText(location.href).then(function () {
+        if (tooltip) {
+          tooltip.classList.add('visible');
+          setTimeout(function () { tooltip.classList.remove('visible'); }, 1500);
+        }
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (fab.classList.contains('open') && !fab.contains(e.target)) {
+        fab.classList.remove('open');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }());
+
   // ── Reading progress + scroll-top SVG ring ──
   (function () {
     var progressBar = document.getElementById('readingProgress');
