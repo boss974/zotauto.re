@@ -947,6 +947,65 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 }
 .product:hover .product__media::after { transform: translateY(0); }
 
+/* ── Compteurs stats ── */
+.stat__n { font-variant-numeric: tabular-nums; }
+
+/* ── Cookie banner RGPD ── */
+.cookie-banner {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  z-index: 9990;
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; flex-wrap: wrap;
+  padding: 14px 20px;
+  background: #1a1a2e; color: #fff;
+  box-shadow: 0 -4px 16px rgba(0,0,0,.35);
+  transform: translateY(110%);
+  transition: transform .45s ease;
+}
+.cookie-banner.is-visible { transform: translateY(0); }
+.cookie-banner__text { margin: 0; font-size: .92rem; line-height: 1.45; max-width: 760px; }
+.cookie-banner__link { color: #ffcb00; text-decoration: underline; font-weight: 600; }
+.cookie-banner__link:hover { color: #fff; }
+.cookie-banner__btn { flex-shrink: 0; background: #ffcb00; color: #000; border: none; border-radius: 6px; padding: 10px 22px; font-size: .92rem; font-weight: 700; cursor: pointer; transition: filter .2s ease, transform .15s ease; }
+.cookie-banner__btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+@media (max-width: 640px) {
+  .cookie-banner { flex-direction: column; align-items: stretch; text-align: center; gap: 10px; padding: 12px 16px; }
+  .cookie-banner__text { font-size: .8rem; }
+  .cookie-banner__btn { width: 100%; padding: 12px; }
+}
+
+/* ── Top ventes podium ── */
+.top-sellers { background: #fff; padding: 60px 16px; }
+.top-sellers-title { text-align: center; font-size: 2rem; font-weight: 800; color: #1a1a2e; margin: 0 0 40px; }
+.podium { display: flex; align-items: flex-end; justify-content: center; gap: 16px; max-width: 760px; margin: 0 auto; }
+.podium-item { display: flex; flex-direction: column; align-items: center; text-align: center; flex: 1; max-width: 220px; }
+.podium-emoji { font-size: 3rem; line-height: 1; margin-bottom: 10px; }
+.podium-name { font-weight: 700; font-size: 1rem; color: #1a1a2e; margin: 0 0 4px; }
+.podium-sub { font-size: 0.85rem; color: #666; margin: 0 0 12px; }
+.podium-step { position: relative; width: 100%; border-radius: 10px 10px 0 0; display: flex; align-items: flex-start; justify-content: center; overflow: hidden; }
+.step-gold   { height: 140px; background: var(--yellow,#ffcb00); }
+.step-silver { height: 100px; background: #c0c4cc; }
+.step-bronze { height: 80px;  background: #cd9b6a; }
+.podium-badge { margin-top: 10px; background: #1a1a2e; color: #fff; font-weight: 800; font-size: 0.8rem; padding: 4px 12px; border-radius: 999px; z-index: 1; }
+.podium-num { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 6rem; font-weight: 900; color: #fff; opacity: 0.35; line-height: 1; pointer-events: none; }
+.top-sellers-cta { text-align: center; margin-top: 40px; }
+.btn-top-sellers { display: inline-block; background: var(--blue,#2a52e0); color: #fff; font-weight: 700; padding: 14px 32px; border-radius: 999px; text-decoration: none; transition: transform .2s, box-shadow .2s; }
+.btn-top-sellers:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(42,82,224,0.35); }
+@media (max-width: 640px) {
+  .top-sellers { padding: 40px 10px; }
+  .top-sellers-title { font-size: 1.4rem; margin-bottom: 28px; }
+  .podium { gap: 8px; }
+  .podium-emoji { font-size: 2rem; }
+  .podium-item { max-width: 120px; }
+  .podium-name { font-size: 0.8rem; }
+  .podium-sub { font-size: 0.7rem; }
+  .step-gold   { height: 110px; }
+  .step-silver { height: 80px; }
+  .step-bronze { height: 64px; }
+  .podium-num { font-size: 4rem; }
+  .podium-badge { font-size: 0.65rem; padding: 3px 8px; }
+}
+
 /* ── Cat marquee ── */
 .cat-marquee { background: #1a1a2e; height: 64px; display: flex; align-items: center; overflow: hidden; position: relative; }
 .cat-marquee::before, .cat-marquee::after { content: ""; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }

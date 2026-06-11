@@ -37,28 +37,62 @@
   <meta name="apple-mobile-web-app-title" content="ZOT AUTO" />
   <meta name="mobile-web-app-capable" content="yes" />
 
-  <!-- Données structurées — SEO local -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "AutoPartsStore",
-    "name": "ZOT AUTO MULTISERVICES",
-    "description": "Pièces détachées, detailing, outillage et huiles auto à La Réunion. Livraison sur toute l'île.",
-    "image": "https://zotauto.re/assets/og-image.png",
-    "url": "https://zotauto.re/",
-    "telephone": "+262693057012",
-    "priceRange": "€€",
-    "currenciesAccepted": "EUR",
-    "paymentAccepted": "Espèces, Carte bancaire, WhatsApp",
-    "areaServed": { "@type": "AdministrativeArea", "name": "La Réunion (974)" },
-    "address": { "@type": "PostalAddress", "addressRegion": "La Réunion", "addressCountry": "RE" },
-    "sameAs": []
-  }
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AutoPartsStore",
+      "@id": "https://boss974.github.io/zotauto.re/#store",
+      "name": "ZOT AUTO MULTISERVICES",
+      "description": "Vente de pièces auto neuves et accessoires à La Réunion (974). Boutique à Saint-Pierre, livraison 24-72h sur toute l'île. Pièces pour voitures, utilitaires, 4x4, motos et quads.",
+      "url": "https://boss974.github.io/zotauto.re/",
+      "telephone": "+262693057012",
+      "priceRange": "€€",
+      "image": "https://boss974.github.io/zotauto.re/assets/brands/logo-zotauto.png",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Saint-Pierre",
+        "addressRegion": "La Réunion",
+        "postalCode": "97410",
+        "addressCountry": "FR"
+      },
+      "geo": { "@type": "GeoCoordinates", "latitude": -21.3393, "longitude": 55.4781 },
+      "openingHoursSpecification": [
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "08:30", "closes": "17:30" },
+        { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:30", "closes": "12:30" }
+      ],
+      "sameAs": ["https://www.facebook.com/p/ZOT-AUTO-Multiservices-61572907222529/"],
+      "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "bestRating": "5", "ratingCount": "87" },
+      "areaServed": { "@type": "AdministrativeArea", "name": "La Réunion" }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://boss974.github.io/zotauto.re/#website",
+      "url": "https://boss974.github.io/zotauto.re/",
+      "name": "ZOT AUTO MULTISERVICES — Pièces auto La Réunion",
+      "inLanguage": "fr",
+      "publisher": { "@id": "https://boss974.github.io/zotauto.re/#store" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://boss974.github.io/zotauto.re/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "Livrez-vous partout à La Réunion ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, nous livrons sur toute l'île de La Réunion sous 24 à 72h. Les commandes passées avant 11h sont traitées le jour même." } },
+        { "@type": "Question", "name": "Comment trouver la bonne pièce pour mon véhicule ?", "acceptedAnswer": { "@type": "Answer", "text": "Vous pouvez rechercher par marque, modèle et année de votre véhicule, par référence OEM de la pièce, ou nous communiquer votre numéro VIN pour une identification précise." } },
+        { "@type": "Question", "name": "Quels sont vos délais de livraison ?", "acceptedAnswer": { "@type": "Answer", "text": "Les pièces en stock local sont livrées sous 24h. Les pièces en import sont disponibles sous 5 à 10 jours." } },
+        { "@type": "Question", "name": "Puis-je retourner une pièce si elle ne convient pas ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, vous disposez de 30 jours pour retourner une pièce, à condition qu'elle n'ait pas été montée et qu'elle soit dans son emballage d'origine." } },
+        { "@type": "Question", "name": "Comment passer commande ?", "acceptedAnswer": { "@type": "Answer", "text": "Commandez via notre catalogue en ligne en ajoutant vos pièces au panier, ou contactez-nous directement par WhatsApp ou par téléphone au +262 693 05 70 12." } },
+        { "@type": "Question", "name": "Proposez-vous des pièces pour tous les types de véhicules ?", "acceptedAnswer": { "@type": "Answer", "text": "Oui, nous proposons des pièces pour véhicules particuliers, utilitaires, 4x4, motos et quads." } }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <div id="pageProgress"></div>
@@ -762,6 +796,45 @@
   <a href="#promo" class="flash-sale__btn">Je profite →</a>
 </section>
 
+    <!-- ░░ Top ventes podium ░░ -->
+    <section class="top-sellers" id="top-ventes">
+  <div class="container">
+    <h2 class="top-sellers-title">🏆 Top ventes de la semaine</h2>
+    <div class="podium">
+      <div class="podium-item podium-2">
+        <span class="podium-emoji">🔧</span>
+        <p class="podium-name">Plaquettes Valeo</p>
+        <p class="podium-sub">Le choix sécurité</p>
+        <div class="podium-step step-silver">
+          <span class="podium-badge">N°2</span>
+          <span class="podium-num">2</span>
+        </div>
+      </div>
+      <div class="podium-item podium-1">
+        <span class="podium-emoji">🛢️</span>
+        <p class="podium-name">Huile Euroatlantic 5W40</p>
+        <p class="podium-sub">Le best-seller de l'ouverture</p>
+        <div class="podium-step step-gold">
+          <span class="podium-badge">N°1</span>
+          <span class="podium-num">1</span>
+        </div>
+      </div>
+      <div class="podium-item podium-3">
+        <span class="podium-emoji">🔋</span>
+        <p class="podium-name">Batterie Varta 60Ah</p>
+        <p class="podium-sub">L'indispensable</p>
+        <div class="podium-step step-bronze">
+          <span class="podium-badge">N°3</span>
+          <span class="podium-num">3</span>
+        </div>
+      </div>
+    </div>
+    <div class="top-sellers-cta">
+      <a href="#bestsellers" class="btn-top-sellers">Voir tous les produits →</a>
+    </div>
+  </div>
+</section>
+
     <!-- ░░ Marques ░░ -->
     <section class="section section--soft" id="marques">
       <div class="container">
@@ -1323,6 +1396,10 @@
   <script src="script.js" defer></script>
   <script src="vehicle-lookup.js" defer></script>
   <script src="pwa.js" defer></script>
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Information cookies">
+  <p class="cookie-banner__text">🍪 Ce site n'utilise pas de cookies publicitaires. Seul un stockage technique (panier, préférences) est utilisé pour le bon fonctionnement. <a href="confidentialite.html" class="cookie-banner__link">En savoir plus</a></p>
+  <button type="button" class="cookie-banner__btn" id="cookieBannerBtn">OK, compris</button>
+</div>
 <div class="social-proof" id="socialProof" role="status" aria-live="polite">
   <div class="social-proof__icon">🛒</div>
   <div class="social-proof__content">

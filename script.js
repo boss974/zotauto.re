@@ -557,6 +557,67 @@
     mo.observe(grid, { childList: true });
   }());
 
+  // ── Compteurs animés stats ──
+  (function () {
+    var grid = document.querySelector('.stats__grid');
+    if (!grid || !('IntersectionObserver' in window)) return;
+    var DURATION = 1500;
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+    function formatFr(value, decimals) {
+      if (decimals > 0) return value.toFixed(decimals).replace('.', ',');
+      return String(Math.round(value));
+    }
+    function animateCounter(el) {
+      if (!el) return;
+      var textNode = null;
+      for (var i = 0; i < el.childNodes.length; i++) {
+        var node = el.childNodes[i];
+        if (node.nodeType === 3 && node.nodeValue.trim() !== '') { textNode = node; break; }
+      }
+      if (!textNode) return;
+      var raw = textNode.nodeValue.trim();
+      var decimals = raw.indexOf(',') !== -1 ? raw.split(',')[1].length : 0;
+      var target = parseFloat(raw.replace(',', '.'));
+      if (isNaN(target)) return;
+      var start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var progress = Math.min((ts - start) / DURATION, 1);
+        textNode.nodeValue = formatFr(target * easeOut(progress), decimals);
+        if (progress < 1) { requestAnimationFrame(step); } else { textNode.nodeValue = raw; }
+      }
+      textNode.nodeValue = formatFr(0, decimals);
+      requestAnimationFrame(step);
+    }
+    var observer = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        obs.unobserve(entry.target);
+        entry.target.querySelectorAll('.stat__n').forEach(animateCounter);
+      });
+    }, { threshold: 0.3 });
+    observer.observe(grid);
+  }());
+
+  // ── Cookie banner RGPD ──
+  (function () {
+    var KEY = 'cookie_consent';
+    var banner = document.getElementById('cookieBanner');
+    if (!banner) return;
+    var consent = null;
+    try { consent = localStorage.getItem(KEY); } catch (e) {}
+    if (consent === '1') { banner.remove(); return; }
+    window.addEventListener('load', function () {
+      setTimeout(function () { banner.classList.add('is-visible'); }, 2000);
+    });
+    var btn = document.getElementById('cookieBannerBtn');
+    if (btn) btn.addEventListener('click', function () {
+      try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      banner.classList.remove('is-visible');
+      banner.addEventListener('transitionend', function () { banner.remove(); }, { once: true });
+    });
+  }());
+
   // ── Statut boutique ouvert/fermé (heure Réunion) ──
   (function () {
     var SCHEDULE = { 0: null, 1: [510,1050], 2: [510,1050], 3: [510,1050], 4: [510,1050], 5: [510,1050], 6: [510,750] };
