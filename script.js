@@ -734,7 +734,7 @@
       var docHeight = (document.documentElement.scrollHeight || document.body.scrollHeight) - window.innerHeight;
       var progress  = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
       if (progressBar) { progressBar.style.width = (progress * 100).toFixed(2) + '%'; }
-      if (wrapper) { wrapper.classList.toggle('visible', scrollTop > 300); }
+      if (wrapper) { wrapper.classList.toggle('visible', scrollTop > 400); }
       if (circle) { circle.style.strokeDashoffset = (CIRCUMFERENCE * (1 - progress)).toFixed(3); }
       ticking = false;
     }
@@ -1026,6 +1026,332 @@
       var moMenu = new MutationObserver(syncBodyClass);
       moMenu.observe(catnav, { attributes: true, attributeFilter: ["class"] });
     }
+  }());
+
+  // ── Hero counter animation ──
+  (function () {
+    var counters = document.querySelectorAll('.hero-counter__num[data-target]');
+    if (!counters.length || prefersReduced) {
+      counters.forEach(function (el) { el.textContent = el.getAttribute('data-target'); });
+      return;
+    }
+    var DURATION = 1800;
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function animateNum(el) {
+      var target = parseInt(el.getAttribute('data-target'), 10);
+      if (isNaN(target)) return;
+      var start = null;
+      function step(ts) {
+        if (start === null) start = ts;
+        var progress = Math.min((ts - start) / DURATION, 1);
+        el.textContent = Math.round(target * easeOutCubic(progress));
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      }
+      el.textContent = '0';
+      requestAnimationFrame(step);
+    }
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            counters.forEach(animateNum);
+          }
+        });
+      }, { threshold: 0.5 });
+      obs.observe(counters[0].closest('.hero-counter'));
+    } else {
+      counters.forEach(animateNum);
+    }
+  }());
+
+
+  // ── Mode sombre ──
+  (function () {
+    var STORAGE_KEY = 'zotauto_theme';
+    var toggle = document.getElementById('themeToggle');
+    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function getPreferred() {
+      var stored = null;
+      try { stored = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+      if (stored === 'dark' || stored === 'light') return stored;
+      return prefersDark.matches ? 'dark' : 'light';
+    }
+
+    function apply(theme, animate) {
+      if (animate) {
+        document.body.classList.add('dark-transition');
+        setTimeout(function () { document.body.classList.remove('dark-transition'); }, 350);
+      }
+      if (theme === 'dark') {
+        document.body.classList.add('dark');
+        if (toggle) toggle.textContent = '☀️'; // sun
+      } else {
+        document.body.classList.remove('dark');
+        if (toggle) toggle.textContent = '🌙'; // moon
+      }
+    }
+
+    apply(getPreferred(), false);
+
+    if (toggle) {
+      toggle.addEventListener('click', function () {
+        var next = document.body.classList.contains('dark') ? 'light' : 'dark';
+        try { localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
+        apply(next, true);
+      });
+    }
+
+    // React to OS preference change if no manual override
+    try {
+      prefersDark.addEventListener('change', function () {
+        var stored = localStorage.getItem(STORAGE_KEY);
+        if (!stored) apply(prefersDark.matches ? 'dark' : 'light', true);
+      });
+    } catch (e) {}
+  }());
+
+  // ── Loading skeleton dismissal ──
+  (function () {
+    var skeleton = document.getElementById('skeletonScreen');
+    if (!skeleton) return;
+    function dismiss() {
+      skeleton.classList.add('is-hidden');
+      setTimeout(function () { skeleton.remove(); }, 500);
+    }
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      dismiss();
+    } else {
+      document.addEventListener('DOMContentLoaded', dismiss);
+    }
+  }());
+
+
+  // ── Reassurance strip fade-in staggered on scroll ──
+  (function () {
+    var items = document.querySelectorAll('.reassurance-reveal');
+    if (!items.length) return;
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      items.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    items.forEach(function (el, i) {
+      el.style.transitionDelay = (i * 0.12) + 's';
+      observer.observe(el);
+    });
+  }());
+
+
+  // ── Roue de la chance (Spin to Win) ──
+  (function () {
+    var SPIN_KEY = 'zotauto_spin_done';
+    var fabSpin = document.getElementById('fabSpin');
+    var modal = document.getElementById('spinModal');
+    var wheel = document.getElementById('spinWheel');
+    var goBtn = document.getElementById('spinGo');
+    var resultDiv = document.getElementById('spinResult');
+    var prizeEl = document.getElementById('spinPrize');
+    var codeEl = document.getElementById('spinCode');
+    var spinWaEl = document.getElementById('spinWa');
+    if (!fabSpin || !modal) return;
+
+    if (sessionStorage.getItem(SPIN_KEY) === '1') { fabSpin.style.display = 'none'; return; }
+
+    var segments = [
+      { label: '-5% sur votre commande', code: 'ZOTSPIN5', angle: 0 },
+      { label: '-10% sur votre commande', code: 'ZOTSPIN10', angle: 60 },
+      { label: 'Cadeau mystere avec votre commande', code: 'ZOTCADEAU', angle: 120 },
+      { label: '-15% sur votre commande', code: 'ZOTSPIN15', angle: 180 },
+      { label: 'Livraison offerte !', code: 'ZOTFREE', angle: 240 },
+      { label: 'Presque... Retentez la prochaine fois !', code: '', angle: 300 }
+    ];
+
+    function openSpin() {
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSpin() {
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    fabSpin.addEventListener('click', openSpin);
+    document.getElementById('spinModalClose').addEventListener('click', closeSpin);
+    document.getElementById('spinModalX').addEventListener('click', closeSpin);
+
+    var spinning = false;
+    goBtn.addEventListener('click', function () {
+      if (spinning) return;
+      spinning = true;
+      goBtn.disabled = true;
+      resultDiv.hidden = true;
+
+      var weights = [20, 20, 15, 10, 15, 20];
+      var totalW = 0;
+      for (var i = 0; i < weights.length; i++) totalW += weights[i];
+      var r = Math.random() * totalW, acc = 0, chosen = 0;
+      for (var j = 0; j < weights.length; j++) {
+        acc += weights[j];
+        if (r < acc) { chosen = j; break; }
+      }
+
+      var segCenter = chosen * 60 + 30;
+      var targetAngle = 360 - segCenter;
+      var totalSpin = 360 * 6 + targetAngle + (Math.random() * 20 - 10);
+
+      wheel.style.transition = 'transform 4s cubic-bezier(0.17,0.67,0.12,0.99)';
+      wheel.style.transform = 'rotate(' + totalSpin + 'deg)';
+      wheel.classList.add('is-spinning');
+
+      setTimeout(function () {
+        spinning = false;
+        wheel.classList.remove('is-spinning');
+        goBtn.style.display = 'none';
+        resultDiv.hidden = false;
+        var seg = segments[chosen];
+        prizeEl.textContent = seg.label;
+        if (seg.code) {
+          codeEl.textContent = seg.code;
+          codeEl.parentElement.style.display = '';
+          spinWaEl.href = 'https://wa.me/262693057012?text=' + encodeURIComponent('Bonjour ZOT AUTO ! J\'ai gagne le code ' + seg.code + ' sur la roue de la chance. Je souhaite l\'utiliser pour ma commande.');
+          spinWaEl.style.display = '';
+        } else {
+          codeEl.parentElement.style.display = 'none';
+          spinWaEl.style.display = 'none';
+        }
+        sessionStorage.setItem(SPIN_KEY, '1');
+        fabSpin.style.display = 'none';
+      }, 4200);
+    });
+  }());
+
+  // ── Barre livraison gratuite ──
+  (function () {
+    var bar = document.getElementById('freeShippingBar');
+    var textEl = document.getElementById('freeShippingText');
+    var fillEl = document.getElementById('freeShippingFill');
+    if (!bar) return;
+
+    var FREE_THRESHOLD = 50;
+
+    function updateBar() {
+      var cartTotal = 0;
+      try {
+        var items = JSON.parse(localStorage.getItem('zotauto_cart')) || [];
+        for (var i = 0; i < items.length; i++) cartTotal += (items[i].price || 0) * (items[i].qty || 0);
+      } catch (e) { cartTotal = 35; }
+      if (cartTotal === 0) cartTotal = 35;
+
+      var pct = Math.min(cartTotal / FREE_THRESHOLD * 100, 100);
+      fillEl.style.width = pct + '%';
+
+      if (cartTotal >= FREE_THRESHOLD) {
+        textEl.innerHTML = '🎉 Livraison gratuite débloquée !';
+        bar.classList.add('is-complete');
+      } else {
+        var remaining = (FREE_THRESHOLD - cartTotal).toFixed(2).replace('.', ',');
+        textEl.innerHTML = 'Plus que <strong>' + remaining + ' €</strong> pour la livraison gratuite !';
+        bar.classList.remove('is-complete');
+      }
+    }
+
+    updateBar();
+    window.addEventListener('storage', function (e) { if (e.key === 'zotauto_cart') updateBar(); });
+    setInterval(updateBar, 2000);
+  }());
+
+  // ── Vus recemment ──
+  (function () {
+    var VIEWED_KEY = 'zotauto_viewed';
+    var section = document.getElementById('recentlyViewed');
+    var track = document.getElementById('recentlyViewedTrack');
+    if (!section || !track) return;
+
+    var DATA = window.ZOTAUTO || { products: [] };
+    var PRODUCTS = DATA.products || [];
+    if (!PRODUCTS.length) return;
+
+    function getViewed() {
+      try { return JSON.parse(localStorage.getItem(VIEWED_KEY)) || []; } catch (e) { return []; }
+    }
+    function saveViewed(ids) {
+      try { localStorage.setItem(VIEWED_KEY, JSON.stringify(ids.slice(0, 8))); } catch (e) {}
+    }
+    function findById(id) {
+      for (var i = 0; i < PRODUCTS.length; i++) if (PRODUCTS[i].id === id) return PRODUCTS[i];
+      return null;
+    }
+
+    var qv = document.getElementById('quickView');
+    if (qv) {
+      new MutationObserver(function () {
+        if (!qv.classList.contains('open')) return;
+        var nameEl = document.getElementById('qvName');
+        if (!nameEl) return;
+        var name = nameEl.textContent;
+        for (var i = 0; i < PRODUCTS.length; i++) {
+          if (PRODUCTS[i].name === name) {
+            var ids = getViewed();
+            ids = ids.filter(function (x) { return x !== PRODUCTS[i].id; });
+            ids.unshift(PRODUCTS[i].id);
+            saveViewed(ids);
+            renderViewed();
+            break;
+          }
+        }
+      }).observe(qv, { attributes: true, attributeFilter: ['class'] });
+    }
+
+    function renderViewed() {
+      var ids = getViewed();
+      if (!ids.length) { section.hidden = true; return; }
+      var html = '';
+      var count = 0;
+      for (var i = 0; i < ids.length && count < 4; i++) {
+        var p = findById(ids[i]);
+        if (!p) continue;
+        count++;
+        var mediaClass = p.contain ? 'rv-card__media rv-card__media--logo' : 'rv-card__media';
+        html += '<div class="rv-card" data-rv-id="' + p.id + '">' +
+          '<div class="' + mediaClass + '"><img src="' + (p.image||'') + '" alt="' + (p.brand||'') + ' ' + (p.name||'') + '" loading="lazy" /></div>' +
+          '<div class="rv-card__body">' +
+          '<span class="rv-card__brand">' + (p.brand||'') + '</span>' +
+          '<div class="rv-card__name">' + (p.name||'') + '</div>' +
+          '<div class="rv-card__price">' + Number(p.price).toFixed(2).replace('.',',') + ' €</div>' +
+          '</div></div>';
+      }
+      if (!count) { section.hidden = true; return; }
+      track.innerHTML = html;
+      section.hidden = false;
+    }
+
+    track.addEventListener('click', function (e) {
+      var card = e.target.closest('.rv-card');
+      if (!card) return;
+      var p = findById(card.getAttribute('data-rv-id'));
+      if (p) {
+        // Try to call the openQuickView from the outer IIFE scope
+        var btn = document.querySelector('.product[data-id="' + p.id + '"] .product__open');
+        if (btn) btn.click();
+      }
+    });
+
+    renderViewed();
   }());
 
 })();
