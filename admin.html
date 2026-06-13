@@ -409,7 +409,6 @@
       ["detailing", "Detailing & nettoyage", "🧽"],
       ["outillage", "Outillage & atelier", "🔧"],
       ["huiles", "Huiles & lubrifiants", "🛢️"],
-      ["pieces", "Pièces & freinage", "⚙️"],
       ["accessoires", "Accessoires", "🎨"]
     ];
     var CAT_KEYS = CATS.map(function (c) { return c[0]; });
@@ -1106,7 +1105,7 @@
     function exportText() {
       var header = "/* ZOT AUTO — CATALOGUE (généré par admin.html)\n" +
         "   Pour modifier facilement : ouvrez admin.html. Sinon, copiez un bloc { ... }.\n" +
-        "   category : detailing | outillage | huiles | pieces | accessoires\n" +
+        "   category : detailing | outillage | huiles | accessoires\n" +
         "   stock : in (En stock) | soon (Sur commande) · oldPrice : ancien prix ou null\n" +
         "   featured : true = Coup de cœur · nouveau : true = badge Nouveau\n*/\n\n";
       var out = normalize(state);
@@ -1241,7 +1240,7 @@
       closeMenu();
       var sample = [
         CSV_COLS.join(";"),
-        ['', 'Disque de frein avant', 'Brembo', 'pieces', 'BR-DF-AV', '49,90', '59,90', 'in', 'oui', 'non', '-17%', 'Disque ventilé haute performance, vendu à l\'unité.', 'assets/brands/brembo.png', 'non', '5', '8'].map(csvCell).join(";"),
+        ['', 'Cric hydraulique 2T', 'Worcraft', 'outillage', 'WC-CH2T', '39,90', '49,90', 'in', 'oui', 'non', '-20%', 'Cric hydraulique 2 tonnes, levée rapide.', 'assets/brands/worcraft.png', 'non', '5', '8'].map(csvCell).join(";"),
         ['', 'Cire de protection céramique', 'Koch-Chemie', 'detailing', 'KC-CER', '24,90', '', 'in', 'non', 'oui', '', 'Protection céramique longue durée, finition brillante.', '', 'oui', '4', '3'].map(csvCell).join(";")
       ].join("\r\n");
       downloadFile("zotauto-modele.csv", "﻿" + sample + "\r\n", "text/csv");
@@ -1373,7 +1372,6 @@
       if (/detail|nettoy|lavage/.test(s)) return "detailing";
       if (/outil|atelier/.test(s)) return "outillage";
       if (/huile|lubrifi/.test(s)) return "huiles";
-      if (/piece|pièce|frein/.test(s)) return "pieces";
       if (/accessoir/.test(s)) return "accessoires";
       return "";
     }

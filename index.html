@@ -170,7 +170,6 @@
         <a href="#bestsellers" data-gocat="detailing">Detailing &amp; nettoyage</a>
         <a href="#bestsellers" data-gocat="outillage">Outillage &amp; atelier</a>
         <a href="#bestsellers" data-gocat="huiles">Huiles &amp; lubrifiants</a>
-        <a href="#bestsellers" data-gocat="pieces">Pièces &amp; freinage</a>
         <a href="#services">Services</a>
         <a href="#marques">Marques</a>
         <a href="#promo" class="catnav__promo">🔥 Promos</a>
@@ -614,11 +613,6 @@
             <h3>Huiles &amp; Lubrifiants</h3><small>Euroatlantic, vidange</small>
             <span class="cat__arrow">→</span>
           </a>
-          <a href="#bestsellers" class="cat reveal" data-gocat="pieces">
-            <span class="cat__ic cat__ic--blue"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></span>
-            <h3>Pièces &amp; Freinage</h3><small>Valeo, plaquettes, embrayage</small>
-            <span class="cat__arrow">→</span>
-          </a>
           <a href="#bestsellers" class="cat reveal" data-gocat="accessoires">
             <span class="cat__ic cat__ic--red"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
             <h3>Accessoires</h3><small>Confort, sécurité, entretien</small>
@@ -643,7 +637,6 @@
             <button class="chip" data-filter="detailing">Detailing</button>
             <button class="chip" data-filter="outillage">Outillage</button>
             <button class="chip" data-filter="huiles">Huiles</button>
-            <button class="chip" data-filter="pieces">Pièces</button>
             <button class="chip" data-filter="accessoires">Accessoires</button>
           </div>
         </header>
@@ -1258,7 +1251,7 @@
           <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 8.5a6.5 6.5 0 0 1-5-2.3V16a5 5 0 1 1-5-5v3a2 2 0 1 0 2 2V2h3a6.5 6.5 0 0 0 5 4z"/></svg></a>
         </div>
       </div>
-      <div class="footer__col"><h4>Rayons</h4><a href="#categories">Detailing &amp; nettoyage</a><a href="#categories">Outillage &amp; atelier</a><a href="#categories">Huiles &amp; lubrifiants</a><a href="#categories">Pièces &amp; freinage</a><a href="#services">Services</a></div>
+      <div class="footer__col"><h4>Rayons</h4><a href="#categories">Detailing &amp; nettoyage</a><a href="#categories">Outillage &amp; atelier</a><a href="#categories">Huiles &amp; lubrifiants</a><a href="#services">Services</a></div>
       <div class="footer__col"><h4>Marques</h4><a href="#marques">Koch-Chemie</a><a href="#marques">Worcraft</a><a href="#marques">Valeo</a><a href="#marques">Euroatlantic</a><a href="#marques">Power Maxx</a></div>
       <div class="footer__col"><h4>Aide</h4><a href="https://wa.me/262693057012" target="_blank" rel="noopener">Commander</a><a href="#avis">Avis clients</a><a href="tel:+262693057012">0693 05 70 12</a><a href="mailto:contact@zotauto.re">contact@zotauto.re</a></div>
     </div>
@@ -1422,5 +1415,31 @@
     <span>WhatsApp</span>
   </a>
 </div>
+<!-- Protection anti-copie / anti-aspiration -->
+<script>
+(function(){
+  // Bloquer clic droit
+  document.addEventListener('contextmenu',function(e){e.preventDefault();});
+  // Bloquer sélection texte
+  document.addEventListener('selectstart',function(e){if(e.target.tagName!=='INPUT'&&e.target.tagName!=='TEXTAREA')e.preventDefault();});
+  // Bloquer raccourcis clavier (Ctrl+U, Ctrl+S, Ctrl+C, Ctrl+Shift+I, F12)
+  document.addEventListener('keydown',function(e){
+    if(e.key==='F12')e.preventDefault();
+    if((e.ctrlKey||e.metaKey)&&['u','s','i','j','c'].indexOf(e.key.toLowerCase())>=0)e.preventDefault();
+    if((e.ctrlKey||e.metaKey)&&e.shiftKey&&['i','j','c'].indexOf(e.key.toLowerCase())>=0)e.preventDefault();
+  });
+  // Bloquer drag d'images
+  document.addEventListener('dragstart',function(e){if(e.target.tagName==='IMG')e.preventDefault();});
+  // Détecter DevTools (heuristique)
+  var dt=function(){var t=170;if(window.outerWidth-window.innerWidth>t||window.outerHeight-window.innerHeight>t){document.body.innerHTML='<div style="display:grid;place-items:center;min-height:100vh;font-family:sans-serif;text-align:center;padding:40px"><h1>🔒 Accès restreint</h1><p>Les outils de développement sont désactivés sur ce site.</p></div>';}};
+  setInterval(dt,2000);
+})();
+</script>
+<style>
+  body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
+  input,textarea,select{-webkit-user-select:text;-moz-user-select:text;user-select:text;}
+  img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:none;pointer-events:none;}
+  img:hover{pointer-events:auto;}
+</style>
 </body>
 </html>

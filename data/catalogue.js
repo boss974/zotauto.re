@@ -9,7 +9,7 @@
    id          identifiant unique (texte court, sans espace)
    name        nom affiché
    brand       marque
-   category    "detailing" | "outillage" | "huiles" | "pieces" | "accessoires"
+   category    "detailing" | "outillage" | "huiles" | "accessoires"
    reference   référence / SKU (texte libre, peut être "")
    price       prix (nombre)
    oldPrice    ancien prix barré (nombre) ou null
@@ -89,24 +89,6 @@ window.ZOTAUTO = {
       reviews: 31
     },
     {
-      id: "essuie-glace",
-      name: "Balais d'essuie-glace (paire)",
-      brand: "Valeo",
-      category: "pieces",
-      reference: "VAL-WB",
-      price: 19.90,
-      oldPrice: null,
-      stock: "in",
-      featured: false,
-      nouveau: false,
-      badge: "",
-      description: "Balais d'essuie-glace Valeo, montage facile, vision nette par tous les temps. Vendus par paire.",
-      image: "assets/brands/valeo.png",
-      contain: true,
-      rating: 5,
-      reviews: 12
-    },
-    {
       id: "microfibres-x5",
       name: "Lot de 5 microfibres premium",
       brand: "Koch-Chemie",
@@ -141,24 +123,6 @@ window.ZOTAUTO = {
       contain: true,
       rating: 4,
       reviews: 19
-    },
-    {
-      id: "plaquettes-frein",
-      name: "Plaquettes de frein — avant",
-      brand: "Valeo",
-      category: "pieces",
-      reference: "VAL-BP-AV",
-      price: 29.90,
-      oldPrice: null,
-      stock: "in",
-      featured: false,
-      nouveau: false,
-      badge: "",
-      description: "Plaquettes de frein avant Valeo, freinage sûr et silencieux. Vérifiez la compatibilité avec votre véhicule.",
-      image: "assets/brands/valeo.png",
-      contain: true,
-      rating: 5,
-      reviews: 27
     },
     {
       id: "huile-5w30-5l",
