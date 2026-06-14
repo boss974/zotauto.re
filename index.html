@@ -213,22 +213,6 @@
     </div>
   </div>
 
-  <section class="search-bar-section">
-  <div class="search-bar-inner">
-    <form class="search-bar-form" id="searchBarForm" action="#bestsellers">
-      <div class="search-bar-group">
-        <input type="search" class="search-bar-input" id="searchBarInput" placeholder="Rechercher une pièce, une marque, une référence..." autocomplete="off" />
-        <button type="submit" class="search-bar-btn">Rechercher</button>
-      </div>
-    </form>
-    <div class="search-bar-pills">
-      <button class="search-pill" data-value="Plaquettes Valeo">Plaquettes Valeo</button>
-      <button class="search-pill" data-value="Filtre à huile Mann">Filtre à huile Mann</button>
-      <button class="search-pill" data-value="Batterie Varta">Batterie Varta</button>
-    </div>
-  </div>
-</section>
-
   <main id="main">
 
     <!-- ░░ Hero + sélecteur véhicule ░░ -->
@@ -1572,16 +1556,17 @@
   });
   // Bloquer drag d'images
   document.addEventListener('dragstart',function(e){if(e.target.tagName==='IMG')e.preventDefault();});
-  // Détecter DevTools (heuristique)
-  var dt=function(){var t=170;if(window.outerWidth-window.innerWidth>t||window.outerHeight-window.innerHeight>t){document.body.innerHTML='<div style="display:grid;place-items:center;min-height:100vh;font-family:sans-serif;text-align:center;padding:40px"><h1>🔒 Accès restreint</h1><p>Les outils de développement sont désactivés sur ce site.</p></div>';}};
-  setInterval(dt,2000);
+  // Dissuasion console (sans jamais bloquer ni effacer la page pour un vrai client)
+  try{
+    console.log('%c⛔ Stop !','color:#e01f2b;font-size:28px;font-weight:bold');
+    console.log('%cCe site appartient à ZOT AUTO. Toute copie est interdite. Pour un site comme celui-ci, contactez-nous.','color:#2a52e0;font-size:14px');
+  }catch(e){}
 })();
 </script>
 <style>
   body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;}
-  input,textarea,select{-webkit-user-select:text;-moz-user-select:text;user-select:text;}
-  img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:none;pointer-events:none;}
-  img:hover{pointer-events:auto;}
+  input,textarea,select,[contenteditable]{-webkit-user-select:text;-moz-user-select:text;user-select:text;}
+  img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:none;}
 </style>
 </body>
 </html>
