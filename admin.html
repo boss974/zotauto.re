@@ -175,6 +175,40 @@
     .img-drop__remove:hover { transform: scale(1.1); }
     .img-drop__url { margin-top: 8px; width: 100%; }
 
+    /* ===== MEDIA / GALLERY ===== */
+    .media-quality { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; font-size: 0.8rem; }
+    .media-quality__label { font-family: var(--z-font-display); font-weight: 600; color: var(--z-ink2); }
+    .qbtns { display: inline-flex; border: 2px solid var(--z-line2); border-radius: 999px; overflow: hidden; }
+    .qbtns button { border: none; background: var(--z-card); padding: 7px 12px; font-family: var(--z-font-display); font-weight: 600; font-size: 0.78rem; color: var(--z-ink2); cursor: pointer; min-height: 36px; }
+    .qbtns button + button { border-left: 1px solid var(--z-line); }
+    .qbtns button.on { background: var(--z-blue); color: #fff; }
+    .media-weight { font-size: 0.78rem; color: var(--z-muted); margin-top: 6px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .media-weight b { font-family: var(--z-font-display); color: var(--z-ink2); }
+    .media-weight.heavy b, .media-weight.heavy { color: #b45309; }
+
+    .gallery { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .gthumb { position: relative; width: 72px; height: 72px; border-radius: var(--z-radius-sm); overflow: hidden; border: 2px solid var(--z-line2); background: var(--z-bg); cursor: grab; flex: 0 0 auto; }
+    .gthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gthumb.cover { border-color: var(--z-blue); box-shadow: 0 0 0 3px rgba(42,82,224,0.18); }
+    .gthumb.dragging { opacity: 0.4; }
+    .gthumb.drop-before { box-shadow: -3px 0 0 0 var(--z-blue); }
+    .gthumb.drop-after { box-shadow: 3px 0 0 0 var(--z-blue); }
+    .gthumb__cover { position: absolute; top: 2px; left: 2px; background: var(--z-blue); color: #fff; font-family: var(--z-font-display); font-weight: 700; font-size: 0.56rem; padding: 2px 5px; border-radius: 6px; letter-spacing: 0.04em; }
+    .gthumb__x { position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(224,31,43,0.92); color: #fff; border: none; font-size: 0.72rem; cursor: pointer; display: grid; place-items: center; line-height: 1; }
+    .gthumb__ord { position: absolute; bottom: 2px; right: 2px; display: flex; gap: 2px; }
+    .gthumb__ord button { width: 18px; height: 18px; border: none; border-radius: 5px; background: rgba(14,27,51,0.7); color: #fff; font-size: 0.6rem; cursor: pointer; line-height: 1; padding: 0; }
+    .gthumb__ord button:disabled { opacity: 0.3; cursor: not-allowed; }
+    .gthumb--add { display: grid; place-items: center; cursor: pointer; border-style: dashed; color: var(--z-muted); font-size: 1.6rem; }
+    .gthumb--add:hover { border-color: var(--z-blue); color: var(--z-blue); background: var(--z-blue-light); }
+    .img-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+    /* Crop modal */
+    .crop-stage { position: relative; background: #0e1b33; border-radius: var(--z-radius-sm); overflow: hidden; margin: 8px 0; display: grid; place-items: center; }
+    .crop-stage canvas { display: block; max-width: 100%; touch-action: none; cursor: move; }
+    .crop-ratios { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+    .crop-zoom { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+    .crop-zoom input[type=range] { flex: 1; accent-color: var(--z-blue); }
+
     /* ===== TOGGLE SWITCH ===== */
     .toggle { display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 10px 0; min-height: 48px; }
     .toggle__track { width: 52px; height: 28px; border-radius: 999px; background: var(--z-line2); position: relative; transition: all 0.2s; flex-shrink: 0; }
@@ -251,6 +285,203 @@
     @keyframes slide-out-right { 0%{ transform:translateX(0); opacity:1; } 100%{ transform:translateX(100%); opacity:0; } }
     .item--removing { animation: slide-out-right 0.35s ease forwards; }
 
+    /* ===== DASHBOARD ===== */
+    .dash { display: none; }
+    .dash.show { display: block; animation: dash-in 0.3s ease; }
+    @keyframes dash-in { 0%{ opacity:0; transform: translateY(8px); } 100%{ opacity:1; transform: translateY(0); } }
+    .dash__section { margin-bottom: 26px; }
+    .dash__h { font-family: var(--z-font-display); font-weight: 700; font-size: 1.05rem; margin: 0 0 14px; display: flex; align-items: center; gap: 8px; }
+
+    /* KPI cards */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+    .kpi { position: relative; border-radius: var(--z-radius); padding: 18px 18px 16px; color: #fff; box-shadow: var(--z-shadow); overflow: hidden; }
+    .kpi::after { content: ""; position: absolute; right: -20px; top: -20px; width: 90px; height: 90px; border-radius: 50%; background: rgba(255,255,255,0.14); }
+    .kpi__icon { font-size: 1.5rem; opacity: 0.9; }
+    .kpi__val { font-family: var(--z-font-display); font-weight: 800; font-size: 1.9rem; line-height: 1.05; margin-top: 8px; }
+    .kpi__label { font-family: var(--z-font-display); font-weight: 600; font-size: 0.82rem; opacity: 0.92; margin-top: 4px; }
+    .kpi--blue { background: linear-gradient(135deg, #2a52e0, #4169f0); }
+    .kpi--red { background: linear-gradient(135deg, #e01f2b, #f0454f); }
+    .kpi--green { background: linear-gradient(135deg, #15a34a, #1ec05a); }
+    .kpi--yellow { background: linear-gradient(135deg, #f5b800, #ffcb00); color: var(--z-ink); }
+    .kpi--yellow .kpi::after, .kpi--yellow::after { background: rgba(14,27,51,0.08); }
+    .kpi--violet { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+    .kpi--ink { background: linear-gradient(135deg, #1f2d4a, #344566); }
+
+    /* Category bars */
+    .catbars { display: grid; gap: 12px; }
+    .catbar__top { display: flex; align-items: center; justify-content: space-between; font-family: var(--z-font-display); font-weight: 600; font-size: 0.86rem; margin-bottom: 5px; }
+    .catbar__top b { font-weight: 700; }
+    .catbar__count { color: var(--z-muted); font-weight: 600; }
+    .catbar__track { height: 14px; border-radius: 999px; background: var(--z-bg); overflow: hidden; }
+    .catbar__fill { height: 100%; width: 0; border-radius: 999px; transition: width 0.9s cubic-bezier(.2,.7,.2,1); }
+    .catbar__fill--detailing { background: var(--z-blue); }
+    .catbar__fill--outillage { background: var(--z-yellow); }
+    .catbar__fill--huiles { background: var(--z-green); }
+    .catbar__fill--accessoires { background: #a855f7; }
+
+    /* Alerts */
+    .alerts { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+    .alert { background: var(--z-card); border: 1px solid var(--z-line); border-radius: var(--z-radius); padding: 14px 16px; box-shadow: var(--z-shadow); }
+    .alert__head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .alert__ic { font-size: 1.3rem; }
+    .alert__title { font-family: var(--z-font-display); font-weight: 700; font-size: 0.9rem; flex: 1; }
+    .alert__badge { font-family: var(--z-font-display); font-weight: 800; font-size: 0.82rem; padding: 3px 10px; border-radius: 999px; }
+    .alert__badge--ok { background: var(--z-green-light); color: var(--z-green); }
+    .alert__badge--warn { background: var(--z-red-light); color: var(--z-red); }
+    .alert__ok { display: flex; align-items: center; gap: 8px; color: var(--z-green); font-weight: 600; font-size: 0.86rem; }
+    .alert__list { list-style: none; margin: 0; padding: 0; max-height: 170px; overflow: auto; display: grid; gap: 4px; }
+    .alert__item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; color: var(--z-ink2); transition: all 0.15s; }
+    .alert__item:hover { background: var(--z-blue-light); color: var(--z-blue); }
+    .alert__item .thumb { width: 28px; height: 28px; border-radius: 7px; background: var(--z-bg); display: grid; place-items: center; font-size: 0.9rem; overflow: hidden; flex: 0 0 auto; }
+    .alert__item .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .alert__item .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Highlights */
+    .hl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .hl { background: var(--z-card); border: 1px solid var(--z-line); border-radius: var(--z-radius); padding: 16px; box-shadow: var(--z-shadow); }
+    .hl__label { font-family: var(--z-font-display); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--z-muted); margin-bottom: 10px; }
+    .hl__row { display: flex; align-items: center; gap: 12px; cursor: pointer; border-radius: 10px; padding: 6px; transition: background 0.15s; }
+    .hl__row:hover { background: var(--z-blue-light); }
+    .hl__thumb { width: 52px; height: 52px; border-radius: var(--z-radius-sm); background: var(--z-bg); display: grid; place-items: center; font-size: 1.5rem; overflow: hidden; flex: 0 0 auto; }
+    .hl__thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .hl__nm { font-family: var(--z-font-display); font-weight: 700; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hl__pr { color: var(--z-blue); font-weight: 700; font-size: 0.9rem; margin-top: 2px; }
+    .hl__empty { color: var(--z-muted); font-size: 0.86rem; }
+    .stockbar { height: 22px; border-radius: 999px; overflow: hidden; display: flex; background: var(--z-bg); margin: 4px 0 10px; }
+    .stockbar__in { background: var(--z-green); height: 100%; width: 0; transition: width 0.9s cubic-bezier(.2,.7,.2,1); }
+    .stockbar__soon { background: var(--z-yellow); height: 100%; width: 0; transition: width 0.9s cubic-bezier(.2,.7,.2,1); }
+    .stocklegend { display: flex; gap: 16px; font-size: 0.84rem; font-weight: 600; color: var(--z-ink2); }
+    .stocklegend span { display: inline-flex; align-items: center; gap: 6px; }
+    .stocklegend i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+
+    /* ===== CATEGORY MANAGER ===== */
+    .catmgr { display: grid; gap: 10px; margin: 10px 0 4px; }
+    .catmgr__row { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 2px solid var(--z-line); border-radius: var(--z-radius-sm); background: var(--z-card); }
+    .catmgr__row.dragging { opacity: 0.4; }
+    .catmgr__row.drop-before { box-shadow: 0 -3px 0 0 var(--z-blue); }
+    .catmgr__row.drop-after { box-shadow: 0 3px 0 0 var(--z-blue); }
+    .catmgr__handle { cursor: grab; color: var(--z-muted); font-size: 1.1rem; user-select: none; touch-action: none; }
+    .catmgr__ic { font-size: 1.5rem; width: 38px; text-align: center; flex: 0 0 auto; }
+    .catmgr__info { flex: 1; min-width: 0; }
+    .catmgr__nm { font-family: var(--z-font-display); font-weight: 700; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .catmgr__key { font-size: 0.74rem; color: var(--z-muted); }
+    .catmgr__count { font-family: var(--z-font-display); font-weight: 700; font-size: 0.72rem; color: var(--z-ink2); background: var(--z-bg); padding: 3px 9px; border-radius: 999px; flex: 0 0 auto; }
+    .catmgr__acts { display: flex; gap: 4px; flex: 0 0 auto; }
+    .catmgr__ord { display: flex; flex-direction: column; gap: 2px; }
+    .catmgr__ord button { width: 28px; height: 22px; padding: 0; border: 1px solid var(--z-line2); background: var(--z-card); border-radius: 7px; cursor: pointer; font-size: 0.7rem; line-height: 1; color: var(--z-ink2); }
+    .catmgr__ord button:hover:not(:disabled) { border-color: var(--z-blue); color: var(--z-blue); }
+    .catmgr__ord button:disabled { opacity: 0.3; cursor: not-allowed; }
+    .emoji-pick { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 2px; }
+    .emoji-pick button { width: 40px; height: 40px; border: 2px solid var(--z-line); background: var(--z-card); border-radius: 10px; font-size: 1.2rem; cursor: pointer; }
+    .emoji-pick button:hover { border-color: var(--z-blue); background: var(--z-blue-light); }
+    .catmgr__add { border: 2px dashed var(--z-line2); border-radius: var(--z-radius-sm); padding: 14px; margin-top: 6px; background: var(--z-bg); }
+    .catmgr__add .row2 { gap: 10px; }
+
+    /* ===== BACKUPS / VERSIONS ===== */
+    .bk-list { display: grid; gap: 10px; margin: 12px 0 4px; max-height: 50vh; overflow: auto; }
+    .bk-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 2px solid var(--z-line); border-radius: var(--z-radius-sm); background: var(--z-card); flex-wrap: wrap; }
+    .bk-row__info { flex: 1; min-width: 160px; }
+    .bk-row__date { font-family: var(--z-font-display); font-weight: 700; font-size: 0.9rem; }
+    .bk-row__meta { font-size: 0.8rem; color: var(--z-muted); margin-top: 2px; }
+    .bk-row__label { display: inline-block; font-family: var(--z-font-display); font-weight: 700; font-size: 0.7rem; background: var(--z-blue-light); color: var(--z-blue); padding: 2px 8px; border-radius: 999px; margin-top: 4px; }
+    .bk-row__acts { display: flex; gap: 6px; flex-wrap: wrap; }
+    .bk-empty { text-align: center; color: var(--z-muted); padding: 26px 16px; font-size: 0.92rem; }
+    .bk-create { border: 2px dashed var(--z-line2); border-radius: var(--z-radius-sm); padding: 14px; background: var(--z-bg); margin-bottom: 10px; }
+    .bk-create .row2 { gap: 10px; align-items: end; }
+
+    /* ===== PUBLISH WIZARD ===== */
+    .pub-step { display: flex; gap: 14px; padding: 16px; border: 2px solid var(--z-line); border-radius: var(--z-radius); margin-bottom: 12px; background: var(--z-card); }
+    .pub-step__num { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; background: var(--z-blue); color: #fff; font-family: var(--z-font-display); font-weight: 800; font-size: 1.1rem; display: grid; place-items: center; }
+    .pub-step:nth-child(2) .pub-step__num { background: var(--z-yellow); color: var(--z-ink); }
+    .pub-step:nth-child(3) .pub-step__num { background: var(--z-green); }
+    .pub-step__body { flex: 1; min-width: 0; }
+    .pub-step__title { font-family: var(--z-font-display); font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+    .pub-step__txt { font-size: 0.88rem; color: var(--z-ink2); line-height: 1.5; margin-bottom: 10px; }
+    .pub-step__txt b { color: var(--z-ink); }
+    .pub-link { display: inline-flex; align-items: center; gap: 8px; padding: 12px 18px; border-radius: var(--z-radius-sm); background: var(--z-ink); color: #fff; font-family: var(--z-font-display); font-weight: 700; font-size: 0.88rem; text-decoration: none; min-height: 48px; }
+    .pub-link:hover { background: var(--z-blue); }
+    .pub-link--green { background: var(--z-green); }
+    .pub-link--green:hover { background: #12903f; }
+    .pub-recall { background: var(--z-blue-light); border-radius: var(--z-radius-sm); padding: 12px 14px; font-size: 0.86rem; color: var(--z-ink2); display: grid; gap: 8px; }
+    .pub-recall a { color: var(--z-blue); font-weight: 700; }
+    .pub-check { display: flex; align-items: center; gap: 10px; margin-top: 14px; cursor: pointer; font-size: 0.86rem; color: var(--z-ink2); }
+    .pub-check input { width: 20px; height: 20px; accent-color: var(--z-blue); cursor: pointer; }
+
+    /* ===== QR CODE ===== */
+    .qr-wrap { text-align: center; }
+    .qr-canvas { background: #fff; border: 2px solid var(--z-line); border-radius: var(--z-radius); padding: 14px; margin: 6px auto 14px; display: inline-block; }
+    .qr-canvas canvas { display: block; image-rendering: pixelated; }
+    .qr-url { font-family: var(--z-font-display); font-weight: 700; font-size: 1rem; color: var(--z-blue); word-break: break-all; margin: 8px 0; }
+    .qr-acts { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+    /* ===== ADVANCED FILTER CHIPS ===== */
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .chip { display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px; border-radius: 999px; border: 2px solid var(--z-line2); background: var(--z-card); font-family: var(--z-font-display); font-weight: 600; font-size: 0.78rem; color: var(--z-ink2); cursor: pointer; min-height: 36px; transition: all 0.15s; }
+    .chip:hover { border-color: var(--z-blue); color: var(--z-blue); }
+    .chip.on { background: var(--z-blue); border-color: var(--z-blue); color: #fff; }
+
+    /* ===== LIST META (count + clear) ===== */
+    .list-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .list-meta__count { font-family: var(--z-font-display); font-weight: 600; font-size: 0.8rem; color: var(--z-muted); }
+    .list-meta__clear { border: none; background: var(--z-red-light); color: var(--z-red); font-family: var(--z-font-display); font-weight: 700; font-size: 0.78rem; padding: 6px 12px; border-radius: 999px; cursor: pointer; min-height: 34px; }
+    .list-meta__clear:hover { background: var(--z-red); color: #fff; }
+    .item-list.sorted .item__handle { opacity: 0.3; cursor: not-allowed; }
+
+    /* ===== SHORTCUTS MODAL ===== */
+    .kbd-list { display: grid; gap: 8px; margin: 8px 0 4px; }
+    .kbd-row { display: flex; align-items: center; gap: 12px; }
+    .kbd-row .kbd { font-family: var(--z-font-display); font-weight: 700; font-size: 0.82rem; background: var(--z-bg); border: 1px solid var(--z-line2); border-bottom-width: 2px; border-radius: 8px; padding: 4px 10px; min-width: 44px; text-align: center; color: var(--z-ink); flex: 0 0 auto; }
+    .kbd-row span { font-size: 0.9rem; color: var(--z-ink2); }
+
+    /* ===== LIVE PREVIEW MODAL ===== */
+    .preview-modal { position: fixed; inset: 0; z-index: 130; background: var(--z-bg); display: none; flex-direction: column; }
+    .preview-modal.open { display: flex; }
+    .preview-modal__bar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 16px; background: var(--z-card); border-bottom: 1px solid var(--z-line); box-shadow: 0 1px 8px rgba(14,27,51,0.06); }
+    .preview-modal__title { font-family: var(--z-font-display); font-size: 0.98rem; }
+    .preview-modal__widths { display: inline-flex; border: 2px solid var(--z-line2); border-radius: 999px; overflow: hidden; }
+    .qbtns-btn { border: none; background: var(--z-card); padding: 8px 14px; font-family: var(--z-font-display); font-weight: 600; font-size: 0.8rem; color: var(--z-ink2); cursor: pointer; min-height: 38px; }
+    .qbtns-btn + .qbtns-btn { border-left: 1px solid var(--z-line); }
+    .qbtns-btn.on { background: var(--z-blue); color: #fff; }
+    .preview-modal__note { font-size: 0.76rem; color: var(--z-muted); flex: 1; min-width: 140px; }
+    .preview-modal__close { width: 40px; height: 40px; border-radius: 50%; border: none; background: var(--z-bg); cursor: pointer; font-size: 1.1rem; display: grid; place-items: center; flex: 0 0 auto; color: var(--z-ink); }
+    .preview-modal__close:hover { background: var(--z-line); }
+    .preview-modal__stage { flex: 1; overflow: auto; display: grid; place-items: start center; padding: 16px; background: var(--z-bg); }
+    .preview-modal__frame { width: 100%; height: 100%; min-height: 100%; border: none; background: #fff; border-radius: 8px; box-shadow: var(--z-shadow); }
+    .preview-modal__frame.mobile { width: 390px; max-width: 100%; height: 100%; border: 1px solid var(--z-line2); }
+
+    /* ===== DARK MODE (admin) ===== */
+    body, .top, .panel, .item, .modal__box, .filter-select, .chip, .field input, .field select, .field textarea,
+    .search-bar, .pro-menu__pop, .toast, .preview-modal, .preview-modal__bar, .preview-modal__stage, .qbtns-btn { transition: background-color 0.25s, color 0.25s, border-color 0.25s; }
+    body.dark {
+      --z-ink: #e2e8f0;
+      --z-ink2: #cbd5e1;
+      --z-muted: #94a3b8;
+      --z-line: #334155;
+      --z-line2: #475569;
+      --z-bg: #0f172a;
+      --z-card: #1e293b;
+      --z-blue-light: #1e2f55;
+      --z-red-light: #3a2025;
+      --z-yellow-light: #3a3318;
+      --z-green-light: #14352a;
+      --z-shadow: 0 2px 12px rgba(0,0,0,0.4);
+      --z-shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    body.dark .tab.on { background: var(--z-blue); border-color: var(--z-blue); color: #fff; }
+    body.dark .item.sel { background: var(--z-blue-light); }
+    body.dark .search-bar:focus-within { background: var(--z-card); }
+    body.dark .img-drop, body.dark .csv-drop, body.dark .catmgr__add, body.dark .bk-create { background: #0b1322; }
+    body.dark .modal__bg { background: rgba(0,0,0,0.65); }
+    body.dark .qr-canvas { background: #fff; }
+    body.dark .preview-modal__frame { background: #fff; }
+    body.dark .kpi--yellow { color: var(--z-ink); }
+    body.dark .item__cat--detailing { background: #1e3a5f; color: #93c5fd; }
+    body.dark .item__cat--outillage { background: #3a2f12; color: #fcd34d; }
+    body.dark .item__cat--huiles { background: #123528; color: #6ee7b7; }
+    body.dark .item__cat--pieces { background: #3a1228; color: #f9a8d4; }
+    body.dark .item__cat--accessoires { background: #2e1a45; color: #d8b4fe; }
+    body.dark .bulk select, body.dark .bulk .btn { color: #fff; }
+
     /* ===== MOBILE RESPONSIVE ===== */
     @media (max-width: 860px) {
       .grid { grid-template-columns: 1fr; }
@@ -281,6 +512,8 @@
     <div class="top__save-indicator" id="saveIndicator" title="Sauvegarde automatique"></div>
 
     <button class="btn btn--ghost btn--sm" id="btnUndo" disabled title="Annuler (Ctrl+Z)">↶</button>
+    <button class="btn btn--ghost btn--sm" id="btnPreview" title="Voir le rendu réel du site">👁️</button>
+    <button class="btn btn--ghost btn--sm" id="btnTheme" title="Mode sombre / clair" aria-pressed="false">🌙</button>
 
     <!-- Pro menu (gear) -->
     <div class="pro-menu" id="proMenu">
@@ -295,7 +528,14 @@
         <button id="btnCsvImport" role="menuitem">📥 Importer un tableur</button>
         <button id="btnCsvTemplate" role="menuitem">📄 Fichier exemple</button>
         <div class="pro-menu__sep"></div>
+        <div class="pro-menu__title">Catalogue</div>
+        <button id="btnCats" role="menuitem">🗂️ Gérer les rayons / catégories</button>
+        <button id="btnBackups" role="menuitem">🕑 Sauvegardes / versions</button>
+        <button id="btnQr" role="menuitem">📱 QR code du site</button>
+        <div class="pro-menu__sep"></div>
         <button id="btnSeesite" role="menuitem">👁 Voir le site</button>
+        <button id="btnPreview2" role="menuitem">🖥️ Voir le rendu réel</button>
+        <button id="btnShortcuts" role="menuitem">⌨️ Raccourcis clavier</button>
         <div class="pro-menu__sep"></div>
         <button id="btnReset" role="menuitem" style="color:var(--z-red)">↺ Tout effacer et recommencer</button>
       </div>
@@ -311,7 +551,11 @@
     <div class="tabs" role="tablist">
       <button class="tab on" data-tab="products" id="tabProducts" role="tab" aria-selected="true">📦 Produits</button>
       <button class="tab" data-tab="services" id="tabServices" role="tab" aria-selected="false">🔧 Services</button>
+      <button class="tab" data-tab="dashboard" id="tabDashboard" role="tab" aria-selected="false">📊 Tableau de bord</button>
     </div>
+
+    <!-- Dashboard (read-only) -->
+    <div class="dash" id="dash"></div>
 
     <div class="grid">
       <!-- Left: List panel -->
@@ -330,6 +574,29 @@
           <select class="filter-select" id="filterCat" aria-label="Filtrer par catégorie">
             <option value="">Toutes les catégories</option>
           </select>
+          <select class="filter-select" id="sortMode" aria-label="Trier par">
+            <option value="manual">↕ Ordre manuel</option>
+            <option value="name-asc">Nom A→Z</option>
+            <option value="name-desc">Nom Z→A</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="price-desc">Prix décroissant</option>
+            <option value="cat">Catégorie</option>
+          </select>
+        </div>
+
+        <!-- Advanced filter chips -->
+        <div class="chips" id="advChips">
+          <button class="chip" type="button" data-flag="featured">⭐ Coups de cœur</button>
+          <button class="chip" type="button" data-flag="nouveau">🆕 Nouveaux</button>
+          <button class="chip" type="button" data-flag="nophoto">📷 Sans photo</button>
+          <button class="chip" type="button" data-flag="soon">⏳ Sur commande</button>
+          <button class="chip" type="button" data-flag="promo">🏷️ En promo</button>
+        </div>
+
+        <!-- Result count + clear -->
+        <div class="list-meta">
+          <span class="list-meta__count" id="listCount"></span>
+          <button class="list-meta__clear" id="clearFilters" type="button" hidden>✕ Effacer les filtres</button>
         </div>
 
         <!-- Bulk actions -->
@@ -367,6 +634,7 @@
   <!-- Bottom bar -->
   <div class="bottom-bar">
     <button class="btn btn--primary" id="btnDownload">💾 Enregistrer mon catalogue</button>
+    <button class="btn btn--blue" id="btnPublish">🚀 Publier</button>
     <button class="btn btn--sm" id="btnCopyBottom" title="Copier le code">📋</button>
   </div>
 
@@ -376,6 +644,22 @@
     <div class="modal__box">
       <button class="modal__close" id="modalClose" type="button" aria-label="Fermer">✕</button>
       <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Live preview modal -->
+  <div class="preview-modal" id="previewModal" role="dialog" aria-modal="true" aria-label="Aperçu du site">
+    <div class="preview-modal__bar">
+      <b class="preview-modal__title">👁️ Rendu réel du site</b>
+      <div class="preview-modal__widths">
+        <button class="qbtns-btn" type="button" data-pw="390" id="pwMobile">📱 Mobile</button>
+        <button class="qbtns-btn on" type="button" data-pw="full" id="pwDesktop">💻 Bureau</button>
+      </div>
+      <span class="preview-modal__note">Affiche la version publiée ; télécharge + publie pour voir tes derniers changements.</span>
+      <button class="preview-modal__close" id="previewClose" type="button" aria-label="Fermer">✕</button>
+    </div>
+    <div class="preview-modal__stage" id="previewStage">
+      <iframe class="preview-modal__frame" id="previewFrame" title="Aperçu du site"></iframe>
     </div>
   </div>
 
@@ -405,15 +689,50 @@
     var isMobile = function () { return window.innerWidth <= 860; };
 
     // Categories
-    var CATS = [
+    var CATS_KEY = "zotauto_cats";
+    var CATS_DEFAULT = [
       ["detailing", "Detailing & nettoyage", "🧽"],
       ["outillage", "Outillage & atelier", "🔧"],
       ["huiles", "Huiles & lubrifiants", "🛢️"],
       ["accessoires", "Accessoires", "🎨"]
     ];
+    // Merge: validate a stored CATS array, falling back to defaults if invalid/empty.
+    function sanitizeCats(arr) {
+      if (!arr || !arr.length) return clone(CATS_DEFAULT);
+      var out = [], seen = {};
+      arr.forEach(function (c) {
+        if (!c) return;
+        var key = slug(c[0] != null ? c[0] : c[1]);
+        if (!key || seen[key]) return;
+        var label = String(c[1] != null && c[1] !== "" ? c[1] : key);
+        var icon = String(c[2] != null && c[2] !== "" ? c[2] : "📦");
+        seen[key] = true;
+        out.push([key, label, icon]);
+      });
+      return out.length ? out : clone(CATS_DEFAULT);
+    }
+    var CATS;
+    try { CATS = sanitizeCats(JSON.parse(localStorage.getItem(CATS_KEY))); }
+    catch (e) { CATS = clone(CATS_DEFAULT); }
     var CAT_KEYS = CATS.map(function (c) { return c[0]; });
+    function refreshCatKeys() { CAT_KEYS = CATS.map(function (c) { return c[0]; }); }
+    function persistCats() { try { localStorage.setItem(CATS_KEY, JSON.stringify(CATS)); } catch (e) {} }
     var catLabel = function (k) { for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === k) return CATS[i][1]; return k; };
     var catIcon = function (k) { for (var i = 0; i < CATS.length; i++) if (CATS[i][0] === k) return CATS[i][2]; return "📦"; };
+
+    // Stable color generated from a category key (for badges of custom categories).
+    function catColor(k) {
+      var h = 0, s = String(k || "");
+      for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360;
+      return { bg: "hsl(" + h + ",70%,90%)", fg: "hsl(" + h + ",70%,30%)" };
+    }
+    // Built-in keys have fixed CSS classes; only custom keys need inline color.
+    var BUILTIN_CAT_KEYS = ["detailing", "outillage", "huiles", "pieces", "accessoires"];
+    function catBadgeAttrs(k) {
+      if (BUILTIN_CAT_KEYS.indexOf(k) >= 0) return { cls: " item__cat--" + k, style: "" };
+      var c = catColor(k);
+      return { cls: "", style: ' style="background:' + c.bg + ';color:' + c.fg + '"' };
+    }
 
     var DRAFT = "zotauto_catalogue_draft";
     var SEED = (window.ZOTAUTO && clone(window.ZOTAUTO)) || { products: [], services: [] };
@@ -421,7 +740,16 @@
     /* ======================= Normalization ======================= */
     function normProduct(p) {
       p = p || {};
-      var cat = CAT_KEYS.indexOf(p.category) >= 0 ? p.category : "detailing";
+      var cat = CAT_KEYS.indexOf(p.category) >= 0 ? p.category : (CAT_KEYS[0] || "detailing");
+      // Gallery: build images[] from images[] then image (rétrocompat).
+      var images = [];
+      if (Array.isArray(p.images)) {
+        p.images.forEach(function (s) { if (s != null && String(s).trim() !== "") images.push(String(s)); });
+      }
+      var img = (p.image != null && String(p.image).trim() !== "") ? String(p.image) : "";
+      if (img && images.indexOf(img) < 0) images.unshift(img); // legacy image becomes cover if absent
+      // image must always mirror images[0] for the public site.
+      var cover = images.length ? images[0] : img;
       return {
         id: p.id || "",
         name: p.name != null ? String(p.name) : "",
@@ -435,11 +763,34 @@
         nouveau: !!p.nouveau,
         badge: p.badge != null ? String(p.badge) : "",
         description: p.description != null ? String(p.description) : "",
-        image: p.image != null ? String(p.image) : "",
+        image: cover,
+        images: images,
         contain: !!p.contain,
         rating: (p.rating == null || p.rating === "") ? 5 : (Number(p.rating) || 0),
         reviews: Number(p.reviews) || 0
       };
+    }
+    // Keep product.image synced to images[0] (public site reads .image). Call after any gallery mutation.
+    function syncCover(p) {
+      if (!p) return;
+      if (!Array.isArray(p.images)) p.images = p.image ? [p.image] : [];
+      p.image = p.images.length ? p.images[0] : "";
+    }
+    // Rough byte size of a stored image string (data URI base64 or path).
+    function imgBytes(s) {
+      s = String(s || "");
+      if (!s) return 0;
+      var m = s.indexOf("base64,");
+      if (m >= 0) { var b = s.length - (m + 7); return Math.round(b * 0.75); }
+      return s.length;
+    }
+    function fmtWeight(bytes) {
+      if (bytes < 1024) return bytes + " o";
+      if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + " Ko";
+      return (bytes / 1024 / 1024).toFixed(1).replace(".", ",") + " Mo";
+    }
+    function productImagesBytes(p) {
+      return (p.images || []).reduce(function (a, s) { return a + imgBytes(s); }, 0);
     }
     function normService(s) {
       s = s || {};
@@ -465,9 +816,20 @@
     var state, tab = "products", sel = -1, toastTimer, undoToastTimer;
     var selected = { products: {}, services: {} };
     var query = "", filterCat = "";
+    var sortMode = "manual";
+    var advFilters = { featured: false, nouveau: false, nophoto: false, soon: false, promo: false };
     var history = [];
     var HISTORY_MAX = 25;
     var lastDeletedItem = null; // for undo-delete via toast
+
+    /* Image compression presets (réglable) */
+    var QUALITY_PRESETS = {
+      light:  { dim: 600,  q: 0.7,  label: "Léger" },
+      normal: { dim: 1000, q: 0.82, label: "Normal" },
+      high:   { dim: 1400, q: 0.9,  label: "Haute qualité" }
+    };
+    var imgQuality = "normal";
+    try { var qs = localStorage.getItem("zotauto_img_quality"); if (qs && QUALITY_PRESETS[qs]) imgQuality = qs; } catch (e) {}
 
     try { state = JSON.parse(localStorage.getItem(DRAFT)); } catch (e) {}
     if (!state || !state.products || !state.services) state = clone(SEED);
@@ -540,12 +902,13 @@
       sel = snap.sel >= 0 && snap.sel < list().length ? snap.sel : (list().length ? 0 : -1);
       $("#btnUndo").disabled = history.length === 0;
       render(); persist();
+      if (typeof applyDashView === "function") applyDashView();
       toast("Action annulée !");
     }
 
     /* ======================= Models ======================= */
     function blankProduct() {
-      return { id: "", name: "Nouveau produit", brand: "", category: "detailing", reference: "", price: 0, oldPrice: null, stock: "in", featured: false, nouveau: false, badge: "", description: "", image: "", contain: true, rating: 5, reviews: 0 };
+      return { id: "", name: "Nouveau produit", brand: "", category: (CAT_KEYS[0] || "detailing"), reference: "", price: 0, oldPrice: null, stock: "in", featured: false, nouveau: false, badge: "", description: "", image: "", images: [], contain: true, rating: 5, reviews: 0 };
     }
     function blankService() {
       return { id: "", name: "Nouveau service", icon: "🔧", description: "", price: "", badge: "", featured: false };
@@ -584,21 +947,55 @@
     }
 
     /* ======================= Selection / filter ======================= */
-    function list() { return state[tab]; }
+    function list() { return state[tab] || state.products; }
     function clearSelection() { selected = { products: {}, services: {} }; }
     function selMap() { return selected[tab]; }
     function selCount() { var m = selMap(), n = 0; for (var k in m) if (m[k]) n++; return n; }
 
+    function advFiltersActive() {
+      for (var k in advFilters) if (advFilters[k]) return true;
+      return false;
+    }
+    function anyFilterActive() {
+      return !!(query.trim() || (filterCat && tab === "products") || advFiltersActive());
+    }
+    function passAdv(it) {
+      if (advFilters.featured && !it.featured) return false;
+      if (advFilters.nouveau && !(tab === "products" && it.nouveau)) return false;
+      if (advFilters.nophoto) {
+        var hasPhoto = tab === "products" ? !!it.image : false;
+        if (hasPhoto) return false;
+      }
+      if (advFilters.soon && !(tab === "products" && it.stock === "soon")) return false;
+      if (advFilters.promo && !(it.badge && String(it.badge).trim() !== "")) return false;
+      return true;
+    }
     function visibleItems() {
       var arr = list(), q = query.toLowerCase().trim(), out = [];
       arr.forEach(function (it, i) {
         if (filterCat && tab === "products" && it.category !== filterCat) return;
+        if (advFiltersActive() && !passAdv(it)) return;
         if (q) {
           var hay = (it.name + " " + (it.brand || "") + " " + (it.reference || "") + " " + (it.description || "")).toLowerCase();
           if (hay.indexOf(q) < 0) return;
         }
         out.push({ it: it, i: i });
       });
+      // Display-only sort layer (keeps real index i for select/edit/delete).
+      if (sortMode !== "manual") {
+        var cmp;
+        var byName = function (a, b) { return String(a.it.name || "").localeCompare(String(b.it.name || ""), "fr", { sensitivity: "base" }); };
+        var byPrice = function (a, b) { return (Number(a.it.price) || 0) - (Number(b.it.price) || 0); };
+        if (sortMode === "name-asc") cmp = byName;
+        else if (sortMode === "name-desc") cmp = function (a, b) { return -byName(a, b); };
+        else if (sortMode === "price-asc") cmp = byPrice;
+        else if (sortMode === "price-desc") cmp = function (a, b) { return -byPrice(a, b); };
+        else if (sortMode === "cat") cmp = function (a, b) {
+          var c = String(catLabel(a.it.category) || "").localeCompare(String(catLabel(b.it.category) || ""), "fr", { sensitivity: "base" });
+          return c !== 0 ? c : byName(a, b);
+        };
+        if (cmp) out.sort(cmp);
+      }
       return out;
     }
 
@@ -610,8 +1007,16 @@
       $("#tabServices").textContent = "🔧 Services (" + state.services.length + ")";
       $("#filterCat").disabled = tab === "services";
 
+      var sorted = sortMode !== "manual";
+      box.classList.toggle("sorted", sorted);
+
       var items = visibleItems();
       box.innerHTML = "";
+
+      // Count + clear-filters UI
+      var total = list().length;
+      var cEl = $("#listCount"); if (cEl) cEl.textContent = items.length + " affichés / " + total + " total";
+      var clrEl = $("#clearFilters"); if (clrEl) clrEl.hidden = !anyFilterActive();
 
       if (!items.length) {
         box.innerHTML = '<div class="item-list__empty">' +
@@ -623,12 +1028,11 @@
         return;
       }
 
-      var total = list().length;
       items.forEach(function (entry) {
         var it = entry.it, i = entry.i;
         var row = document.createElement("div");
         row.className = "item" + (i === sel ? " sel" : "");
-        row.setAttribute("draggable", "true");
+        row.setAttribute("draggable", sorted ? "false" : "true");
         row.dataset.index = i;
 
         var thumb = tab === "products"
@@ -645,7 +1049,8 @@
 
         var catBadge = "";
         if (tab === "products") {
-          catBadge = '<span class="item__cat item__cat--' + esc(it.category) + '">' + catIcon(it.category) + ' ' + esc(catLabel(it.category)) + '</span>';
+          var ba = catBadgeAttrs(it.category);
+          catBadge = '<span class="item__cat' + ba.cls + '"' + ba.style + '>' + catIcon(it.category) + ' ' + esc(catLabel(it.category)) + '</span>';
         }
 
         var checked = selMap()[i] ? " checked" : "";
@@ -717,25 +1122,57 @@
       var it = arr[sel];
 
       if (tab === "products") {
-        // Image drop zone
+        // Image drop zone (cover = images[0])
+        var cover = it.images && it.images.length ? it.images[0] : it.image;
         var imgZoneContent;
-        if (it.image) {
-          imgZoneContent = '<img class="img-drop__preview" src="' + esc(it.image) + '" alt="Aperçu">' +
-            '<button class="img-drop__remove" type="button" id="imgRemove" title="Retirer la photo">✕</button>';
+        if (cover) {
+          imgZoneContent = '<img class="img-drop__preview" src="' + esc(cover) + '" alt="Aperçu">' +
+            '<button class="img-drop__remove" type="button" id="imgRemove" title="Retirer la photo de couverture">✕</button>';
         } else {
           imgZoneContent = '<div class="img-drop__icon">📸</div>' +
             '<div class="img-drop__text">Touchez ici pour ajouter une photo</div>' +
-            '<div class="img-drop__hint">ou glissez-déposez une image</div>';
+            '<div class="img-drop__hint">ou glissez-déposez, ou collez (Ctrl+V)</div>';
         }
+
+        // Quality selector
+        var qBtns = Object.keys(QUALITY_PRESETS).map(function (k) {
+          return '<button type="button" data-quality="' + k + '"' + (imgQuality === k ? ' class="on"' : '') + '>' + QUALITY_PRESETS[k].label + '</button>';
+        }).join("");
+
+        // Gallery thumbnails
+        var imgs = it.images || [];
+        var galleryHTML = imgs.map(function (src, gi) {
+          return '<div class="gthumb' + (gi === 0 ? ' cover' : '') + '" draggable="true" data-g="' + gi + '" title="' + (gi === 0 ? 'Photo de couverture' : 'Cliquez pour définir comme couverture') + '">' +
+            '<img src="' + esc(src) + '" alt="">' +
+            (gi === 0 ? '<span class="gthumb__cover">COUV.</span>' : '') +
+            '<button type="button" class="gthumb__x" data-gdel="' + gi + '" title="Supprimer">✕</button>' +
+            '<span class="gthumb__ord">' +
+              '<button type="button" data-gleft="' + gi + '"' + (gi === 0 ? ' disabled' : '') + ' title="Vers la gauche">◀</button>' +
+              '<button type="button" data-gright="' + gi + '"' + (gi === imgs.length - 1 ? ' disabled' : '') + ' title="Vers la droite">▶</button>' +
+            '</span>' +
+          '</div>';
+        }).join("");
+        galleryHTML += '<div class="gthumb gthumb--add" id="galAdd" title="Ajouter une photo">＋</div>';
+
+        var totalBytes = productImagesBytes(it);
+        var heavy = totalBytes > 500 * 1024;
+        var weightHTML = '<div class="media-weight' + (heavy ? ' heavy' : '') + '" id="mediaWeight">' +
+          '📦 Poids des photos : <b>' + fmtWeight(totalBytes) + '</b> (' + imgs.length + ' photo' + (imgs.length > 1 ? 's' : '') + ')' +
+          (heavy ? ' — ⚠️ Cette fiche est lourde, pensez à compresser (qualité « Léger »).' : '') +
+        '</div>';
 
         form.innerHTML =
           // Photo section
           '<div class="form-section">' +
-            '<div class="form-section__title"><span>📸</span> Photo du produit</div>' +
-            '<div class="img-drop' + (it.image ? ' has-image' : '') + '" id="imgDrop">' + imgZoneContent + '</div>' +
-            '<input class="field img-drop__url" data-field="image" type="text" value="' + esc(it.image) + '" placeholder="Ou collez un lien vers l\'image..." style="margin-top:10px;padding:12px 14px;border:2px solid var(--z-line2);border-radius:12px;font-size:0.88rem;">' +
+            '<div class="form-section__title"><span>📸</span> Photos du produit</div>' +
+            '<div class="img-drop' + (cover ? ' has-image' : '') + '" id="imgDrop">' + imgZoneContent + '</div>' +
+            (cover ? '<div class="img-actions"><button class="btn btn--sm" type="button" id="btnCrop">✂️ Recadrer</button></div>' : '') +
+            '<div class="media-quality"><span class="media-quality__label">Compression :</span><span class="qbtns" id="qBtns">' + qBtns + '</span></div>' +
+            '<div class="gallery" id="gallery">' + galleryHTML + '</div>' +
+            weightHTML +
+            '<input class="field img-drop__url" data-field="image" type="text" value="' + esc(cover) + '" placeholder="Ou collez un lien vers l\'image..." style="margin-top:10px;padding:12px 14px;border:2px solid var(--z-line2);border-radius:12px;font-size:0.88rem;">' +
             '<div class="warn-msg" id="imgWarn">⚠️ Sans photo, le produit sera moins attractif sur le site.</div>' +
-            '<input type="file" id="fileImg" accept="image/*" hidden>' +
+            '<input type="file" id="fileImg" accept="image/*" multiple hidden>' +
           '</div>' +
 
           // Main info
@@ -820,12 +1257,13 @@
       if (!drop) return;
 
       drop.addEventListener("click", function (e) {
-        if (e.target.id === "imgRemove") {
-          var it = list()[sel]; if (it) { it.image = ""; render(); persist(); }
-          return;
-        }
-        if (e.target.closest(".img-drop__remove")) {
-          var it2 = list()[sel]; if (it2) { it2.image = ""; render(); persist(); }
+        if (e.target.id === "imgRemove" || e.target.closest(".img-drop__remove")) {
+          // Remove cover (images[0]); next image becomes cover.
+          var it = list()[sel];
+          if (it && it.images && it.images.length) {
+            snapshot("retrait photo");
+            it.images.shift(); syncCover(it); render(); persist();
+          }
           return;
         }
         $("#fileImg").click();
@@ -835,41 +1273,242 @@
       drop.addEventListener("dragleave", function () { drop.classList.remove("over"); });
       drop.addEventListener("drop", function (e) {
         e.preventDefault(); drop.classList.remove("over");
-        var file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith("image/")) processImageFile(file);
+        var files = e.dataTransfer.files;
+        var imgFiles = [];
+        for (var i = 0; i < files.length; i++) if (files[i].type.indexOf("image/") === 0) imgFiles.push(files[i]);
+        if (imgFiles.length) addImageFiles(imgFiles);
+      });
+
+      // Quality selector
+      var qBox = $("#qBtns");
+      if (qBox) qBox.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-quality]"); if (!b) return;
+        imgQuality = b.dataset.quality;
+        try { localStorage.setItem("zotauto_img_quality", imgQuality); } catch (er) {}
+        $$("#qBtns button").forEach(function (x) { x.classList.toggle("on", x.dataset.quality === imgQuality); });
+      });
+
+      // Add-more thumbnail
+      var galAdd = $("#galAdd");
+      if (galAdd) galAdd.addEventListener("click", function () { $("#fileImg").click(); });
+
+      // Crop button
+      var btnCrop = $("#btnCrop");
+      if (btnCrop) btnCrop.addEventListener("click", openCropModal);
+
+      setupGalleryEvents();
+    }
+
+    // Gallery: set cover, delete, reorder (arrows + drag).
+    function setupGalleryEvents() {
+      var gal = $("#gallery"); if (!gal) return;
+      gal.addEventListener("click", function (e) {
+        var it = list()[sel]; if (!it) return;
+        var del = e.target.closest("[data-gdel]");
+        if (del) { snapshot("retrait photo"); it.images.splice(+del.dataset.gdel, 1); syncCover(it); render(); persist(); return; }
+        var lft = e.target.closest("[data-gleft]");
+        if (lft) { var li = +lft.dataset.gleft; if (li > 0) { snapshot("réordre photo"); var t = it.images[li]; it.images[li] = it.images[li - 1]; it.images[li - 1] = t; syncCover(it); render(); persist(); } return; }
+        var rgt = e.target.closest("[data-gright]");
+        if (rgt) { var ri = +rgt.dataset.gright; if (ri < it.images.length - 1) { snapshot("réordre photo"); var t2 = it.images[ri]; it.images[ri] = it.images[ri + 1]; it.images[ri + 1] = t2; syncCover(it); render(); persist(); } return; }
+        var th = e.target.closest("[data-g]");
+        if (th) { var gi = +th.dataset.g; if (gi > 0) { snapshot("changement couverture"); var moved = it.images.splice(gi, 1)[0]; it.images.unshift(moved); syncCover(it); render(); persist(); toast("Couverture définie !"); } }
+      });
+
+      // Drag reorder
+      var gDrag = null;
+      gal.addEventListener("dragstart", function (e) {
+        var th = e.target.closest(".gthumb[data-g]"); if (!th) return;
+        gDrag = +th.dataset.g; th.classList.add("dragging");
+        try { e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", String(gDrag)); } catch (er) {}
+      });
+      gal.addEventListener("dragend", function () { gDrag = null; $$(".gthumb", gal).forEach(function (r) { r.classList.remove("dragging", "drop-before", "drop-after"); }); });
+      gal.addEventListener("dragover", function (e) {
+        if (gDrag == null) return; e.preventDefault();
+        var th = e.target.closest(".gthumb[data-g]");
+        $$(".gthumb", gal).forEach(function (r) { r.classList.remove("drop-before", "drop-after"); });
+        if (!th || +th.dataset.g === gDrag) return;
+        var rect = th.getBoundingClientRect();
+        th.classList.add((e.clientX - rect.left) > rect.width / 2 ? "drop-after" : "drop-before");
+      });
+      gal.addEventListener("drop", function (e) {
+        if (gDrag == null) return; e.preventDefault();
+        var th = e.target.closest(".gthumb[data-g]"); if (!th) return;
+        var it = list()[sel]; if (!it) return;
+        var to = +th.dataset.g;
+        var rect = th.getBoundingClientRect();
+        if ((e.clientX - rect.left) > rect.width / 2) to += 1;
+        var from = gDrag;
+        if (from < to) to -= 1;
+        if (from === to) return;
+        snapshot("réordre photo");
+        var moved = it.images.splice(from, 1)[0];
+        it.images.splice(to, 0, moved);
+        syncCover(it); render(); persist();
       });
     }
 
-    function processImageFile(file) {
-      // Compress if too large
-      var maxDim = 800;
+    // Rebuild only the gallery strip + weight line (keeps URL input focus during typing).
+    function refreshGalleryUI() {
+      var gal = $("#gallery"); if (!gal) return;
+      var it = list()[sel]; if (!it) return;
+      var imgs = it.images || [];
+      var html = imgs.map(function (src, gi) {
+        return '<div class="gthumb' + (gi === 0 ? ' cover' : '') + '" draggable="true" data-g="' + gi + '" title="' + (gi === 0 ? 'Photo de couverture' : 'Cliquez pour définir comme couverture') + '">' +
+          '<img src="' + esc(src) + '" alt="">' +
+          (gi === 0 ? '<span class="gthumb__cover">COUV.</span>' : '') +
+          '<button type="button" class="gthumb__x" data-gdel="' + gi + '" title="Supprimer">✕</button>' +
+          '<span class="gthumb__ord">' +
+            '<button type="button" data-gleft="' + gi + '"' + (gi === 0 ? ' disabled' : '') + ' title="Vers la gauche">◀</button>' +
+            '<button type="button" data-gright="' + gi + '"' + (gi === imgs.length - 1 ? ' disabled' : '') + ' title="Vers la droite">▶</button>' +
+          '</span>' +
+        '</div>';
+      }).join("");
+      html += '<div class="gthumb gthumb--add" id="galAdd" title="Ajouter une photo">＋</div>';
+      gal.innerHTML = html;
+      var galAdd = $("#galAdd"); if (galAdd) galAdd.addEventListener("click", function () { $("#fileImg").click(); });
+      var w = $("#mediaWeight");
+      if (w) {
+        var total = productImagesBytes(it), heavy = total > 500 * 1024;
+        w.classList.toggle("heavy", heavy);
+        w.innerHTML = '📦 Poids des photos : <b>' + fmtWeight(total) + '</b> (' + imgs.length + ' photo' + (imgs.length > 1 ? 's' : '') + ')' +
+          (heavy ? ' — ⚠️ Cette fiche est lourde, pensez à compresser (qualité « Léger »).' : '');
+      }
+    }
+
+    // Compress a file to a data URI using the active quality preset, then call back.
+    function compressFile(file, cb) {
+      var preset = QUALITY_PRESETS[imgQuality] || QUALITY_PRESETS.normal;
       var reader = new FileReader();
       reader.onload = function () {
         var img = new Image();
         img.onload = function () {
-          var w = img.width, h = img.height;
-          if (w > maxDim || h > maxDim) {
-            // Resize via canvas
-            var ratio = Math.min(maxDim / w, maxDim / h);
-            var nw = Math.round(w * ratio), nh = Math.round(h * ratio);
-            var canvas = document.createElement("canvas");
-            canvas.width = nw; canvas.height = nh;
-            var ctx = canvas.getContext("2d");
-            ctx.drawImage(img, 0, 0, nw, nh);
-            var dataUrl = canvas.toDataURL("image/jpeg", 0.85);
-            applyImage(dataUrl);
-          } else {
-            applyImage(reader.result);
-          }
+          var w = img.width, h = img.height, maxDim = preset.dim;
+          var ratio = Math.min(1, maxDim / Math.max(w, h));
+          var nw = Math.max(1, Math.round(w * ratio)), nh = Math.max(1, Math.round(h * ratio));
+          var canvas = document.createElement("canvas");
+          canvas.width = nw; canvas.height = nh;
+          var ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, nw, nh);
+          ctx.drawImage(img, 0, 0, nw, nh);
+          cb(canvas.toDataURL("image/jpeg", preset.q));
         };
+        img.onerror = function () { cb(reader.result); };
         img.src = reader.result;
       };
       reader.readAsDataURL(file);
     }
 
-    function applyImage(dataUrl) {
-      var it = list()[sel];
-      if (it) { it.image = dataUrl; render(); persist(); toast("Photo ajoutée !"); }
+    // Add one or more image files to the gallery (compressed, sequentially).
+    function addImageFiles(files) {
+      var it = list()[sel]; if (!it) return;
+      if (!Array.isArray(it.images)) it.images = it.image ? [it.image] : [];
+      snapshot("ajout photo");
+      var arr = Array.prototype.slice.call(files), idx = 0;
+      (function next() {
+        if (idx >= arr.length) { syncCover(it); render(); persist(); toast(arr.length > 1 ? arr.length + " photos ajoutées !" : "Photo ajoutée !"); return; }
+        compressFile(arr[idx++], function (dataUrl) {
+          var cur = list()[sel];
+          if (cur) { if (!Array.isArray(cur.images)) cur.images = []; cur.images.push(dataUrl); }
+          next();
+        });
+      })();
+    }
+
+    /* ======================= Crop (recadrage) ======================= */
+    function openCropModal() {
+      var it = list()[sel]; if (!it || !it.images || !it.images.length) return;
+      var src = it.images[0];
+      var ratios = [["1", "Carré 1:1"], ["1.3333", "Paysage 4:3"], ["0", "Libre"]];
+      var html = '<h3>✂️ Recadrer la photo de couverture</h3>' +
+        '<p>Choisissez un format, zoomez et déplacez l\'image. Le recadrage est appliqué à la couverture.</p>' +
+        '<div class="crop-ratios" id="cropRatios">' + ratios.map(function (r, i) {
+          return '<button type="button" class="btn btn--sm' + (i === 0 ? ' btn--blue' : '') + '" data-ratio="' + r[0] + '">' + r[1] + '</button>';
+        }).join("") + '</div>' +
+        '<div class="crop-stage" id="cropStage"></div>' +
+        '<div class="crop-zoom"><span style="font-size:.82rem;color:var(--z-ink2)">🔍 Zoom</span><input type="range" id="cropZoom" min="1" max="3" step="0.01" value="1"></div>' +
+        '<div class="modal__actions">' +
+          '<button class="btn btn--primary" id="cropApply" type="button">✅ Appliquer</button>' +
+          '<button class="btn" id="cropCancel" type="button">Annuler</button>' +
+        '</div>';
+      openModal(html);
+
+      var img = new Image();
+      img.onload = function () { initCrop(img); };
+      img.onerror = function () { toast("Impossible de charger l'image."); closeModal(); };
+      img.src = src;
+
+      function initCrop(image) {
+        var stage = $("#cropStage");
+        var VW = Math.min(420, stage.clientWidth || 420);
+        var ratio = 1; // square default
+        var zoom = 1, offX = 0, offY = 0;
+        var canvas = document.createElement("canvas");
+        var ctx = canvas.getContext("2d");
+        stage.appendChild(canvas);
+
+        function viewSize() {
+          var w = VW, h = ratio ? Math.round(VW / ratio) : Math.round(VW * (image.height / image.width));
+          // Cap height for "Libre" tall images
+          if (!ratio && h > 480) h = 480;
+          return { w: w, h: h };
+        }
+        function draw() {
+          var vs = viewSize();
+          canvas.width = vs.w; canvas.height = vs.h;
+          ctx.fillStyle = "#0e1b33"; ctx.fillRect(0, 0, vs.w, vs.h);
+          // base scale so image covers the view, times zoom
+          var base = Math.max(vs.w / image.width, vs.h / image.height);
+          var s = base * zoom;
+          var dw = image.width * s, dh = image.height * s;
+          // clamp offsets so image always covers
+          var minX = vs.w - dw, minY = vs.h - dh;
+          offX = Math.min(0, Math.max(minX, offX));
+          offY = Math.min(0, Math.max(minY, offY));
+          ctx.drawImage(image, offX, offY, dw, dh);
+        }
+        draw();
+
+        // Drag to pan
+        var dragging = false, lastX = 0, lastY = 0;
+        function pt(e) { return e.touches ? e.touches[0] : e; }
+        canvas.addEventListener("mousedown", function (e) { dragging = true; lastX = pt(e).clientX; lastY = pt(e).clientY; });
+        canvas.addEventListener("touchstart", function (e) { dragging = true; lastX = pt(e).clientX; lastY = pt(e).clientY; }, { passive: true });
+        function move(e) { if (!dragging) return; var p = pt(e); offX += p.clientX - lastX; offY += p.clientY - lastY; lastX = p.clientX; lastY = p.clientY; draw(); if (e.cancelable) e.preventDefault(); }
+        window.addEventListener("mousemove", move);
+        canvas.addEventListener("touchmove", move, { passive: false });
+        function up() { dragging = false; }
+        window.addEventListener("mouseup", up);
+        canvas.addEventListener("touchend", up);
+
+        $("#cropZoom").addEventListener("input", function () { zoom = parseFloat(this.value) || 1; draw(); });
+        $("#cropRatios").addEventListener("click", function (e) {
+          var b = e.target.closest("[data-ratio]"); if (!b) return;
+          ratio = parseFloat(b.dataset.ratio) || 0;
+          $$("#cropRatios button").forEach(function (x) { x.classList.toggle("btn--blue", x === b); });
+          offX = 0; offY = 0; draw();
+        });
+
+        $("#cropCancel").addEventListener("click", closeModal);
+        $("#cropApply").addEventListener("click", function () {
+          var preset = QUALITY_PRESETS[imgQuality] || QUALITY_PRESETS.normal;
+          var vs = viewSize();
+          var base = Math.max(vs.w / image.width, vs.h / image.height) * zoom;
+          // Map current view to a full-res output, scaled down to preset.dim.
+          var outScale = Math.min(1, preset.dim / Math.max(vs.w, vs.h));
+          var ow = Math.max(1, Math.round(vs.w * outScale)), oh = Math.max(1, Math.round(vs.h * outScale));
+          var oc = document.createElement("canvas");
+          oc.width = ow; oc.height = oh;
+          var octx = oc.getContext("2d");
+          octx.fillStyle = "#fff"; octx.fillRect(0, 0, ow, oh);
+          var s = base * outScale;
+          octx.drawImage(image, offX * outScale, offY * outScale, image.width * s, image.height * s);
+          var out = oc.toDataURL("image/jpeg", preset.q);
+          var cur = list()[sel];
+          if (cur) { snapshot("recadrage"); if (!Array.isArray(cur.images)) cur.images = []; cur.images[0] = out; syncCover(cur); render(); persist(); }
+          closeModal();
+          toast("Photo recadrée !");
+        });
+      }
     }
 
     function updateValidation() {
@@ -889,7 +1528,135 @@
       $("#preview").innerHTML = tab === "products" ? productPreview(arr[sel]) : servicePreview(arr[sel]);
     }
 
-    function render() { renderList(); renderForm(); renderPreview(); persist(); }
+    function render() { renderList(); renderForm(); renderPreview(); persist(); if (tab === "dashboard") renderDashboard(); }
+
+    /* ======================= Dashboard ======================= */
+    function applyDashView() {
+      var onDash = tab === "dashboard";
+      $("#dash").classList.toggle("show", onDash);
+      $(".grid").style.display = onDash ? "none" : "";
+      $("#fab").style.display = onDash ? "none" : "";
+    }
+
+    function openProduct(i) {
+      tab = "products";
+      $$(".tab").forEach(function (x) { var on = x.dataset.tab === "products"; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+      query = ""; $("#search").value = ""; $("#searchClear").hidden = true;
+      filterCat = ""; $("#filterCat").value = "";
+      applyDashView();
+      selectIndex(i);
+    }
+
+    function thumbHTML(p, cls) {
+      return '<div class="' + cls + '">' + (p.image ? '<img src="' + esc(p.image) + '" alt="">' : "📦") + "</div>";
+    }
+
+    function renderDashboard() {
+      var box = $("#dash");
+      var prods = state.products, servs = state.services;
+      var nProd = prods.length, nServ = servs.length;
+      var sumPrice = prods.reduce(function (a, p) { return a + (Number(p.price) || 0); }, 0);
+      var avg = nProd ? sumPrice / nProd : 0;
+      var nFav = prods.filter(function (p) { return p.featured; }).length;
+      var nNew = prods.filter(function (p) { return p.nouveau; }).length;
+
+      // KPI cards
+      var kpis = [
+        ["blue", "📦", nProd, "Produits"],
+        ["ink", "🔧", nServ, "Services"],
+        ["green", "💰", euro(sumPrice), "Valeur du catalogue"],
+        ["violet", "🏷️", euro(avg), "Prix moyen produit"],
+        ["yellow", "♥", nFav, "Coups de cœur"],
+        ["red", "🆕", nNew, "Nouveautés"]
+      ];
+      var kpiHTML = kpis.map(function (k) {
+        return '<div class="kpi kpi--' + k[0] + '">' +
+          '<div class="kpi__icon">' + k[1] + "</div>" +
+          '<div class="kpi__val">' + esc(k[2]) + "</div>" +
+          '<div class="kpi__label">' + k[3] + "</div></div>";
+      }).join("");
+
+      // Category breakdown
+      var counts = {};
+      CAT_KEYS.forEach(function (k) { counts[k] = 0; });
+      prods.forEach(function (p) { if (counts[p.category] != null) counts[p.category]++; });
+      var maxCat = Math.max(1, Math.max.apply(null, CAT_KEYS.map(function (k) { return counts[k]; })));
+      var catHTML = CATS.map(function (c) {
+        var k = c[0], n = counts[k];
+        var pct = nProd ? Math.round((n / nProd) * 100) : 0;
+        var w = Math.round((n / maxCat) * 100);
+        var fillStyle = "";
+        if (BUILTIN_CAT_KEYS.indexOf(k) < 0) fillStyle = ' style="background:' + catColor(k).fg + '"';
+        return '<div class="catbar">' +
+          '<div class="catbar__top"><b>' + c[2] + " " + esc(c[1]) + "</b>" +
+          '<span class="catbar__count">' + n + " · " + pct + "%</span></div>" +
+          '<div class="catbar__track"><div class="catbar__fill catbar__fill--' + k + '"' + fillStyle + ' data-w="' + w + '"></div></div></div>';
+      }).join("");
+
+      // Alerts
+      function alertCard(icon, title, items, renderRow) {
+        var n = items.length;
+        var head = '<div class="alert__head"><span class="alert__ic">' + icon + '</span><span class="alert__title">' + title + "</span>" +
+          '<span class="alert__badge alert__badge--' + (n ? "warn" : "ok") + '">' + n + "</span></div>";
+        if (!n) return '<div class="alert">' + head + '<div class="alert__ok">✓ Tout bon</div></div>';
+        var lis = items.map(renderRow).join("");
+        return '<div class="alert">' + head + '<ul class="alert__list">' + lis + "</ul></div>";
+      }
+      function idx(p) { return prods.indexOf(p); }
+      function rowItem(p) {
+        return '<li class="alert__item" data-prod="' + idx(p) + '"><span class="thumb">' +
+          (p.image ? '<img src="' + esc(p.image) + '" alt="">' : "📦") + '</span><span class="nm">' + esc(p.name || "Sans nom") + "</span></li>";
+      }
+      var noImg = prods.filter(function (p) { return !String(p.image || "").trim(); });
+      var soon = prods.filter(function (p) { return p.stock === "soon"; });
+      var noDesc = prods.filter(function (p) { return !String(p.description || "").trim(); });
+      var noPrice = prods.filter(function (p) { return !(Number(p.price) > 0); });
+      var alertsHTML =
+        alertCard("📷", "Sans photo", noImg, rowItem) +
+        alertCard("⏳", "Sur commande", soon, rowItem) +
+        alertCard("📝", "Sans description", noDesc, rowItem) +
+        alertCard("🪙", "Sans prix", noPrice, rowItem);
+
+      // Highlights
+      var pricedSorted = prods.filter(function (p) { return Number(p.price) > 0; }).slice().sort(function (a, b) { return a.price - b.price; });
+      var cheapest = pricedSorted[0] || null;
+      var dearest = pricedSorted[pricedSorted.length - 1] || null;
+      function hlRow(p) {
+        if (!p) return '<div class="hl__empty">Aucun produit avec un prix.</div>';
+        return '<div class="hl__row" data-prod="' + idx(p) + '">' +
+          '<div class="hl__thumb">' + (p.image ? '<img src="' + esc(p.image) + '" alt="">' : "📦") + "</div>" +
+          '<div style="min-width:0"><div class="hl__nm">' + esc(p.name || "Sans nom") + '</div><div class="hl__pr">' + euro(p.price) + "</div></div></div>";
+      }
+      var nIn = prods.filter(function (p) { return p.stock !== "soon"; }).length;
+      var nSoon = nProd - nIn;
+      var pIn = nProd ? Math.round((nIn / nProd) * 100) : 0;
+      var pSoon = nProd ? 100 - pIn : 0;
+      var stockHTML = '<div class="hl"><div class="hl__label">Disponibilité</div>' +
+        '<div class="stockbar"><div class="stockbar__in" data-w="' + pIn + '"></div><div class="stockbar__soon" data-w="' + pSoon + '"></div></div>' +
+        '<div class="stocklegend"><span><i style="background:var(--z-green)"></i>' + nIn + " en stock</span>" +
+        '<span><i style="background:var(--z-yellow)"></i>' + nSoon + " sur commande</span></div></div>";
+
+      box.innerHTML =
+        '<div class="dash__section"><h2 class="dash__h">📈 Chiffres clés</h2><div class="kpi-grid">' + kpiHTML + "</div></div>" +
+        '<div class="dash__section"><h2 class="dash__h">🗂️ Répartition par catégorie</h2><div class="panel"><div class="catbars">' + catHTML + "</div></div></div>" +
+        '<div class="dash__section"><h2 class="dash__h">⚠️ À corriger</h2><div class="alerts">' + alertsHTML + "</div></div>" +
+        '<div class="dash__section"><h2 class="dash__h">⭐ Points forts</h2><div class="hl-grid">' +
+          '<div class="hl"><div class="hl__label">Produit le plus cher</div>' + hlRow(dearest) + "</div>" +
+          '<div class="hl"><div class="hl__label">Produit le moins cher</div>' + hlRow(cheapest) + "</div>" +
+          stockHTML +
+        "</div></div>";
+
+      // Animate bars on next frame
+      requestAnimationFrame(function () {
+        $$(".catbar__fill", box).forEach(function (el) { el.style.width = el.dataset.w + "%"; });
+        $$(".stockbar__in, .stockbar__soon", box).forEach(function (el) { el.style.width = el.dataset.w + "%"; });
+      });
+    }
+
+    $("#dash").addEventListener("click", function (e) {
+      var row = e.target.closest("[data-prod]");
+      if (row) openProduct(+row.dataset.prod);
+    });
 
     /* ======================= Live editing ======================= */
     $("#form").addEventListener("input", function (e) {
@@ -900,7 +1667,19 @@
       else if (e.target.type === "number") v = e.target.value === "" ? (f === "oldPrice" ? null : 0) : parseFloat(e.target.value);
       else v = e.target.value;
 
-      if (f === "category" && CAT_KEYS.indexOf(v) < 0) v = "detailing";
+      if (f === "category" && CAT_KEYS.indexOf(v) < 0) v = (CAT_KEYS[0] || "detailing");
+      if (f === "image") {
+        // The URL field drives the gallery cover (images[0]) without re-rendering the input.
+        var url = String(v || "").trim();
+        if (!Array.isArray(it.images)) it.images = it.image ? [it.image] : [];
+        if (!url) { if (it.images.length) it.images.shift(); }
+        else if (it.images.length) it.images[0] = url;
+        else it.images.push(url);
+        syncCover(it);
+        // Refresh gallery + preview but not the whole form (keep focus in the input).
+        renderList(); renderPreview(); refreshGalleryUI(); updateValidation(); persist();
+        return;
+      }
       it[f] = v;
       if (!it.id) it.id = slug(it.name);
       renderList(); renderPreview(); updateValidation(); persist();
@@ -919,9 +1698,23 @@
     });
     document.addEventListener("change", function (e) {
       if (e.target.id !== "fileImg") return;
-      var file = e.target.files[0]; if (!file) return;
-      processImageFile(file);
+      if (e.target.files && e.target.files.length) addImageFiles(e.target.files);
       e.target.value = "";
+    });
+
+    /* Paste image from clipboard into the photo zone */
+    document.addEventListener("paste", function (e) {
+      if (tab !== "products" || sel < 0 || !list()[sel]) return;
+      var t = e.target;
+      // Ignore paste while typing into text fields (except the dedicated image-url field is fine to keep default)
+      if (t && /^(INPUT|TEXTAREA)$/.test(t.tagName) && t.dataset.field !== "image") return;
+      var items = (e.clipboardData || {}).items || [];
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].type && items[i].type.indexOf("image/") === 0) {
+          var file = items[i].getAsFile();
+          if (file) { e.preventDefault(); addImageFiles([file]); return; }
+        }
+      }
     });
 
     /* ======================= List actions ======================= */
@@ -995,6 +1788,7 @@
     var dragFrom = null;
     var listEl = $("#list");
     listEl.addEventListener("dragstart", function (e) {
+      if (sortMode !== "manual") { e.preventDefault(); return; }
       var row = e.target.closest(".item"); if (!row) return;
       dragFrom = +row.dataset.index;
       row.classList.add("dragging");
@@ -1038,6 +1832,25 @@
       query = ""; $("#search").value = ""; this.hidden = true; renderList(); $("#search").focus();
     });
     $("#filterCat").addEventListener("change", function () { filterCat = this.value; renderList(); });
+    function resetAdvFilters() {
+      for (var k in advFilters) advFilters[k] = false;
+      var box = $("#advChips"); if (box) $$(".chip", box).forEach(function (c) { c.classList.remove("on"); });
+    }
+    $("#sortMode").addEventListener("change", function () { sortMode = this.value; renderList(); });
+    $("#advChips").addEventListener("click", function (e) {
+      var c = e.target.closest(".chip"); if (!c) return;
+      var f = c.dataset.flag;
+      advFilters[f] = !advFilters[f];
+      c.classList.toggle("on", advFilters[f]);
+      renderList();
+    });
+    $("#clearFilters").addEventListener("click", function () {
+      query = ""; $("#search").value = ""; $("#searchClear").hidden = true;
+      filterCat = ""; $("#filterCat").value = "";
+      for (var k in advFilters) advFilters[k] = false;
+      $$("#advChips .chip").forEach(function (c) { c.classList.remove("on"); });
+      renderList();
+    });
 
     /* ======================= Bulk actions ======================= */
     function selectedIndexes() {
@@ -1094,10 +1907,17 @@
       t.addEventListener("click", function () {
         tab = t.dataset.tab;
         $$(".tab").forEach(function (x) { var on = x === t; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+        if (tab === "dashboard") {
+          applyDashView();
+          renderDashboard();
+          return;
+        }
         sel = list().length ? 0 : -1;
         query = ""; $("#search").value = ""; $("#searchClear").hidden = true;
         filterCat = ""; $("#filterCat").value = "";
+        resetAdvFilters();
         render();
+        applyDashView();
       });
     });
 
@@ -1107,7 +1927,8 @@
         "   Pour modifier facilement : ouvrez admin.html. Sinon, copiez un bloc { ... }.\n" +
         "   category : detailing | outillage | huiles | accessoires\n" +
         "   stock : in (En stock) | soon (Sur commande) · oldPrice : ancien prix ou null\n" +
-        "   featured : true = Coup de cœur · nouveau : true = badge Nouveau\n*/\n\n";
+        "   featured : true = Coup de cœur · nouveau : true = badge Nouveau\n" +
+        "   image : photo de couverture (= images[0]) · images : galerie (tableau de chemins/data-URI)\n*/\n\n";
       var out = normalize(state);
       return header + "window.ZOTAUTO = " + JSON.stringify(out, null, 2) + ";\n";
     }
@@ -1120,6 +1941,7 @@
     }
     $("#btnDownload").addEventListener("click", function () {
       downloadFile("catalogue.js", exportText(), "text/javascript");
+      if (typeof createBackup === "function") createBackup("téléchargement", true);
       toast("Fichier téléchargé ! Remplacez data/catalogue.js sur votre site.");
     });
     function doCopy() {
@@ -1417,9 +2239,40 @@
     /* ======================= Undo ======================= */
     $("#btnUndo").addEventListener("click", undo);
     document.addEventListener("keydown", function (e) {
-      var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || ""));
+      var typing = /^(INPUT|TEXTAREA|SELECT)$/.test((e.target.tagName || "")) || (e.target && e.target.isContentEditable);
       if ((e.ctrlKey || e.metaKey) && (e.key === "z" || e.key === "Z") && !typing) { e.preventDefault(); undo(); }
-      if (e.key === "Escape") { closeModal(); closeMenu(); if (isMobile()) $("#formPanel").classList.remove("form-panel--mobile-open"); }
+      if (e.key === "Escape") {
+        if ($("#previewModal").classList.contains("open")) { closePreview(); return; }
+        if (modal.classList.contains("open")) { closeModal(); return; }
+        closeMenu();
+        if (isMobile() && $("#formPanel").classList.contains("form-panel--mobile-open")) { $("#formPanel").classList.remove("form-panel--mobile-open"); return; }
+        if (sel >= 0 && tab !== "dashboard") { sel = -1; renderList(); renderForm(); renderPreview(); }
+        return;
+      }
+      if (typing || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (modal.classList.contains("open") || $("#previewModal").classList.contains("open")) return;
+
+      if (e.key === "/") { e.preventDefault(); var s = $("#search"); if (s) { s.focus(); s.select(); } return; }
+      if (e.key === "n" || e.key === "N") {
+        if (tab === "dashboard") return;
+        e.preventDefault(); addItem(); return;
+      }
+      if (e.key === "?") { e.preventDefault(); openShortcuts(); return; }
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+        if (tab === "dashboard") return;
+        var items = visibleItems(); if (!items.length) return;
+        e.preventDefault();
+        // find position of current sel in the displayed order
+        var pos = -1;
+        for (var p = 0; p < items.length; p++) if (items[p].i === sel) { pos = p; break; }
+        if (e.key === "ArrowDown") pos = pos < 0 ? 0 : Math.min(items.length - 1, pos + 1);
+        else pos = pos < 0 ? items.length - 1 : Math.max(0, pos - 1);
+        var target = items[pos].i;
+        sel = target;
+        renderList(); renderForm(); renderPreview();
+        var row = $('.item[data-index="' + target + '"]'); if (row && row.scrollIntoView) row.scrollIntoView({ block: "nearest" });
+        return;
+      }
     });
 
     /* ======================= Fill category selects ======================= */
@@ -1429,7 +2282,800 @@
       $("#bulkCat").innerHTML = CATS.map(function (c) { return '<option value="' + c[0] + '">' + c[2] + ' ' + esc(c[1]) + "</option>"; }).join("");
     }
 
+    /* ======================= Category manager ======================= */
+    var EMOJI_SUGGEST = ["🧽", "🔧", "🛢️", "🎨", "🔋", "💡", "🚗", "🛞", "⚙️", "🪛", "🧰", "🔌"];
+
+    function countByCat() {
+      var c = {};
+      state.products.forEach(function (p) { c[p.category] = (c[p.category] || 0) + 1; });
+      return c;
+    }
+
+    // Apply category changes everywhere: keys, selects, list, dashboard, persist.
+    function applyCatsChanged() {
+      refreshCatKeys();
+      persistCats();
+      fillCatSelects();
+      // keep current filter valid
+      if (filterCat && CAT_KEYS.indexOf(filterCat) < 0) { filterCat = ""; $("#filterCat").value = ""; }
+      render();
+      if (tab === "dashboard") renderDashboard();
+    }
+
+    function openCatManager() {
+      closeMenu();
+      var counts = countByCat();
+      var dragKey = null;
+
+      var rows = CATS.map(function (c, i) {
+        var k = c[0], n = counts[k] || 0;
+        return '<div class="catmgr__row" draggable="true" data-key="' + esc(k) + '" data-i="' + i + '">' +
+          '<span class="catmgr__handle" title="Glisser pour réordonner">⠿</span>' +
+          '<div class="catmgr__ord">' +
+            '<button type="button" data-up="' + i + '"' + (i === 0 ? " disabled" : "") + ' title="Monter">▲</button>' +
+            '<button type="button" data-down="' + i + '"' + (i === CATS.length - 1 ? " disabled" : "") + ' title="Descendre">▼</button>' +
+          '</div>' +
+          '<span class="catmgr__ic">' + esc(c[2]) + '</span>' +
+          '<div class="catmgr__info"><div class="catmgr__nm">' + esc(c[1]) + '</div><div class="catmgr__key">' + esc(k) + '</div></div>' +
+          '<span class="catmgr__count" title="Produits dans ce rayon">' + n + ' produit' + (n > 1 ? 's' : '') + '</span>' +
+          '<div class="catmgr__acts">' +
+            '<button class="btn btn--icon-sm" type="button" data-edit="' + i + '" title="Renommer">✏️</button>' +
+            '<button class="btn btn--icon-sm btn--danger" type="button" data-rm="' + i + '" title="Supprimer">🗑</button>' +
+          '</div>' +
+        '</div>';
+      }).join("");
+
+      var html = '<h3>🗂️ Gérer les rayons</h3>' +
+        '<p>Renommez, réorganisez, ajoutez ou supprimez vos rayons. La clé technique (en gris) ne change pas lors d\'un renommage.</p>' +
+        '<div class="catmgr" id="catmgrList">' + rows + '</div>' +
+        '<div class="catmgr__add">' +
+          '<div class="form-section__title"><span>➕</span> Ajouter un rayon</div>' +
+          '<div class="row2">' +
+            '<div class="field"><label>Nom du rayon</label><input id="newCatName" type="text" placeholder="ex : Pneumatiques"></div>' +
+            '<div class="field"><label>Emoji</label><input id="newCatIcon" type="text" placeholder="🚗" maxlength="4"></div>' +
+          '</div>' +
+          '<div class="emoji-pick" id="newCatEmojis">' + EMOJI_SUGGEST.map(function (e2) { return '<button type="button" data-emoji="' + e2 + '">' + e2 + '</button>'; }).join("") + '</div>' +
+          '<button class="btn btn--primary btn--sm" type="button" id="newCatAdd">➕ Ajouter ce rayon</button>' +
+        '</div>' +
+        '<div class="modal__actions"><button class="btn btn--blue" id="catmgrDone" type="button">Terminé</button></div>';
+
+      openModal(html);
+
+      var listBox = $("#catmgrList");
+
+      // Reorder via arrows
+      listBox.addEventListener("click", function (e) {
+        var up = e.target.closest("[data-up]"), down = e.target.closest("[data-down]");
+        var edit = e.target.closest("[data-edit]"), rm = e.target.closest("[data-rm]");
+        if (up) { var iu = +up.dataset.up; if (iu > 0) { var t = CATS[iu]; CATS[iu] = CATS[iu - 1]; CATS[iu - 1] = t; applyCatsChanged(); openCatManager(); } }
+        else if (down) { var idn = +down.dataset.down; if (idn < CATS.length - 1) { var t2 = CATS[idn]; CATS[idn] = CATS[idn + 1]; CATS[idn + 1] = t2; applyCatsChanged(); openCatManager(); } }
+        else if (edit) { editCat(+edit.dataset.edit); }
+        else if (rm) { removeCat(+rm.dataset.rm); }
+      });
+
+      // Reorder via drag
+      listBox.addEventListener("dragstart", function (e) {
+        var row = e.target.closest(".catmgr__row"); if (!row) return;
+        dragKey = row.dataset.key; row.classList.add("dragging");
+      });
+      listBox.addEventListener("dragend", function () {
+        dragKey = null;
+        $$(".catmgr__row", listBox).forEach(function (r) { r.classList.remove("dragging", "drop-before", "drop-after"); });
+      });
+      listBox.addEventListener("dragover", function (e) {
+        if (dragKey == null) return;
+        e.preventDefault();
+        var row = e.target.closest(".catmgr__row");
+        $$(".catmgr__row", listBox).forEach(function (r) { r.classList.remove("drop-before", "drop-after"); });
+        if (!row || row.dataset.key === dragKey) return;
+        var rect = row.getBoundingClientRect();
+        row.classList.add((e.clientY - rect.top) > rect.height / 2 ? "drop-after" : "drop-before");
+      });
+      listBox.addEventListener("drop", function (e) {
+        if (dragKey == null) return;
+        e.preventDefault();
+        var row = e.target.closest(".catmgr__row"); if (!row || row.dataset.key === dragKey) return;
+        var rect = row.getBoundingClientRect();
+        var after = (e.clientY - rect.top) > rect.height / 2;
+        var from = CAT_KEYS.indexOf(dragKey);
+        var to = +row.dataset.i;
+        if (after) to += 1;
+        if (from < to) to -= 1;
+        var moved = CATS.splice(from, 1)[0];
+        CATS.splice(to, 0, moved);
+        applyCatsChanged(); openCatManager();
+      });
+
+      // Emoji picker
+      $("#newCatEmojis").addEventListener("click", function (e) {
+        var b = e.target.closest("[data-emoji]"); if (!b) return;
+        $("#newCatIcon").value = b.dataset.emoji;
+      });
+
+      // Add new
+      $("#newCatAdd").addEventListener("click", function () {
+        var name = String($("#newCatName").value || "").trim();
+        var icon = String($("#newCatIcon").value || "").trim() || "📦";
+        if (!name) { toast("Donnez un nom au rayon"); return; }
+        var key = slug(name), base = key, n = 2;
+        while (CAT_KEYS.indexOf(key) >= 0) { key = base + "-" + (n++); }
+        CATS.push([key, name, icon]);
+        applyCatsChanged();
+        toast("Rayon « " + name + " » ajouté !");
+        openCatManager();
+      });
+
+      $("#catmgrDone").addEventListener("click", closeModal);
+    }
+
+    function editCat(i) {
+      var c = CATS[i]; if (!c) return;
+      var name = prompt("Nom du rayon :", c[1]);
+      if (name == null) return;
+      name = String(name).trim(); if (!name) { toast("Nom vide ignoré"); return; }
+      var icon = prompt("Emoji du rayon (ex : 🚗) :", c[2]);
+      if (icon == null) icon = c[2];
+      icon = String(icon).trim() || "📦";
+      c[1] = name; c[2] = icon; // key (c[0]) unchanged on purpose
+      applyCatsChanged();
+      toast("Rayon renommé !");
+      openCatManager();
+    }
+
+    function removeCat(i) {
+      var c = CATS[i]; if (!c) return;
+      if (CATS.length <= 1) { toast("Il faut au moins un rayon."); return; }
+      var key = c[0];
+      var counts = countByCat();
+      var n = counts[key] || 0;
+
+      if (n > 0) {
+        // Must move products to another category first.
+        var others = CATS.filter(function (x) { return x[0] !== key; });
+        var opts = others.map(function (x) { return '<option value="' + esc(x[0]) + '">' + x[2] + ' ' + esc(x[1]) + '</option>'; }).join("");
+        var html = '<h3>Supprimer « ' + esc(c[1]) + ' »</h3>' +
+          '<p>Ce rayon contient <b>' + n + ' produit' + (n > 1 ? 's' : '') + '</b>. Choisissez où les déplacer avant la suppression.</p>' +
+          '<div class="field"><label>Déplacer les ' + n + ' produit' + (n > 1 ? 's' : '') + ' vers :</label><select id="moveTo">' + opts + '</select></div>' +
+          '<div class="modal__actions">' +
+            '<button class="btn btn--danger" id="confirmRm" type="button">🗑 Déplacer puis supprimer</button>' +
+            '<button class="btn" id="cancelRm" type="button">Annuler</button>' +
+          '</div>';
+        openModal(html);
+        $("#cancelRm").addEventListener("click", openCatManager);
+        $("#confirmRm").addEventListener("click", function () {
+          var dest = $("#moveTo").value;
+          if (CAT_KEYS.indexOf(dest) < 0) return;
+          snapshot("suppression rayon");
+          state.products.forEach(function (p) { if (p.category === key) p.category = dest; });
+          var pos = CAT_KEYS.indexOf(key);
+          if (pos >= 0) CATS.splice(pos, 1);
+          applyCatsChanged();
+          toast("Rayon supprimé, produits déplacés.");
+          openCatManager();
+        });
+        return;
+      }
+
+      if (!confirm("Supprimer le rayon « " + c[1] + " » ?")) return;
+      CATS.splice(i, 1);
+      applyCatsChanged();
+      toast("Rayon supprimé.");
+      openCatManager();
+    }
+
+    $("#btnCats").addEventListener("click", openCatManager);
+
+    /* ======================= Backups / versions ======================= */
+    var BACKUPS_KEY = "zotauto_backups";
+    var BACKUPS_MAX = 15;
+
+    function readBackups() {
+      try {
+        var arr = JSON.parse(localStorage.getItem(BACKUPS_KEY));
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) { return []; }
+    }
+    // Write backups, trimming oldest on quota errors. Returns true on success.
+    function writeBackups(arr) {
+      var copy = arr.slice();
+      for (var attempt = 0; attempt < 30; attempt++) {
+        try { localStorage.setItem(BACKUPS_KEY, JSON.stringify(copy)); return true; }
+        catch (e) {
+          if (copy.length > 1) { copy.shift(); arr.length = 0; Array.prototype.push.apply(arr, copy); }
+          else { try { localStorage.removeItem(BACKUPS_KEY); } catch (er) {} return false; }
+        }
+      }
+      return false;
+    }
+    function fmtDateFR(ts) {
+      var d = new Date(ts);
+      try {
+        return d.toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" }) +
+          " à " + d.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
+      } catch (e) { return d.toLocaleString(); }
+    }
+    // Create a backup entry from current state. label optional.
+    function createBackup(label, silent) {
+      var entry = {
+        ts: Date.now(),
+        label: String(label || "").trim().slice(0, 60),
+        nProd: state.products.length,
+        nServ: state.services.length,
+        state: clone(normalize(state))
+      };
+      var arr = readBackups();
+      arr.push(entry);
+      while (arr.length > BACKUPS_MAX) arr.shift();
+      var ok = writeBackups(arr);
+      if (!ok && !silent) toast("⚠️ Mémoire pleine : anciennes sauvegardes supprimées.", { duration: 4000 });
+      else if (ok && !silent) toast("Sauvegarde créée !");
+      return ok;
+    }
+
+    function openBackups() {
+      closeMenu();
+      renderBackupsModal();
+    }
+    function renderBackupsModal() {
+      var arr = readBackups().slice().reverse(); // newest first
+      var rows = arr.length ? arr.map(function (b) {
+        var realIndex = b.ts; // identify by timestamp
+        return '<div class="bk-row" data-ts="' + realIndex + '">' +
+          '<div class="bk-row__info">' +
+            '<div class="bk-row__date">📅 ' + esc(fmtDateFR(b.ts)) + '</div>' +
+            '<div class="bk-row__meta">' + b.nProd + ' produit' + (b.nProd > 1 ? 's' : '') + ' · ' + b.nServ + ' service' + (b.nServ > 1 ? 's' : '') + '</div>' +
+            (b.label ? '<span class="bk-row__label">' + esc(b.label) + '</span>' : '') +
+          '</div>' +
+          '<div class="bk-row__acts">' +
+            '<button class="btn btn--sm btn--primary" type="button" data-bk-restore="' + realIndex + '">↩️ Restaurer</button>' +
+            '<button class="btn btn--sm" type="button" data-bk-dl="' + realIndex + '">⬇️ Télécharger</button>' +
+            '<button class="btn btn--sm btn--danger" type="button" data-bk-del="' + realIndex + '">🗑️</button>' +
+          '</div>' +
+        '</div>';
+      }).join("") : '<div class="bk-empty">Aucune sauvegarde pour le moment.<br>Créez-en une ci-dessus, ou elles se créent automatiquement à chaque téléchargement.</div>';
+
+      var html = '<h3>🕑 Sauvegardes / versions</h3>' +
+        '<p>Vos 15 dernières versions sont conservées dans ce navigateur. Restaurez, téléchargez ou supprimez à tout moment.</p>' +
+        '<div class="bk-create">' +
+          '<div class="form-section__title"><span>💾</span> Créer une sauvegarde maintenant</div>' +
+          '<div class="row2">' +
+            '<div class="field"><label>Petit nom (optionnel)</label><input id="bkLabel" type="text" placeholder="ex : avant promo été" maxlength="60"></div>' +
+            '<button class="btn btn--primary" type="button" id="bkCreate">💾 Sauvegarder</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="bk-list" id="bkList">' + rows + '</div>' +
+        '<div class="modal__actions"><button class="btn btn--blue" id="bkDone" type="button">Terminé</button></div>';
+      openModal(html);
+
+      $("#bkCreate").addEventListener("click", function () {
+        var lbl = $("#bkLabel").value;
+        createBackup(lbl, false);
+        renderBackupsModal();
+      });
+      $("#bkDone").addEventListener("click", closeModal);
+
+      var listBox = $("#bkList");
+      listBox.addEventListener("click", function (e) {
+        var rest = e.target.closest("[data-bk-restore]");
+        var dl = e.target.closest("[data-bk-dl]");
+        var del = e.target.closest("[data-bk-del]");
+        if (rest) { restoreBackup(+rest.dataset.bkRestore); }
+        else if (dl) { downloadBackup(+dl.dataset.bkDl); }
+        else if (del) { deleteBackup(+del.dataset.bkDel); }
+      });
+    }
+    function findBackup(ts) {
+      var arr = readBackups();
+      for (var i = 0; i < arr.length; i++) if (arr[i].ts === ts) return arr[i];
+      return null;
+    }
+    function restoreBackup(ts) {
+      var b = findBackup(ts); if (!b) return;
+      if (!confirm("Restaurer la sauvegarde du " + fmtDateFR(b.ts) + " ?\nVotre catalogue actuel sera remplacé (annulable avec ↶).")) return;
+      snapshot("restauration sauvegarde");
+      state = normalize(clone(b.state));
+      clearSelection(); sel = state.products.length ? 0 : -1; tab = "products";
+      $$(".tab").forEach(function (x) { var on = x.dataset.tab === "products"; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+      applyDashView(); render();
+      closeModal();
+      toast("Sauvegarde restaurée !", { undo: function () { undo(); }, duration: 5000 });
+    }
+    function downloadBackup(ts) {
+      var b = findBackup(ts); if (!b) return;
+      var out = normalize(b.state);
+      var header = "/* ZOT AUTO — CATALOGUE (sauvegarde du " + fmtDateFR(b.ts) + ") */\n\n";
+      var text = header + "window.ZOTAUTO = " + JSON.stringify(out, null, 2) + ";\n";
+      downloadFile("catalogue.js", text, "text/javascript");
+      toast("Version téléchargée !");
+    }
+    function deleteBackup(ts) {
+      var b = findBackup(ts); if (!b) return;
+      if (!confirm("Supprimer définitivement la sauvegarde du " + fmtDateFR(b.ts) + " ?")) return;
+      var arr = readBackups().filter(function (x) { return x.ts !== ts; });
+      writeBackups(arr);
+      renderBackupsModal();
+      toast("Sauvegarde supprimée.");
+    }
+    $("#btnBackups").addEventListener("click", openBackups);
+
+    /* ======================= Publish wizard ======================= */
+    var PUB_HIDE_KEY = "zotauto_pub_hide_detail";
+    var GITHUB_UPLOAD_URL = "https://github.com/boss974/zotauto.re/upload/main/data";
+    var SITE_URL = "https://zotauto-re.pages.dev";
+
+    function pubHideDetail() {
+      try { return localStorage.getItem(PUB_HIDE_KEY) === "1"; } catch (e) { return false; }
+    }
+    function openPublish() {
+      closeMenu();
+      var compact = pubHideDetail();
+      var stepsHTML;
+      if (compact) {
+        stepsHTML =
+          '<div class="pub-recall">' +
+            '<div><b>1.</b> <button class="btn btn--sm btn--primary" type="button" id="pubDownload">💾 Télécharger catalogue.js</button></div>' +
+            '<div><b>2.</b> Dépose-le sur <a href="' + GITHUB_UPLOAD_URL + '" target="_blank" rel="noopener">GitHub</a> puis « Commit changes ».</div>' +
+            '<div><b>3.</b> En ligne sur <a href="' + SITE_URL + '" target="_blank" rel="noopener">zotauto-re.pages.dev</a> en 1-2 min.</div>' +
+          '</div>';
+      } else {
+        stepsHTML =
+          '<div class="pub-step">' +
+            '<div class="pub-step__num">1</div>' +
+            '<div class="pub-step__body">' +
+              '<div class="pub-step__title">Télécharge ton catalogue</div>' +
+              '<div class="pub-step__txt">Clique sur le bouton ci-dessous. Le fichier <b>catalogue.js</b> sera enregistré sur ton ordinateur (souvent dans « Téléchargements »).</div>' +
+              '<button class="btn btn--primary" type="button" id="pubDownload">💾 Télécharger catalogue.js</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="pub-step">' +
+            '<div class="pub-step__num">2</div>' +
+            '<div class="pub-step__body">' +
+              '<div class="pub-step__title">Remplace le fichier sur GitHub</div>' +
+              '<div class="pub-step__txt">Ouvre la page GitHub, puis <b>glisse le fichier catalogue.js</b> que tu viens de télécharger dans la zone. Descends en bas de la page et clique sur le bouton vert <b>« Commit changes »</b>.</div>' +
+              '<a class="pub-link" href="' + GITHUB_UPLOAD_URL + '" target="_blank" rel="noopener">🔗 Ouvrir la page GitHub</a>' +
+            '</div>' +
+          '</div>' +
+          '<div class="pub-step">' +
+            '<div class="pub-step__num">3</div>' +
+            '<div class="pub-step__body">' +
+              '<div class="pub-step__title">C\'est en ligne ! 🎉</div>' +
+              '<div class="pub-step__txt">Ton catalogue est publié. <b>Patiente 1 à 2 minutes</b>, puis vérifie le résultat sur ton site.</div>' +
+              '<a class="pub-link pub-link--green" href="' + SITE_URL + '" target="_blank" rel="noopener">🌐 Voir mon site en ligne</a>' +
+            '</div>' +
+          '</div>';
+      }
+
+      var html = '<h3>🚀 Publier mon catalogue</h3>' +
+        '<p>Trois étapes simples pour mettre tes changements en ligne :</p>' +
+        stepsHTML +
+        '<label class="pub-check"><input type="checkbox" id="pubHide"' + (compact ? ' checked' : '') + '> Ne plus me montrer le détail</label>' +
+        '<div class="modal__actions"><button class="btn btn--blue" id="pubDone" type="button">Fermer</button></div>';
+      openModal(html);
+
+      $("#pubDownload").addEventListener("click", function () {
+        downloadFile("catalogue.js", exportText(), "text/javascript");
+        createBackup("publication", true);
+        toast("Fichier téléchargé ! Étape 2 : dépose-le sur GitHub.");
+        confetti();
+      });
+      $("#pubHide").addEventListener("change", function () {
+        try { localStorage.setItem(PUB_HIDE_KEY, this.checked ? "1" : "0"); } catch (e) {}
+        renderPublishReopen();
+      });
+      $("#pubDone").addEventListener("click", closeModal);
+    }
+    // Re-render wizard in place after toggling the detail checkbox.
+    function renderPublishReopen() { openPublish(); }
+    $("#btnPublish").addEventListener("click", openPublish);
+
+    /* ======================= QR code generator (inline, no deps) =======================
+       Minimal QR encoder — byte mode, error correction level L. Supports the
+       versions needed for a short URL. Pure JS, works offline (file://). */
+    var QR = (function () {
+      // Galois field tables for Reed-Solomon
+      var EXP = new Array(256), LOG = new Array(256);
+      (function () {
+        var x = 1;
+        for (var i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11d; }
+        EXP[255] = EXP[0];
+      })();
+      function gmul(a, b) { if (a === 0 || b === 0) return 0; return EXP[(LOG[a] + LOG[b]) % 255]; }
+      function rsGenPoly(deg) {
+        // Build (x - α^0)(x - α^1)...(x - α^(deg-1)); poly[0] is highest-degree coeff.
+        var poly = [1];
+        for (var i = 0; i < deg; i++) {
+          var np = new Array(poly.length + 1);
+          for (var j = 0; j < np.length; j++) np[j] = 0;
+          for (var k = 0; k < poly.length; k++) {
+            np[k] ^= poly[k];               // poly[k] * x (shift, keeps monic gen[0]=1)
+            np[k + 1] ^= gmul(poly[k], EXP[i]); // poly[k] * α^i
+          }
+          poly = np;
+        }
+        return poly;
+      }
+      function rsEncode(data, ecLen) {
+        var gen = rsGenPoly(ecLen);
+        var res = data.slice().concat(new Array(ecLen).fill(0));
+        for (var i = 0; i < data.length; i++) {
+          var coef = res[i];
+          if (coef !== 0) for (var j = 0; j < gen.length; j++) res[i + j] ^= gmul(gen[j], coef);
+        }
+        return res.slice(data.length);
+      }
+
+      // Per-version (level L) capacity in data codewords, EC codewords per block, block layout.
+      // [version]: {dataCW, ecPerBlock, blocks:[[count, dataPerBlock],...], align:[...]}
+      var VINFO = {
+        1:  { ec: 7,  groups: [[1, 19]],  align: [] },
+        2:  { ec: 10, groups: [[1, 34]],  align: [6, 18] },
+        3:  { ec: 15, groups: [[1, 55]],  align: [6, 22] },
+        4:  { ec: 20, groups: [[1, 80]],  align: [6, 26] },
+        5:  { ec: 26, groups: [[1, 108]], align: [6, 30] },
+        6:  { ec: 18, groups: [[2, 68]],  align: [6, 34] },
+        7:  { ec: 20, groups: [[2, 78]],  align: [6, 22, 38] },
+        8:  { ec: 24, groups: [[2, 97]],  align: [6, 24, 42] },
+        9:  { ec: 30, groups: [[2, 116]], align: [6, 26, 46] },
+        10: { ec: 18, groups: [[2, 68], [2, 69]], align: [6, 28, 50] }
+      };
+      function totalData(v) { var g = VINFO[v].groups, n = 0; g.forEach(function (b) { n += b[0] * b[1]; }); return n; }
+
+      function size(v) { return v * 4 + 17; }
+
+      // Build the bit stream (byte mode) for given version.
+      function makeData(bytes, v) {
+        var cap = totalData(v);
+        var bits = [];
+        function push(val, len) { for (var i = len - 1; i >= 0; i--) bits.push((val >> i) & 1); }
+        push(0x4, 4); // byte mode
+        var ccBits = v >= 10 ? 16 : 8;
+        push(bytes.length, ccBits);
+        for (var i = 0; i < bytes.length; i++) push(bytes[i], 8);
+        // terminator
+        var capBits = cap * 8;
+        var term = Math.min(4, capBits - bits.length);
+        for (var t = 0; t < term; t++) bits.push(0);
+        while (bits.length % 8 !== 0) bits.push(0);
+        var cws = [];
+        for (var b = 0; b < bits.length; b += 8) {
+          var byte = 0; for (var k = 0; k < 8; k++) byte = (byte << 1) | bits[b + k];
+          cws.push(byte);
+        }
+        var pad = [0xEC, 0x11], pi = 0;
+        while (cws.length < cap) { cws.push(pad[pi % 2]); pi++; }
+        return cws;
+      }
+
+      // Interleave data + EC codewords across blocks.
+      function buildCodewords(dataCW, v) {
+        var info = VINFO[v], ecLen = info.ec;
+        var blocks = [];
+        var idx = 0;
+        info.groups.forEach(function (g) {
+          for (var n = 0; n < g[0]; n++) {
+            var d = dataCW.slice(idx, idx + g[1]); idx += g[1];
+            blocks.push({ data: d, ec: rsEncode(d, ecLen) });
+          }
+        });
+        var maxData = 0; blocks.forEach(function (b) { if (b.data.length > maxData) maxData = b.data.length; });
+        var result = [];
+        for (var c = 0; c < maxData; c++) for (var bi = 0; bi < blocks.length; bi++) if (c < blocks[bi].data.length) result.push(blocks[bi].data[c]);
+        for (var e = 0; e < ecLen; e++) for (var bj = 0; bj < blocks.length; bj++) result.push(blocks[bj].ec[e]);
+        return result;
+      }
+
+      // Matrix construction
+      function buildMatrix(codewords, v) {
+        var n = size(v);
+        var m = [], reserved = [];
+        for (var i = 0; i < n; i++) { m.push(new Array(n).fill(null)); reserved.push(new Array(n).fill(false)); }
+        function place(r, c, val) { m[r][c] = val; reserved[r][c] = true; }
+        // Finder patterns
+        function finder(r, c) {
+          for (var dr = -1; dr <= 7; dr++) for (var dc = -1; dc <= 7; dc++) {
+            var rr = r + dr, cc = c + dc;
+            if (rr < 0 || rr >= n || cc < 0 || cc >= n) continue;
+            var inRing = (dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6);
+            var val = 0;
+            if (inRing) {
+              if (dr === 0 || dr === 6 || dc === 0 || dc === 6) val = 1;
+              else if (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4) val = 1;
+              else val = 0;
+            } else val = 0; // separator
+            place(rr, cc, val);
+          }
+        }
+        finder(0, 0); finder(0, n - 7); finder(n - 7, 0);
+        // Timing patterns
+        for (var t = 8; t < n - 8; t++) { place(6, t, t % 2 === 0 ? 1 : 0); place(t, 6, t % 2 === 0 ? 1 : 0); }
+        // Alignment patterns
+        var ap = VINFO[v].align;
+        for (var ai = 0; ai < ap.length; ai++) for (var aj = 0; aj < ap.length; aj++) {
+          var ar = ap[ai], ac = ap[aj];
+          if (reserved[ar][ac]) continue; // overlaps finder
+          for (var ddr = -2; ddr <= 2; ddr++) for (var ddc = -2; ddc <= 2; ddc++) {
+            var v2 = (Math.max(Math.abs(ddr), Math.abs(ddc)) !== 1) ? 1 : 0;
+            place(ar + ddr, ac + ddc, v2);
+          }
+        }
+        // Dark module
+        place(n - 8, 8, 1);
+        // Reserve format info areas
+        for (var fr = 0; fr <= 8; fr++) { if (!reserved[fr][8]) reserved[fr][8] = true; if (!reserved[8][fr]) reserved[8][fr] = true; }
+        for (var fb = 0; fb < 8; fb++) { if (!reserved[n - 1 - fb][8]) reserved[n - 1 - fb][8] = true; if (!reserved[8][n - 1 - fb]) reserved[8][n - 1 - fb] = true; }
+        reserved[8][8] = true;
+
+        // Place data bits zig-zag
+        var bits = [];
+        codewords.forEach(function (cw) { for (var i = 7; i >= 0; i--) bits.push((cw >> i) & 1); });
+        var bitIdx = 0, dir = -1;
+        for (var col = n - 1; col > 0; col -= 2) {
+          if (col === 6) col = 5; // skip timing column
+          for (var rowStep = 0; rowStep < n; rowStep++) {
+            var row = dir === -1 ? (n - 1 - rowStep) : rowStep;
+            for (var cc2 = 0; cc2 < 2; cc2++) {
+              var cur = col - cc2;
+              if (!reserved[row][cur]) {
+                var bit = bitIdx < bits.length ? bits[bitIdx++] : 0;
+                m[row][cur] = bit;
+              }
+            }
+          }
+          dir = -dir;
+        }
+        return { m: m, reserved: reserved, n: n };
+      }
+
+      // Masking
+      function maskFn(id, r, c) {
+        switch (id) {
+          case 0: return (r + c) % 2 === 0;
+          case 1: return r % 2 === 0;
+          case 2: return c % 3 === 0;
+          case 3: return (r + c) % 3 === 0;
+          case 4: return (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+          case 5: return ((r * c) % 2 + (r * c) % 3) === 0;
+          case 6: return (((r * c) % 2 + (r * c) % 3) % 2) === 0;
+          case 7: return (((r + c) % 2 + (r * c) % 3) % 2) === 0;
+        }
+        return false;
+      }
+      // Format info (EC level L, mask) with BCH(15,5) + mask XOR 0x5412.
+      // The 15-bit string is indexed bit14 (MSB) .. bit0 (LSB).
+      function formatBits(maskId) {
+        var ec = 0x01; // level L
+        var fmt = (ec << 3) | maskId; // 5-bit data
+        var rem = fmt;
+        for (var i = 0; i < 10; i++) rem = (rem << 1) ^ (((rem >> 9) & 1) ? 0x537 : 0);
+        return ((fmt << 10) | (rem & 0x3FF)) ^ 0x5412;
+      }
+      function applyFormat(m, n, maskId) {
+        var bits = formatBits(maskId);
+        // bit(i): i=0 is LSB. Canonical placement per ISO/IEC 18004.
+        function bit(i) { return (bits >> i) & 1; }
+        // Top-left vertical (column 8): bits 0..5, skip timing row 6, bit6 at row7, bit7..8 at row8 corner.
+        for (var i = 0; i <= 5; i++) m[i][8] = bit(i);
+        m[7][8] = bit(6);
+        m[8][8] = bit(7);
+        m[8][7] = bit(8);
+        // Top-left horizontal (row 8): bits 9..14 going left, skipping timing col 6.
+        for (var j = 9; j <= 14; j++) m[8][14 - j] = bit(j);
+        // Bottom-left vertical (column 8): bits 0..6 from bottom going up.
+        for (var k = 0; k <= 6; k++) m[n - 1 - k][8] = bit(k);
+        // Top-right horizontal (row 8): bits 7..14.
+        for (var l = 7; l <= 14; l++) m[8][n - 15 + l] = bit(l);
+        m[n - 8][8] = 1; // dark module
+      }
+
+      function penalty(m, n) {
+        var score = 0, r, c;
+        // Rule 1: runs
+        for (r = 0; r < n; r++) {
+          var runC = 1;
+          for (c = 1; c < n; c++) { if (m[r][c] === m[r][c - 1]) { runC++; } else { if (runC >= 5) score += 3 + (runC - 5); runC = 1; } }
+          if (runC >= 5) score += 3 + (runC - 5);
+        }
+        for (c = 0; c < n; c++) {
+          var runR = 1;
+          for (r = 1; r < n; r++) { if (m[r][c] === m[r - 1][c]) { runR++; } else { if (runR >= 5) score += 3 + (runR - 5); runR = 1; } }
+          if (runR >= 5) score += 3 + (runR - 5);
+        }
+        // Rule 2: 2x2 blocks
+        for (r = 0; r < n - 1; r++) for (c = 0; c < n - 1; c++) {
+          var vv = m[r][c];
+          if (vv === m[r][c + 1] && vv === m[r + 1][c] && vv === m[r + 1][c + 1]) score += 3;
+        }
+        return score;
+      }
+
+      // Choose best mask, return final matrix.
+      function finalize(base, v) {
+        var n = base.n;
+        var best = null, bestScore = Infinity, bestMask = 0;
+        for (var mid = 0; mid < 8; mid++) {
+          var mm = base.m.map(function (row) { return row.slice(); });
+          for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+            if (!base.reserved[r][c] && maskFn(mid, r, c)) mm[r][c] ^= 1;
+          }
+          applyFormat(mm, n, mid);
+          var sc = penalty(mm, n);
+          if (sc < bestScore) { bestScore = sc; best = mm; bestMask = mid; }
+        }
+        return best;
+      }
+
+      function encode(text) {
+        // UTF-8 bytes
+        var bytes = [];
+        var enc = unescape(encodeURIComponent(text));
+        for (var i = 0; i < enc.length; i++) bytes.push(enc.charCodeAt(i) & 0xFF);
+        // pick smallest version that fits
+        var v = 0;
+        for (var ver = 1; ver <= 10; ver++) {
+          var cap = totalData(ver);
+          var ccBits = ver >= 10 ? 16 : 8;
+          var needBits = 4 + ccBits + bytes.length * 8;
+          if (needBits <= cap * 8) { v = ver; break; }
+        }
+        if (!v) throw new Error("URL trop longue pour le QR");
+        var dataCW = makeData(bytes, v);
+        var allCW = buildCodewords(dataCW, v);
+        var base = buildMatrix(allCW, v);
+        var matrix = finalize(base, v);
+        return matrix;
+      }
+      return { encode: encode };
+    })();
+
+    function drawQrToCanvas(canvas, matrix, moduleSize, quiet) {
+      moduleSize = moduleSize || 6; quiet = quiet == null ? 4 : quiet;
+      var n = matrix.length;
+      var dim = (n + quiet * 2) * moduleSize;
+      canvas.width = dim; canvas.height = dim;
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff"; ctx.fillRect(0, 0, dim, dim);
+      ctx.fillStyle = "#0e1b33";
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+        if (matrix[r][c]) ctx.fillRect((c + quiet) * moduleSize, (r + quiet) * moduleSize, moduleSize, moduleSize);
+      }
+    }
+
+    function openQr() {
+      closeMenu();
+      var fallbackHtml = '<h3>📱 QR code du site</h3>' +
+        '<p>Imprime ou partage ce lien. Tes clients accèdent à ton catalogue en scannant.</p>' +
+        '<div class="qr-wrap">' +
+          '<div class="qr-url">' + esc(SITE_URL) + '</div>' +
+          '<div class="qr-acts">' +
+            '<button class="btn btn--blue btn--sm" type="button" id="qrCopy">📋 Copier le lien</button>' +
+          '</div>' +
+          '<p class="hint" style="margin-top:12px">Astuce : génère un QR depuis n\'importe quel outil en ligne avec ce lien.</p>' +
+        '</div>' +
+        '<div class="modal__actions"><button class="btn btn--blue" id="qrDone" type="button">Terminé</button></div>';
+
+      var matrix = null;
+      try { matrix = QR.encode(SITE_URL); } catch (e) { matrix = null; }
+
+      if (!matrix) {
+        openModal(fallbackHtml);
+        var cp = $("#qrCopy");
+        if (cp) cp.addEventListener("click", function () {
+          if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(SITE_URL).then(function () { toast("Lien copié !"); }, function () { fallbackCopy(SITE_URL); });
+          else fallbackCopy(SITE_URL);
+        });
+        $("#qrDone").addEventListener("click", closeModal);
+        return;
+      }
+
+      var html = '<h3>📱 QR code du site</h3>' +
+        '<p>Imprime-le ou affiche-le : tes clients scannent et accèdent directement à ton catalogue en ligne.</p>' +
+        '<div class="qr-wrap">' +
+          '<div class="qr-canvas" id="qrCanvasWrap"></div>' +
+          '<div class="qr-url">' + esc(SITE_URL) + '</div>' +
+          '<div class="qr-acts">' +
+            '<button class="btn btn--primary btn--sm" type="button" id="qrDl">⬇️ Télécharger le QR (PNG)</button>' +
+            '<button class="btn btn--blue btn--sm" type="button" id="qrCopy">📋 Copier le lien</button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="modal__actions"><button class="btn btn--blue" id="qrDone" type="button">Terminé</button></div>';
+      openModal(html);
+
+      var canvas = document.createElement("canvas");
+      drawQrToCanvas(canvas, matrix, 6, 4);
+      $("#qrCanvasWrap").appendChild(canvas);
+
+      $("#qrDl").addEventListener("click", function () {
+        var big = document.createElement("canvas");
+        drawQrToCanvas(big, matrix, 16, 4); // higher res for printing
+        try {
+          var url = big.toDataURL("image/png");
+          var a = document.createElement("a");
+          a.href = url; a.download = "qr-zotauto.png";
+          document.body.appendChild(a); a.click(); a.remove();
+          toast("QR code téléchargé !");
+        } catch (e) { toast("Téléchargement impossible."); }
+      });
+      $("#qrCopy").addEventListener("click", function () {
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(SITE_URL).then(function () { toast("Lien copié !"); }, function () { fallbackCopy(SITE_URL); });
+        else fallbackCopy(SITE_URL);
+      });
+      $("#qrDone").addEventListener("click", closeModal);
+    }
+    $("#btnQr").addEventListener("click", openQr);
+
+    /* ======================= Dark mode (admin) ======================= */
+    var THEME_KEY = "zotauto_admin_theme";
+    function applyTheme(dark) {
+      document.body.classList.toggle("dark", dark);
+      var btn = $("#btnTheme");
+      if (btn) { btn.textContent = dark ? "☀️" : "🌙"; btn.setAttribute("aria-pressed", String(dark)); btn.title = dark ? "Passer en mode clair" : "Passer en mode sombre"; }
+    }
+    function initTheme() {
+      var pref = null;
+      try { pref = localStorage.getItem(THEME_KEY); } catch (e) {}
+      var dark;
+      if (pref === "dark") dark = true;
+      else if (pref === "light") dark = false;
+      else { try { dark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; } catch (e) { dark = false; } }
+      applyTheme(!!dark);
+    }
+    $("#btnTheme").addEventListener("click", function () {
+      var dark = !document.body.classList.contains("dark");
+      applyTheme(dark);
+      try { localStorage.setItem(THEME_KEY, dark ? "dark" : "light"); } catch (e) {}
+    });
+
+    /* ======================= Shortcuts modal ======================= */
+    function openShortcuts() {
+      closeMenu();
+      var rows = [
+        ["/", "Aller à la recherche"],
+        ["N", "Nouvel élément"],
+        ["↑ / ↓", "Naviguer dans la liste"],
+        ["Échap", "Fermer / désélectionner"],
+        ["Ctrl + Z", "Annuler la dernière action"],
+        ["?", "Afficher cette aide"]
+      ].map(function (r) {
+        return '<div class="kbd-row"><span class="kbd">' + esc(r[0]) + '</span><span>' + esc(r[1]) + '</span></div>';
+      }).join("");
+      openModal('<h3>⌨️ Raccourcis clavier</h3>' +
+        '<p>Ces raccourcis fonctionnent quand vous n\'êtes pas en train de saisir du texte.</p>' +
+        '<div class="kbd-list">' + rows + '</div>' +
+        '<div class="modal__actions"><button class="btn btn--blue" id="kbdDone" type="button">Compris</button></div>');
+      var d = $("#kbdDone"); if (d) d.addEventListener("click", closeModal);
+    }
+    $("#btnShortcuts").addEventListener("click", openShortcuts);
+
+    /* ======================= Live preview modal ======================= */
+    var previewModal = $("#previewModal");
+    function setPreviewWidth(w) {
+      var frame = $("#previewFrame");
+      $("#pwMobile").classList.toggle("on", w === "390");
+      $("#pwDesktop").classList.toggle("on", w === "full");
+      frame.classList.toggle("mobile", w === "390");
+    }
+    function openPreview() {
+      closeMenu();
+      var frame = $("#previewFrame");
+      // reload index.html each time so latest published file shows
+      frame.src = "index.html?" + Date.now();
+      setPreviewWidth("full");
+      previewModal.classList.add("open");
+    }
+    function closePreview() {
+      previewModal.classList.remove("open");
+      $("#previewFrame").src = "about:blank";
+    }
+    $("#btnPreview").addEventListener("click", openPreview);
+    $("#btnPreview2").addEventListener("click", openPreview);
+    $("#previewClose").addEventListener("click", closePreview);
+    $("#previewModal .preview-modal__widths").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pw]"); if (!b) return;
+      setPreviewWidth(b.dataset.pw);
+    });
+
     /* ======================= Init ======================= */
+    initTheme();
     fillCatSelects();
     sel = list().length ? 0 : -1;
     render();
