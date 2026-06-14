@@ -142,9 +142,8 @@
   function set(sel, txt) { var el = $(sel); if (el) el.textContent = txt; }
 
   function prefillParts(v) {
-    // Pas de base de compatibilité fine : on oriente vers le rayon "Pièces & freinage".
-    var chip = document.querySelector('.chip[data-filter="pieces"]') || document.querySelector('[data-gocat="pieces"]');
-    if (chip) chip.click();
+    // Pas de base de compatibilité fine : on oriente le client vers le catalogue produits,
+    // puis il finalise sa demande de pièce via WhatsApp (service "Recherche de pièce").
     var target = document.getElementById("bestsellers");
     if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   }
