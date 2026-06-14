@@ -481,6 +481,24 @@
     body.dark .item__cat--pieces { background: #3a1228; color: #f9a8d4; }
     body.dark .item__cat--accessoires { background: #2e1a45; color: #d8b4fe; }
     body.dark .bulk select, body.dark .bulk .btn { color: #fff; }
+    /* Surfaces structurelles : overrides EXPLICITES (l'admin charge aussi styles.css,
+       dont des règles concurrentes empêchaient ces fonds de passer en sombre via les variables) */
+    body.dark { background: #0f172a; color: #e2e8f0; }
+    body.dark .top { background: #1e293b; border-bottom-color: #334155; }
+    body.dark .top__title, body.dark .top__title b { color: #e2e8f0; }
+    body.dark .panel { background: #1e293b; border-color: #334155; }
+    body.dark .panel__title, body.dark .panel__head { color: #e2e8f0; }
+    body.dark .item { background: #1e293b; border-color: #334155; }
+    body.dark .item__name { color: #e2e8f0; }
+    body.dark .search-bar { background: #0f172a; border-color: #334155; }
+    body.dark .search-bar input { color: #e2e8f0; }
+    body.dark .filter-select, body.dark #sortMode { background: #1e293b; color: #e2e8f0; border-color: #475569; }
+    body.dark .field input, body.dark .field select, body.dark .field textarea { background: #1e293b; color: #e2e8f0; border-color: #475569; }
+    body.dark .collapsible { background: #1e293b; border-color: #334155; }
+    body.dark .preview-area__stage { background: #0f172a; border-color: #334155; }
+    body.dark .pro-menu__pop { background: #1e293b; border-color: #334155; }
+    body.dark .pro-menu__pop button { color: #e2e8f0; }
+    body.dark .modal__box, body.dark .adm-modal__box { background: #1e293b; color: #e2e8f0; }
 
     /* ===== MOBILE RESPONSIVE ===== */
     @media (max-width: 860px) {
