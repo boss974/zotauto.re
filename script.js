@@ -917,14 +917,14 @@
   // ── Social proof notifications ──
   (function () {
     var notifications = [
-      { emoji: "🌺", name: "Matthieu", ville: "Saint-Pierre", produit: "Plaquettes Valeo" },
-      { emoji: "🔧", name: "Cindy", ville: "Saint-Denis", produit: "Filtre à huile Mann" },
-      { emoji: "🌺", name: "Dorian", ville: "Le Tampon", produit: "Kit distribution Gates" },
-      { emoji: "🔧", name: "Priscilla", ville: "Saint-Paul", produit: "Amortisseurs Monroe" },
-      { emoji: "🌺", name: "Kévin", ville: "Saint-André", produit: "Batterie Varta 60Ah" },
-      { emoji: "🔧", name: "Nathalie", ville: "Sainte-Marie", produit: "Courroie accessoires" },
-      { emoji: "🌺", name: "Damien", ville: "Saint-Leu", produit: "Disques de frein TRW" },
-      { emoji: "🔧", name: "Sandrine", ville: "Saint-Louis", produit: "Bougies NGK" }
+      { emoji: "🌺", name: "Matthieu", ville: "Saint-Pierre", produit: "Huile moteur 5W-40 Euroatlantic" },
+      { emoji: "🔧", name: "Cindy", ville: "Saint-Denis", produit: "Lot de 5 microfibres Koch-Chemie" },
+      { emoji: "🌺", name: "Dorian", ville: "Le Tampon", produit: "Visseuse sans-fil Worcraft" },
+      { emoji: "🔧", name: "Priscilla", ville: "Saint-Paul", produit: "Shampoing auto Green Star" },
+      { emoji: "🌺", name: "Kévin", ville: "Saint-André", produit: "Meuleuse d'angle Power Maxx" },
+      { emoji: "🔧", name: "Nathalie", ville: "Sainte-Marie", produit: "Huile moteur 5W-30 Euroatlantic" },
+      { emoji: "🌺", name: "Damien", ville: "Saint-Leu", produit: "Detailing / lavage premium" },
+      { emoji: "🔧", name: "Sandrine", ville: "Saint-Louis", produit: "Vidange & entretien" }
     ];
     var el = document.getElementById("socialProof");
     var textEl = document.getElementById("socialProofText");
