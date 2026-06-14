@@ -551,7 +551,7 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
   .footer__brand { grid-column: 1 / -1; }
 }
 @media (max-width: 860px) {
-  .search { order: 3; flex-basis: 100%; max-width: none; }
+  .search { order: 3; flex-basis: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
   .header__inner { flex-wrap: wrap; height: auto; padding: 12px 0; gap: 12px; }
   .iconbtn--call { display: none; }
   .burger { display: flex; }
