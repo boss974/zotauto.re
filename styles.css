@@ -1364,6 +1364,19 @@ body.dark .skeleton-line {
   .reassurance-strip__sep { display: none; }
 }
 
+/* ── Mode sombre : sections ajoutées en v12 que le dark-mode initial ne couvrait pas ── */
+body.dark .reassurance-strip { background: #162035; border-bottom-color: #2a52e0; }
+body.dark .reassurance-strip__item { color: #cbd5e1; }
+body.dark .reassurance-strip__icon { background: rgba(42,82,224,0.22); }
+body.dark .reassurance-strip__sep { background: #334155; }
+body.dark .trust-logos { background: #0d1424; }
+body.dark .trust-logos__logo { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+body.dark .insta-feed { background: #0f172a; }
+body.dark .insta-feed__title { color: #e2e8f0; }
+body.dark .delivery-zones { background: #0f172a; }
+body.dark .delivery-zones__title { color: #e2e8f0; }
+body.dark .delivery-zones__desc { color: #94a3b8; }
+
 /* ── Trust logos marquee ── */
 .trust-logos {
   background: #f7f8fc;
