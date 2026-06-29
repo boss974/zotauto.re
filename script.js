@@ -1354,4 +1354,13 @@
     renderViewed();
   }());
 
+  // ── Liens placeholder (#) : ne pas faire sauter la page en haut ──
+  // (réseaux sociaux Instagram/TikTok pas encore renseignés)
+  (function () {
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href="#"]');
+      if (a) { e.preventDefault(); }
+    });
+  }());
+
 })();
