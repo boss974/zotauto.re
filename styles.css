@@ -156,6 +156,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 .catnav__all { font-family: var(--font-display); font-weight: 600 !important; color: var(--ink) !important; display: inline-flex; align-items: center; gap: 8px; }
 .catnav__all svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .catnav__promo { color: var(--red) !important; font-weight: 600 !important; }
+.catnav a.is-current { background: var(--soft); color: var(--blue); box-shadow: inset 0 -2px 0 var(--blue); }
+body.dark .catnav a.is-current { background: rgba(42,82,224,.18); color: #93b0ff; box-shadow: inset 0 -2px 0 #93b0ff; }
 
 /* =========================================================
    Hero + sélecteur
@@ -2275,17 +2277,61 @@ details[open] > .faq__body { grid-template-rows: 1fr; }
 body.menu-open .menu-overlay { display: block; opacity: 1; }
 
 @media (max-width: 767px) {
+  /* Drawer latéral gauche pour la navigation des rayons */
   .catnav {
-    transform: translateY(-10px);
-    opacity: 0;
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.22s ease;
-    z-index: 200;
-    position: relative;
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(82vw, 320px);
+    max-width: 100%;
+    background: #fff;
+    border-top: none;
+    box-shadow: 2px 0 24px rgba(0, 0, 0, 0.18);
+    transform: translateX(-102%);
+    opacity: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 320;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 0 calc(20px + env(safe-area-inset-bottom, 0px));
   }
-  .catnav.is-open { display: block; transform: translateY(0); opacity: 1; }
+  .catnav.is-open { display: block; transform: translateX(0); }
+  .catnav__inner {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    overflow: visible;
+    gap: 2px;
+    padding: 0 12px;
+  }
+  .catnav::before {
+    content: "Nos rayons";
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+    padding: 4px 14px 12px;
+    margin-bottom: 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .catnav a {
+    padding: 14px 14px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    font-size: 0.98rem;
+  }
+  body.dark .catnav { background: #1e293b; box-shadow: 2px 0 24px rgba(0,0,0,.5); }
+  body.dark .catnav::before { color: #e2e8f0; border-bottom-color: #334155; }
   .burger { transition: background 0.2s; }
   .burger[aria-expanded="true"] { background: #f0f3ff; border-color: var(--blue, #2a52e0); }
   .burger span { transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s; }
+  /* L'overlay doit passer au-dessus du contenu mais sous le drawer */
+  .menu-overlay { z-index: 310; }
 }
 
 /* ── Barre fixe mobile bas ── */
@@ -2306,12 +2352,13 @@ body.menu-open .menu-overlay { display: block; opacity: 1; }
   }
   .mob-bar__btn {
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 3px;
-    font-size: 0.68rem;
+    font-size: 0.64rem;
     font-weight: 600;
     color: #555;
     background: none;
@@ -2319,16 +2366,35 @@ body.menu-open .menu-overlay { display: block; opacity: 1; }
     cursor: pointer;
     text-decoration: none;
     padding: 6px 0 4px;
+    min-height: 48px;
     transition: color 0.18s, background 0.18s;
     border-radius: 0;
     -webkit-tap-highlight-color: transparent;
   }
   .mob-bar__btn svg { width: 22px; height: 22px; flex-shrink: 0; }
+  .mob-bar__btn span:not(.mob-bar__ic):not(.mob-bar__count) { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .mob-bar__btn:active,
   .mob-bar__btn:focus-visible { background: #f0f3ff; color: #2a52e0; }
+  .mob-bar__btn.is-active { color: #2a52e0; }
   .mob-bar__btn--wa { color: #25d366; }
   .mob-bar__btn--wa:active,
   .mob-bar__btn--wa:focus-visible { background: #e6faf0; color: #128c7e; }
+  .mob-bar__ic { position: relative; display: inline-flex; }
+  .mob-bar__count {
+    position: absolute;
+    top: -6px;
+    right: -9px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    border-radius: 9px;
+    background: var(--red, #e01f2b);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 800;
+    line-height: 16px;
+    text-align: center;
+  }
   body { padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)); }
 }
 

@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="robots" content="noindex, nofollow" />
   <title>ZOT AUTO — Mon catalogue</title>
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../styles.css" />
   <style>
     /* =========================================================
        ADMIN V2 — UX mobile-first, gros boutons, langage simple
@@ -519,16 +519,33 @@
       .form-panel__back { display: none; }
       .fab { bottom: 80px; }
     }
+
+    /* ===== ONBOARDING GUIDE ===== */
+    .onb-steps { display: grid; gap: 12px; margin: 6px 0 4px; }
+    .onb-step { display: flex; gap: 14px; align-items: flex-start; padding: 14px; border: 2px solid var(--z-line); border-radius: var(--z-radius); background: var(--z-card); }
+    .onb-step__num { flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; color: #fff; font-family: var(--z-font-display); font-weight: 800; font-size: 1.15rem; display: grid; place-items: center; }
+    .onb-step:nth-child(1) .onb-step__num { background: var(--z-blue); }
+    .onb-step:nth-child(2) .onb-step__num { background: var(--z-green); }
+    .onb-step:nth-child(3) .onb-step__num { background: var(--z-red); }
+    .onb-step__body { flex: 1; min-width: 0; }
+    .onb-step__title { font-family: var(--z-font-display); font-weight: 700; font-size: 1rem; margin-bottom: 3px; }
+    .onb-step__txt { font-size: 0.9rem; color: var(--z-ink2); line-height: 1.5; }
+    .onb-step__txt b { color: var(--z-ink); }
+
+    /* ===== VALIDATION ERROR SUMMARY (modal) ===== */
+    .valerr { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+    .valerr li { display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: var(--z-red-light); color: var(--z-red); border-radius: 10px; font-weight: 600; font-size: 0.9rem; }
   </style>
 </head>
 <body>
 
   <!-- ===================== TOP BAR ===================== -->
   <div class="top">
-    <img class="top__logo" src="assets/brands/logo-zotauto.png" alt="ZOT AUTO" />
+    <img class="top__logo" src="../assets/brands/logo-zotauto.png" alt="ZOT AUTO" />
     <div class="top__title">Mon catalogue</div>
     <div class="top__save-indicator" id="saveIndicator" title="Sauvegarde automatique"></div>
 
+    <button class="btn btn--ghost btn--sm" id="btnHelp" title="Guide de démarrage">❓</button>
     <button class="btn btn--ghost btn--sm" id="btnUndo" disabled title="Annuler (Ctrl+Z)">↶</button>
     <button class="btn btn--ghost btn--sm" id="btnPreview" title="Voir le rendu réel du site">👁️</button>
     <button class="btn btn--ghost btn--sm" id="btnTheme" title="Mode sombre / clair" aria-pressed="false">🌙</button>
@@ -540,6 +557,8 @@
         <div class="pro-menu__title">Fichier catalogue</div>
         <button id="btnImport" role="menuitem">📥 Importer un fichier catalogue</button>
         <button id="btnCopy" role="menuitem">📋 Copier le code</button>
+        <button id="btnFullExport" role="menuitem">🗃️ Exporter une sauvegarde complète (.json)</button>
+        <button id="btnFullImport" role="menuitem">♻️ Recharger une sauvegarde (.json)</button>
         <div class="pro-menu__sep"></div>
         <div class="pro-menu__title">Tableur (Excel / Google Sheets)</div>
         <button id="btnCsvExport" role="menuitem">📤 Exporter en tableur</button>
@@ -562,6 +581,7 @@
     <!-- hidden file inputs -->
     <input type="file" id="fileImport" accept=".js,.json,application/json,text/javascript" hidden />
     <input type="file" id="fileCsv" accept=".csv,text/csv,text/plain" hidden />
+    <input type="file" id="fileFullImport" accept=".json,application/json" hidden />
   </div>
 
   <!-- ===================== MAIN ===================== -->
@@ -691,7 +711,7 @@
   <div class="confetti" id="confetti"></div>
 
   <!-- Catalogue data -->
-  <script src="data/catalogue.js"></script>
+  <script src="../data/catalogue.js"></script>
   <script>
   (function () {
     "use strict";
@@ -1541,6 +1561,75 @@
       }
     }
 
+    /* ======================= Save guard (validation) ======================= */
+    // Return a list of blocking problems across products & services. Empty = OK.
+    function catalogueProblems() {
+      var problems = [];
+      state.products.forEach(function (p, i) {
+        var nm = String(p.name || "").trim();
+        if (!nm) problems.push({ tab: "products", i: i, msg: "Produit n°" + (i + 1) + " : nom manquant" });
+        if (!(Number(p.price) > 0)) problems.push({ tab: "products", i: i, msg: "« " + (nm || "Produit n°" + (i + 1)) + " » : prix manquant ou nul" });
+      });
+      state.services.forEach(function (s, i) {
+        var nm = String(s.name || "").trim();
+        if (!nm) problems.push({ tab: "services", i: i, msg: "Service n°" + (i + 1) + " : nom manquant" });
+      });
+      return problems;
+    }
+    // Non-blocking warnings (e.g. missing photo).
+    function missingPhotoCount() {
+      return state.products.filter(function (p) { return !String(p.image || "").trim(); }).length;
+    }
+    // Focus the first problematic item.
+    function gotoProblem(pb) {
+      if (!pb) return;
+      if (pb.tab === "products") openProduct(pb.i);
+      else {
+        tab = "services";
+        $$(".tab").forEach(function (x) { var on = x.dataset.tab === "services"; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+        applyDashView(); selectIndex(pb.i);
+      }
+    }
+    // Runs before download/publish. Calls onOk() only when the user chooses to proceed.
+    function guardBeforeSave(onOk) {
+      var problems = catalogueProblems();
+      if (problems.length) {
+        var shown = problems.slice(0, 8);
+        var more = problems.length - shown.length;
+        var html = '<h3>⚠️ Avant d\'enregistrer</h3>' +
+          '<p>Certaines fiches sont incomplètes. Corrigez-les pour un catalogue propre :</p>' +
+          '<ul class="valerr">' + shown.map(function (p) { return '<li data-goto="' + p.tab + ':' + p.i + '">❌ ' + esc(p.msg) + '</li>'; }).join("") +
+          (more > 0 ? '<li>… et ' + more + ' autre(s).</li>' : '') + '</ul>' +
+          '<div class="modal__actions">' +
+            '<button class="btn btn--blue" id="valFix" type="button">✏️ Corriger maintenant</button>' +
+            '<button class="btn" id="valForce" type="button">Enregistrer quand même</button>' +
+          '</div>';
+        openModal(html);
+        $("#modalBody").addEventListener("click", function (e) {
+          var li = e.target.closest("[data-goto]"); if (!li) return;
+          var parts = li.dataset.goto.split(":");
+          closeModal(); gotoProblem({ tab: parts[0], i: +parts[1] });
+        });
+        var fix = $("#valFix"); if (fix) fix.addEventListener("click", function () { closeModal(); gotoProblem(problems[0]); });
+        var force = $("#valForce"); if (force) force.addEventListener("click", function () { closeModal(); onOk(); });
+        return;
+      }
+      var noPhoto = missingPhotoCount();
+      if (noPhoto > 0) {
+        var h2 = '<h3>📷 Photos manquantes</h3>' +
+          '<p><b>' + noPhoto + '</b> produit' + (noPhoto > 1 ? 's n\'ont' : ' n\'a') + ' pas de photo. Ils seront moins attractifs en ligne. Enregistrer quand même ?</p>' +
+          '<div class="modal__actions">' +
+            '<button class="btn btn--primary" id="warnGo" type="button">💾 Oui, enregistrer</button>' +
+            '<button class="btn" id="warnCancel" type="button">Non, ajouter des photos</button>' +
+          '</div>';
+        openModal(h2);
+        var go = $("#warnGo"); if (go) go.addEventListener("click", function () { closeModal(); onOk(); });
+        var cancel = $("#warnCancel"); if (cancel) cancel.addEventListener("click", closeModal);
+        return;
+      }
+      onOk();
+    }
+
     function renderPreview() {
       var arr = list(); if (sel < 0 || !arr[sel]) { $("#preview").innerHTML = ""; return; }
       $("#preview").innerHTML = tab === "products" ? productPreview(arr[sel]) : servicePreview(arr[sel]);
@@ -1958,9 +2047,11 @@
       setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
     }
     $("#btnDownload").addEventListener("click", function () {
-      downloadFile("catalogue.js", exportText(), "text/javascript");
-      if (typeof createBackup === "function") createBackup("téléchargement", true);
-      toast("Fichier téléchargé ! Remplacez data/catalogue.js sur votre site.");
+      guardBeforeSave(function () {
+        downloadFile("catalogue.js", exportText(), "text/javascript");
+        if (typeof createBackup === "function") createBackup("téléchargement", true);
+        toast("Fichier téléchargé ! Remplacez data/catalogue.js sur votre site.");
+      });
     });
     function doCopy() {
       closeMenu();
@@ -2671,10 +2762,12 @@
       openModal(html);
 
       $("#pubDownload").addEventListener("click", function () {
-        downloadFile("catalogue.js", exportText(), "text/javascript");
-        createBackup("publication", true);
-        toast("Fichier téléchargé ! Étape 2 : dépose-le sur GitHub.");
-        confetti();
+        guardBeforeSave(function () {
+          downloadFile("catalogue.js", exportText(), "text/javascript");
+          createBackup("publication", true);
+          toast("Fichier téléchargé ! Étape 2 : dépose-le sur GitHub.");
+          confetti();
+        });
       });
       $("#pubHide").addEventListener("change", function () {
         try { localStorage.setItem(PUB_HIDE_KEY, this.checked ? "1" : "0"); } catch (e) {}
@@ -3092,11 +3185,100 @@
       setPreviewWidth(b.dataset.pw);
     });
 
+    /* ======================= Onboarding guide ======================= */
+    var ONB_KEY = "zotauto_onboarding_seen";
+    function onboardingSeen() {
+      try { return localStorage.getItem(ONB_KEY) === "1"; } catch (e) { return false; }
+    }
+    function markOnboardingSeen() {
+      try { localStorage.setItem(ONB_KEY, "1"); } catch (e) {}
+    }
+    function openOnboarding() {
+      closeMenu();
+      var html = '<h3>👋 Bienvenue sur votre catalogue !</h3>' +
+        '<p>Gérer votre boutique tient en 3 étapes toutes simples :</p>' +
+        '<div class="onb-steps">' +
+          '<div class="onb-step"><div class="onb-step__num">1</div><div class="onb-step__body">' +
+            '<div class="onb-step__title">➕ Ajoutez un produit</div>' +
+            '<div class="onb-step__txt">Appuyez sur le gros bouton bleu <b>＋</b> en bas à droite. Remplissez le <b>nom</b>, le <b>prix</b> et ajoutez une <b>photo</b>.</div>' +
+          '</div></div>' +
+          '<div class="onb-step"><div class="onb-step__num">2</div><div class="onb-step__body">' +
+            '<div class="onb-step__title">💾 Enregistrez</div>' +
+            '<div class="onb-step__txt">Cliquez sur <b>« Enregistrer mon catalogue »</b> en bas de l\'écran. Un fichier <b>catalogue.js</b> est téléchargé sur votre appareil.</div>' +
+          '</div></div>' +
+          '<div class="onb-step"><div class="onb-step__num">3</div><div class="onb-step__body">' +
+            '<div class="onb-step__title">🚀 Publiez</div>' +
+            '<div class="onb-step__txt">Cliquez sur <b>« Publier »</b> et suivez les 3 étapes guidées pour mettre votre catalogue en ligne.</div>' +
+          '</div></div>' +
+        '</div>' +
+        '<div class="modal__actions"><button class="btn btn--primary" id="onbStart" type="button">C\'est parti ! 🎉</button>' +
+        '<button class="btn" id="onbHelpHint" type="button">Le bouton ❓ rouvre ce guide</button></div>';
+      openModal(html);
+      markOnboardingSeen();
+      var start = $("#onbStart"); if (start) start.addEventListener("click", closeModal);
+      var hint = $("#onbHelpHint"); if (hint) hint.addEventListener("click", closeModal);
+    }
+    $("#btnHelp").addEventListener("click", openOnboarding);
+
+    /* ======================= Full backup export / import (.json) ======================= */
+    // A complete snapshot: catalogue (products + services) + custom categories.
+    function fullSnapshot() {
+      return {
+        _format: "zotauto-full-backup",
+        _version: 1,
+        savedAt: new Date().toISOString(),
+        catalogue: normalize(state),
+        categories: clone(CATS)
+      };
+    }
+    function exportFullBackup() {
+      closeMenu();
+      var d = new Date();
+      var stamp = d.getFullYear() + "-" +
+        ("0" + (d.getMonth() + 1)).slice(-2) + "-" +
+        ("0" + d.getDate()).slice(-2) + "_" +
+        ("0" + d.getHours()).slice(-2) + "h" +
+        ("0" + d.getMinutes()).slice(-2);
+      var text = JSON.stringify(fullSnapshot(), null, 2);
+      downloadFile("zotauto-sauvegarde-" + stamp + ".json", text, "application/json");
+      toast("Sauvegarde complète téléchargée !");
+    }
+    $("#btnFullExport").addEventListener("click", exportFullBackup);
+
+    $("#btnFullImport").addEventListener("click", function () { closeMenu(); $("#fileFullImport").click(); });
+    $("#fileFullImport").addEventListener("change", function (e) {
+      var file = e.target.files[0]; if (!file) { return; }
+      var r = new FileReader();
+      r.onload = function () {
+        var obj;
+        try { obj = JSON.parse(r.result); } catch (err) { alert("Fichier illisible : ce n'est pas une sauvegarde .json valide."); e.target.value = ""; return; }
+        // Accept both the full-backup wrapper and a bare catalogue object.
+        var cat = (obj && obj.catalogue) ? obj.catalogue : obj;
+        if (!cat || (!cat.products && !cat.services)) { alert("Fichier non reconnu : aucun produit ni service trouvé."); e.target.value = ""; return; }
+        if (!confirm("Recharger cette sauvegarde ?\nVotre catalogue actuel sera remplacé (annulable avec ↶).")) { e.target.value = ""; return; }
+        snapshot("rechargement sauvegarde complète");
+        // Restore custom categories if present.
+        if (obj && Array.isArray(obj.categories) && obj.categories.length) {
+          CATS = sanitizeCats(obj.categories);
+          refreshCatKeys(); persistCats(); fillCatSelects();
+        }
+        state = normalize(cat);
+        clearSelection(); sel = state.products.length ? 0 : -1; tab = "products";
+        $$(".tab").forEach(function (x) { var on = x.dataset.tab === "products"; x.classList.toggle("on", on); x.setAttribute("aria-selected", String(on)); });
+        applyDashView(); render();
+        toast("Sauvegarde rechargée !", { undo: function () { undo(); }, duration: 5000 });
+        e.target.value = "";
+      };
+      r.readAsText(file);
+    });
+
     /* ======================= Init ======================= */
     initTheme();
     fillCatSelects();
     sel = list().length ? 0 : -1;
     render();
+    // First-launch onboarding
+    if (!onboardingSeen()) { setTimeout(openOnboarding, 400); }
   })();
   </script>
 </body>

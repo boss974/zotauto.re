@@ -409,36 +409,26 @@
   }
 
   var burger = $("#burger"), catnav = $("#catnav");
+  function setDrawer(open) {
+    if (!catnav) return;
+    catnav.classList.toggle("is-open", open);
+    catnav.style.display = "";
+    if (burger) burger.setAttribute("aria-expanded", String(open));
+    var mobRayons = $("#mobRayons");
+    if (mobRayons) mobRayons.setAttribute("aria-expanded", String(open));
+    document.body.classList.toggle("menu-open", open);
+  }
+  // exposé pour les autres blocs (mob-bar « Rayons »)
+  window.__zotToggleDrawer = function () { setDrawer(!(catnav && catnav.classList.contains("is-open"))); };
   if (burger && catnav) {
-    burger.addEventListener("click", function () {
-      var open = catnav.classList.toggle("is-open");
-      burger.setAttribute("aria-expanded", String(open));
-      catnav.style.display = open ? "block" : "";
-    });
+    burger.addEventListener("click", function () { setDrawer(!catnav.classList.contains("is-open")); });
     $$("#catnav a").forEach(function (a) {
-      a.addEventListener("click", function () { catnav.classList.remove("is-open"); catnav.style.display = ""; burger.setAttribute("aria-expanded", "false"); });
+      a.addEventListener("click", function () { setDrawer(false); });
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && catnav.classList.contains("is-open")) setDrawer(false);
     });
   }
-
-  $$(".finder__tab").forEach(function (tab) {
-    tab.addEventListener("click", function () {
-      var name = tab.dataset.tab;
-      $$(".finder__tab").forEach(function (t) { var a = t === tab; t.classList.toggle("is-active", a); t.setAttribute("aria-selected", String(a)); });
-      $$(".finder__panel").forEach(function (p) { p.hidden = p.dataset.panel !== name; });
-    });
-  });
-
-  var plate = $("#plateInput");
-  if (plate) plate.addEventListener("input", function () {
-    var v = plate.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-    var out = v.slice(0, 2);
-    if (v.length > 2) out += "-" + v.slice(2, 5);
-    if (v.length > 5) out += "-" + v.slice(5, 7);
-    plate.value = out;
-  });
-
-  // La recherche véhicule (plaque / VIN / marque-modèle + carte résultat)
-  // est désormais gérée par vehicle-lookup.js (chargé après script.js).
 
   /* =========================================================
      Panier
@@ -469,6 +459,8 @@
       cartCount.textContent = n; cartCount.hidden = n === 0;
       if (n > 0) { cartCount.classList.remove("bump"); void cartCount.offsetWidth; cartCount.classList.add("bump"); }
     }
+    var mobCartCount = $("#mobCartCount");
+    if (mobCartCount) { mobCartCount.textContent = n; mobCartCount.hidden = n === 0; }
     if (!cartItems) return;
     cartItems.innerHTML = "";
     var empty = cart.length === 0;
@@ -1003,29 +995,26 @@
       });
     }
     if (mobCart && cartBtn) { mobCart.addEventListener("click", function () { cartBtn.click(); }); }
-    // Overlay menu
+    // Bouton « Rayons » de la barre mobile → ouvre/ferme le drawer
+    var mobRayons = document.getElementById("mobRayons");
+    if (mobRayons) {
+      mobRayons.addEventListener("click", function () {
+        if (typeof window.__zotToggleDrawer === "function") window.__zotToggleDrawer();
+      });
+    }
+    // Overlay menu (ferme le drawer au clic en dehors)
     var overlay = document.createElement("div");
     overlay.className = "menu-overlay";
     overlay.id = "menuOverlay";
     document.body.appendChild(overlay);
     var burger = document.getElementById("burger");
     var catnav = document.getElementById("catnav");
-    function syncBodyClass() {
-      if (catnav && catnav.classList.contains("is-open")) {
-        document.body.classList.add("menu-open");
-      } else {
-        document.body.classList.remove("menu-open");
-      }
-    }
     overlay.addEventListener("click", function () {
       if (catnav) { catnav.classList.remove("is-open"); catnav.style.display = ""; }
-      if (burger) { burger.setAttribute("aria-expanded", "false"); }
+      if (burger) burger.setAttribute("aria-expanded", "false");
+      if (mobRayons) mobRayons.setAttribute("aria-expanded", "false");
       document.body.classList.remove("menu-open");
     });
-    if (catnav) {
-      var moMenu = new MutationObserver(syncBodyClass);
-      moMenu.observe(catnav, { attributes: true, attributeFilter: ["class"] });
-    }
   }());
 
   // ── Hero counter animation ──
@@ -1361,6 +1350,39 @@
       var a = e.target.closest('a[href="#"]');
       if (a) { e.preventDefault(); }
     });
+  }());
+
+  // ── Scroll-spy : surligne le lien catnav de la section visible (desktop) ──
+  (function () {
+    var nav = document.getElementById("catnav");
+    if (!nav || !("IntersectionObserver" in window)) return;
+    // associe chaque section à un lien de la barre de rayons
+    var map = [
+      { id: "bestsellers", sel: '.catnav__all' },
+      { id: "services",    sel: 'a[href="#services"]' },
+      { id: "marques",     sel: 'a[href="#marques"]' },
+      { id: "promo",       sel: '.catnav__promo' }
+    ];
+    var pairs = [];
+    map.forEach(function (m) {
+      var sec = document.getElementById(m.id);
+      var link = nav.querySelector(m.sel);
+      if (sec && link) pairs.push({ sec: sec, link: link });
+    });
+    if (!pairs.length) return;
+    function clearAll() { pairs.forEach(function (p) { p.link.classList.remove("is-current"); }); }
+    var visible = {};
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { visible[e.target.id] = e.isIntersecting ? e.intersectionRatio : 0; });
+      var best = null, bestRatio = 0;
+      pairs.forEach(function (p) {
+        var r = visible[p.sec.id] || 0;
+        if (r > bestRatio) { bestRatio = r; best = p; }
+      });
+      clearAll();
+      if (best) best.link.classList.add("is-current");
+    }, { threshold: [0.15, 0.4, 0.7], rootMargin: "-100px 0px -45% 0px" });
+    pairs.forEach(function (p) { io.observe(p.sec); });
   }());
 
 })();
