@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ZOT AUTO — Pièces & produits auto à La Réunion · Livraison toute l'île</title>
-  <meta name="description" content="ZOT AUTO Multiservices — pièces détachées, detailing, outillage et huiles à La Réunion. Trouvez vos pièces par plaque d'immatriculation. Koch-Chemie, Worcraft, Valeo, Euroatlantic. Livraison sur toute l'île (974)." />
+  <meta name="description" content="ZOT AUTO Multiservices — pièces détachées, detailing, outillage et huiles à La Réunion. Koch-Chemie, Worcraft, Valeo, Euroatlantic. Livraison sur toute l'île (974)." />
   <meta name="theme-color" content="#2a52e0" />
   <meta name="keywords" content="pièces auto Réunion, pièces détachées 974, detailing Réunion, outillage auto, huile moteur, Koch-Chemie, Worcraft, Valeo, Euroatlantic, ZOT AUTO, multiservices auto La Réunion" />
   <meta name="author" content="ZOT AUTO MULTISERVICES" />
@@ -15,7 +15,7 @@
 
   <!-- Open Graph / partage réseaux sociaux -->
   <meta property="og:title" content="ZOT AUTO — Tout pour l'auto à La Réunion" />
-  <meta property="og:description" content="Pièces, detailing, outillage & huiles. Trouvez vos pièces par plaque. Livraison sur toute l'île." />
+  <meta property="og:description" content="Pièces, detailing, outillage & huiles. Livraison sur toute l'île." />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="fr_FR" />
   <meta property="og:url" content="https://zotauto.re/" />
@@ -264,78 +264,15 @@
           </div>
         </div>
 
-        <!-- Sélecteur de véhicule -->
+        <!-- Appel à l'action -->
         <div class="finder reveal">
           <div class="finder__head">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13l1.5-4.5A2 2 0 0 1 8.4 7h7.2a2 2 0 0 1 1.9 1.5L19 13M5 13h14v4a1 1 0 0 1-1 1h-1a1 1 0 0 1-1-1v-1H8v1a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-4Z"/><circle cx="7.5" cy="15.5" r="1"/><circle cx="16.5" cy="15.5" r="1"/></svg>
-            <div><strong>Trouvez vos pièces &amp; produits</strong><small>Identifiez votre véhicule, on s'occupe du reste.</small></div>
+            <div><strong>Une pièce ou un produit&nbsp;?</strong><small>Parcourez le catalogue ou contactez-nous directement.</small></div>
           </div>
-
-          <div class="finder__tabs" role="tablist" aria-label="Méthode de recherche">
-            <button class="finder__tab is-active" id="tab-plate" data-tab="plate" role="tab" aria-selected="true" aria-controls="panelPlate">Par plaque</button>
-            <button class="finder__tab" id="tab-vin" data-tab="vin" role="tab" aria-selected="false" aria-controls="panelVin">Par VIN</button>
-            <button class="finder__tab" id="tab-model" data-tab="model" role="tab" aria-selected="false" aria-controls="panelModel">Marque / modèle</button>
-          </div>
-
-          <form class="finder__panel is-active" id="panelPlate" data-panel="plate" role="tabpanel" aria-labelledby="tab-plate">
-            <div class="plate">
-              <span class="plate__eu"><b class="plate__stars">★</b><span>F</span></span>
-              <input class="plate__input" id="plateInput" placeholder="AB-123-CD" maxlength="9" inputmode="text" aria-label="Plaque d'immatriculation" />
-              <span class="plate__dom">974</span>
-            </div>
-            <button type="submit" class="btn btn--blue btn--block btn--cta-pulse">Identifier mon véhicule</button>
-            <small class="finder__rgpd"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Vos données ne sont pas conservées</small>
-            <small class="finder__hint">La plaque seule ne permet pas l'identification automatique en ligne ; pour une recherche précise, indiquez le VIN (case E de la carte grise).</small>
-          </form>
-
-          <form class="finder__panel" id="panelVin" data-panel="vin" role="tabpanel" aria-labelledby="tab-vin" hidden>
-            <div class="vinfield">
-              <input class="vinfield__input" id="vinInput" placeholder="VF1RFB00X66072370" maxlength="17" inputmode="latin" autocomplete="off" spellcheck="false" aria-label="Numéro VIN (17 caractères)" />
-              <small class="vinfield__hint">17 caractères — case E de la carte grise, ou en bas du pare-brise.</small>
-            </div>
-            <button type="submit" class="btn btn--blue btn--block btn--cta-pulse">Identifier mon véhicule</button>
-            <small class="finder__rgpd"><svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Vos données ne sont pas conservées</small>
-          </form>
-
-          <form class="finder__panel" id="panelModel" data-panel="model" role="tabpanel" aria-labelledby="tab-model" hidden>
-            <div class="finder__row">
-              <select aria-label="Marque" required>
-                <option value="" selected disabled>Marque</option>
-                <option>Renault</option><option>Peugeot</option><option>Citroën</option><option>Toyota</option>
-                <option>Volkswagen</option><option>Ford</option><option>Hyundai</option><option>Dacia</option><option>Autre</option>
-              </select>
-              <select aria-label="Modèle"><option value="" selected disabled>Modèle</option><option>Clio</option><option>208</option><option>Yaris</option><option>Golf</option><option>Autre</option></select>
-            </div>
-            <div class="finder__row">
-              <select aria-label="Motorisation"><option value="" selected disabled>Motorisation</option><option>Essence</option><option>Diesel</option><option>Hybride</option></select>
-              <select aria-label="Année"><option value="" selected disabled>Année</option><option>2024+</option><option>2018-2023</option><option>2012-2017</option><option>Avant 2012</option></select>
-            </div>
-            <button type="submit" class="btn btn--blue btn--block">Voir mes pièces</button>
-          </form>
-
-          <!-- Zone résultat partagée (plaque / VIN) — pilotée par vehicle-lookup.js -->
-          <div class="finder__result" id="finderResult" data-state="idle" tabindex="-1">
-            <div class="finder__loading" role="status" aria-live="polite"><span class="spinner" aria-hidden="true"></span> Recherche du véhicule…</div>
-            <div class="vcard">
-              <div class="vcard__head"><strong>Véhicule identifié</strong><span class="vcard__demo" id="vcDemo" hidden>Démonstration</span></div>
-              <dl class="vcard__specs">
-                <div><dt>Marque</dt><dd id="vcMake">—</dd></div>
-                <div><dt>Modèle</dt><dd id="vcModel">—</dd></div>
-                <div><dt>Année</dt><dd id="vcYear">—</dd></div>
-                <div><dt>Motorisation</dt><dd id="vcEngine">—</dd></div>
-              </dl>
-              <div class="vcard__actions">
-                <button class="btn btn--red btn--block" id="vcParts" type="button">Voir les pièces</button>
-                <a class="btn btn--wa btn--block" id="vcWa" href="#" target="_blank" rel="noopener">Envoyer sur WhatsApp</a>
-              </div>
-            </div>
-            <div class="finder__error" role="alert">
-              <p id="finderErrText">Véhicule non reconnu. Vérifiez la saisie ou envoyez-nous votre carte grise.</p>
-              <a class="btn btn--wa btn--block" id="finderErrWa" href="#" target="_blank" rel="noopener">Envoyer ma carte grise sur WhatsApp</a>
-            </div>
-          </div>
-
-          <p class="finder__note">Pas sûr de la référence ? <a href="https://wa.me/262693057012" target="_blank" rel="noopener">Envoyez-nous votre carte grise sur WhatsApp</a></p>
+          <a class="btn btn--blue btn--block btn--cta-pulse" href="#bestsellers" style="margin-bottom:10px">Voir le catalogue</a>
+          <a class="btn btn--wa btn--block" href="https://wa.me/262693057012" target="_blank" rel="noopener">Demander un conseil sur WhatsApp</a>
+          <p class="finder__note">Besoin d'une pièce précise&nbsp;? <a href="https://wa.me/262693057012" target="_blank" rel="noopener">Envoyez-nous votre carte grise sur WhatsApp</a></p>
         </div>
       </div>
       <div class="hero-counter">
@@ -391,7 +328,7 @@
       <div class="why-card">
         <div class="why-icon">🔍</div>
         <h3>Référence exacte</h3>
-        <p>Identification précise par VIN, plaque d'immatriculation ou référence OEM constructeur.</p>
+        <p>Trouvez la bonne référence grâce à nos conseillers ou à votre carte grise sur WhatsApp.</p>
       </div>
       <div class="why-card">
         <div class="why-icon">⚡</div>
@@ -723,7 +660,7 @@
             <span class="step__num">1</span>
             <div class="step__ic">🔍</div>
             <h3>Cherchez votre produit</h3>
-            <p>Par plaque, VIN ou en parcourant le catalogue. Ajoutez au panier en un clic.</p>
+            <p>Parcourez le catalogue et ajoutez au panier en un clic.</p>
           </div>
           <div class="step__arrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
           <div class="step reveal">
@@ -1360,9 +1297,7 @@
         <span class="footer__https-badge"><svg viewBox="0 0 24 24" aria-hidden="true" class="footer__lock-icon"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Site sécurisé HTTPS</span>
       </span>
       <nav class="footer__legal" aria-label="Informations légales">
-        <a href="mentions-legales.html">Mentions légales</a>
-        <a href="cgv.html">CGV</a>
-        <a href="confidentialite.html">Confidentialité</a>
+        <a href="mentions-legales.html">Mentions légales &amp; CGV</a>
       </nav>
       <span class="footer__creole">Lé la pou zot 🌺</span>
     </div>
@@ -1516,10 +1451,9 @@
 
   <script src="data/catalogue.js" defer></script>
   <script src="script.js" defer></script>
-  <script src="vehicle-lookup.js" defer></script>
   <script src="pwa.js" defer></script>
 <div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Information cookies">
-  <p class="cookie-banner__text">🍪 Ce site n'utilise pas de cookies publicitaires. Seul un stockage technique (panier, préférences) est utilisé pour le bon fonctionnement. <a href="confidentialite.html" class="cookie-banner__link">En savoir plus</a></p>
+  <p class="cookie-banner__text">🍪 Ce site n'utilise pas de cookies publicitaires. Seul un stockage technique (panier, préférences) est utilisé pour le bon fonctionnement. <a href="mentions-legales.html#confidentialite" class="cookie-banner__link">En savoir plus</a></p>
   <button type="button" class="cookie-banner__btn" id="cookieBannerBtn">OK, compris</button>
 </div>
 <div class="social-proof" id="socialProof" role="status" aria-live="polite">
