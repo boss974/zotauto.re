@@ -343,7 +343,12 @@
     qvEls.now.textContent = euro(p.price);
     if (p.oldPrice != null && p.oldPrice !== "") { qvEls.was.textContent = euro(p.oldPrice); qvEls.was.hidden = false; }
     else qvEls.was.hidden = true;
-    qvEls.wa.href = wa("Bonjour ZOT AUTO, je suis intéressé(e) par : " + p.name + (p.reference ? " (réf. " + p.reference + ")" : "") + " à " + euro(p.price) + ".");
+    qvEls.wa.href = wa("Bonjour ZOT AUTO, je suis intéressé(e) par :\n" +
+      "• " + (p.brand ? p.brand + " " : "") + p.name +
+      (p.reference ? "\n• Réf. : " + p.reference : "") +
+      "\n• Prix : " + euro(p.price) +
+      "\n• Dispo : " + (p.stock === "soon" ? "sur commande" : "en stock") +
+      "\n\nMerci de me confirmer disponibilité et livraison (974).");
 
     qv.classList.add("open");
     qv.setAttribute("aria-hidden", "false");
@@ -479,8 +484,12 @@
     });
     if (cartTotal) cartTotal.textContent = euro(total());
     if (cartCheckout) {
-      var lines = cart.map(function (i) { return "• " + i.qty + "× " + i.name + " (" + i.brand + ") — " + euro(i.price * i.qty); });
-      cartCheckout.href = wa("Bonjour ZOT AUTO, je souhaite commander :\n" + lines.join("\n") + "\n\nTotal : " + euro(total()) + "\nMerci de me confirmer stock, prix et livraison (974).");
+      var lines = cart.map(function (i) {
+        var ref = "";
+        for (var k = 0; k < PRODUCTS.length; k++) { if (PRODUCTS[k].name === i.name && PRODUCTS[k].reference) { ref = " [réf. " + PRODUCTS[k].reference + "]"; break; } }
+        return "• " + i.qty + "× " + i.name + " (" + i.brand + ")" + ref + " — " + euro(i.price * i.qty);
+      });
+      cartCheckout.href = wa("Bonjour ZOT AUTO, je souhaite commander :\n" + lines.join("\n") + "\n\nTotal : " + euro(total()) + "\nMerci de me confirmer disponibilité, prix et livraison (974).");
     }
     save();
   }

@@ -22,3 +22,6 @@ desktop.ini
 .env
 .env.*
 .deploy-ftp.env
+
+# Portail admin — secret runtime (cree au setup sur le serveur, jamais dans git)
+admin/.auth.php

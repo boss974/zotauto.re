@@ -45,7 +45,8 @@ $logoutBar = '<div style="position:fixed;top:0;right:0;z-index:99999;background:
     . 'padding:8px 14px;border-bottom-left-radius:10px;display:flex;align-items:center;gap:10px;">'
     . '<span>Connecté</span>'
     . '<a href="logout.php" style="color:#ffcb00;text-decoration:none;">Se déconnecter</a>'
-    . '</div>';
+    . '</div>'
+    . '<script>window.__ZOTADMIN = { csrf: "' . h(csrf_token()) . '", saveUrl: "save.php" };</script>';
 
 if (preg_match('/<body[^>]*>/i', $html, $m, PREG_OFFSET_CAPTURE)) {
     $insertAt = $m[0][1] + strlen($m[0][0]);

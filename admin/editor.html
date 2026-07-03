@@ -2712,6 +2712,42 @@
     var GITHUB_UPLOAD_URL = "https://github.com/boss974/zotauto.re/upload/main/data";
     var SITE_URL = "https://zotauto-re.pages.dev";
 
+    function autoPublish(btn, msgEl) {
+      if (!window.__ZOTADMIN || !window.__ZOTADMIN.saveUrl) return;
+      var text = exportText();
+      var origLabel = btn ? btn.textContent : "";
+      if (btn) { btn.disabled = true; btn.textContent = "⏳ Publication en cours…"; }
+      if (msgEl) { msgEl.style.display = "none"; msgEl.textContent = ""; }
+
+      var body = "csrf_token=" + encodeURIComponent(window.__ZOTADMIN.csrf) +
+                 "&catalogue=" + encodeURIComponent(text);
+
+      fetch(window.__ZOTADMIN.saveUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+        credentials: "same-origin",
+        body: body
+      }).then(function (res) {
+        return res.json().catch(function () { return { ok: false, error: "Réponse serveur illisible (HTTP " + res.status + ")." }; });
+      }).then(function (data) {
+        if (btn) { btn.disabled = false; btn.textContent = origLabel; }
+        if (data && data.ok) {
+          if (typeof createBackup === "function") createBackup("publication auto", true);
+          if (msgEl) { msgEl.style.display = "block"; msgEl.style.color = "#1a7f37"; msgEl.textContent = "✅ Publié ! Le site est à jour (rafraîchis dans ~1 min)."; }
+          toast("✅ Publié ! Le site est à jour (rafraîchis dans ~1 min).");
+          if (typeof confetti === "function") confetti();
+        } else {
+          var err = (data && data.error) ? data.error : "Erreur inconnue.";
+          if (msgEl) { msgEl.style.display = "block"; msgEl.style.color = "#c0392b"; msgEl.textContent = "❌ Échec : " + err + " — Utilise la publication manuelle ci-dessous."; }
+          toast("❌ Échec de la publication : " + err);
+        }
+      }).catch(function (e) {
+        if (btn) { btn.disabled = false; btn.textContent = origLabel; }
+        if (msgEl) { msgEl.style.display = "block"; msgEl.style.color = "#c0392b"; msgEl.textContent = "❌ Réseau indisponible. Utilise la publication manuelle ci-dessous."; }
+        toast("❌ Publication impossible (réseau).");
+      });
+    }
+
     function pubHideDetail() {
       try { return localStorage.getItem(PUB_HIDE_KEY) === "1"; } catch (e) { return false; }
     }
@@ -2754,12 +2790,35 @@
           '</div>';
       }
 
+      var hasAuto = !!(window.__ZOTADMIN && window.__ZOTADMIN.saveUrl && window.__ZOTADMIN.csrf);
+      var autoHTML = "";
+      if (hasAuto) {
+        autoHTML =
+          '<div class="pub-auto">' +
+            '<button class="btn btn--primary btn--lg" type="button" id="pubAuto">🚀 Publier maintenant</button>' +
+            '<div class="pub-auto__hint">Mise en ligne directe. Rafraîchis ton site dans ~1 min.</div>' +
+            '<div id="pubAutoMsg" class="pub-auto__msg" style="display:none;"></div>' +
+          '</div>' +
+          '<details class="pub-manual"><summary>Publier manuellement (repli)</summary>';
+      }
+      var manualTail = hasAuto ? '</details>' : '';
+
       var html = '<h3>🚀 Publier mon catalogue</h3>' +
-        '<p>Trois étapes simples pour mettre tes changements en ligne :</p>' +
+        (hasAuto
+          ? '<p>Clique sur le bouton pour mettre ton catalogue en ligne automatiquement.</p>'
+          : '<p>Trois étapes simples pour mettre tes changements en ligne :</p>') +
+        autoHTML +
         stepsHTML +
         '<label class="pub-check"><input type="checkbox" id="pubHide"' + (compact ? ' checked' : '') + '> Ne plus me montrer le détail</label>' +
+        manualTail +
         '<div class="modal__actions"><button class="btn btn--blue" id="pubDone" type="button">Fermer</button></div>';
       openModal(html);
+
+      if (hasAuto) {
+        $("#pubAuto").addEventListener("click", function () {
+          guardBeforeSave(function () { autoPublish($("#pubAuto"), $("#pubAutoMsg")); });
+        });
+      }
 
       $("#pubDownload").addEventListener("click", function () {
         guardBeforeSave(function () {

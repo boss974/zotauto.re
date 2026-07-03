@@ -701,6 +701,27 @@ body.dark .footer__credit { border-top-color: #334155; }
   .step__arrow { transform: rotate(90deg); align-self: center; }
 }
 
+/* Conditions livraison / retours (sobre) */
+.conditions { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: clamp(28px, 4vw, 44px); }
+.conditions__card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(20px, 3vw, 28px); box-shadow: var(--shadow-sm); }
+.conditions__ic { font-size: 1.6rem; line-height: 1; display: inline-block; margin-bottom: 10px; }
+.conditions__card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.conditions__card p { color: var(--muted); font-size: 0.92rem; line-height: 1.6; }
+@media (max-width: 720px) { .conditions { grid-template-columns: 1fr; } }
+body.dark .conditions__card { background: #1e293b; border-color: #334155; }
+body.dark .conditions__card p { color: #94a3b8; }
+
+/* Avis / témoignages sobres (pas de faux avis nominatifs) */
+.reviews-soft { max-width: 640px; margin: 0 auto; text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(24px, 4vw, 34px); box-shadow: var(--shadow-sm); }
+.reviews-soft__lead { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--ink); margin-bottom: 8px; }
+.reviews-soft__text { color: var(--muted); font-size: 0.94rem; margin-bottom: 18px; line-height: 1.6; }
+body.dark .reviews-soft { background: #1e293b; border-color: #334155; }
+body.dark .reviews-soft__lead { color: #e2e8f0; }
+body.dark .reviews-soft__text { color: #94a3b8; }
+.testimonials-soft { max-width: 640px; margin: 0 auto 24px; text-align: center; color: var(--muted); font-size: 0.96rem; line-height: 1.65; }
+.testimonials-cta { display: flex; justify-content: center; }
+body.dark .testimonials-soft { color: #94a3b8; }
+
 /* =========================================================
    Avis clients améliorés
    ========================================================= */
