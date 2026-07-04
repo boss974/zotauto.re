@@ -21,7 +21,16 @@ if (!empty($_SESSION['admin_ok'])) {
 }
 
 $error  = '';
-$notice = isset($_GET['welcome']) ? 'Compte créé. Vous pouvez vous connecter.' : '';
+$notice = '';
+if (isset($_GET['welcome'])) {
+    $notice = 'Compte créé. Vous pouvez vous connecter.';
+} elseif (isset($_GET['reset'])) {
+    $notice = 'Mot de passe réinitialisé. Connectez-vous avec le nouveau.';
+} elseif (isset($_GET['expired'])) {
+    $notice = 'Le code a expiré. Merci de recommencer.';
+} elseif (isset($_GET['locked'])) {
+    $notice = 'Trop de tentatives sur le code. Merci de recommencer.';
+}
 
 $_SESSION['login_tries']    = $_SESSION['login_tries']    ?? 0;
 $_SESSION['login_lock_until'] = $_SESSION['login_lock_until'] ?? 0;
@@ -98,5 +107,6 @@ render_page('Connexion', function () use ($locked) {
 
       <button type="submit" <?= $locked ? 'disabled' : '' ?>>Se connecter</button>
     </form>
+    <div class="foot"><a href="forgot.php">Mot de passe oublié ?</a></div>
     <?php
 }, $error, $notice);
