@@ -12,7 +12,8 @@ error_reporting(E_ALL);
 
 // --- Constantes -------------------------------------------------------
 const WEBMASTER_EMAIL  = 'webmaster@zotauto.re';
-const MAIL_FROM         = 'no-reply@zotauto.re';
+// Expéditeur = une VRAIE boîte du domaine (LWS bloque l'envoi depuis une adresse locale inexistante).
+const MAIL_FROM         = 'webmaster@zotauto.re';
 const AUTH_FILE          = __DIR__ . '/.auth.php';
 const OTP_TTL            = 600; // 10 minutes
 const MAX_OTP_TRIES      = 5;
