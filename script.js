@@ -46,8 +46,12 @@
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">' +
       '<rect width="400" height="300" fill="' + cv.c + '"/>' +
       '<rect width="400" height="300" fill="#000" opacity="0.06"/>' +
-      '<text x="200" y="150" font-size="96" text-anchor="middle" dominant-baseline="central">' + cv.ic + '</text>' +
-      '<text x="200" y="250" font-size="20" fill="#fff" font-family="Arial,sans-serif" text-anchor="middle">' + esc(name) + '</text>' +
+      // filigrane ZOT AUTO en diagonale
+      '<text x="200" y="165" font-size="46" fill="#fff" opacity="0.13" font-weight="bold" font-family="Arial,sans-serif" text-anchor="middle" transform="rotate(-20 200 165)">ZOT AUTO</text>' +
+      '<text x="200" y="138" font-size="92" text-anchor="middle" dominant-baseline="central">' + cv.ic + '</text>' +
+      '<text x="200" y="236" font-size="19" fill="#fff" font-family="Arial,sans-serif" text-anchor="middle">' + esc(name) + '</text>' +
+      // tag site (coin bas-droit)
+      '<text x="390" y="290" font-size="13" fill="#fff" opacity="0.8" font-weight="bold" font-family="Arial,sans-serif" text-anchor="end">zotauto.re</text>' +
       '</svg>';
     return "data:image/svg+xml," + encodeURIComponent(svg);
   };
@@ -59,6 +63,22 @@
     if (s.normalize) s = s.normalize("NFD").replace(/[̀-ͯ]/g, "");
     return s;
   };
+
+  // Devine la catégorie d'un produit d'après son nom/référence/marque.
+  // (Les imports Axonaut arrivent tous en "accessoires" → on les reclasse.)
+  var CATS_VALID = { detailing: 1, outillage: 1, huiles: 1, accessoires: 1 };
+  function guessCategory(p) {
+    var t = norm((p.name || "") + " " + (p.reference || "") + " " + (p.brand || ""));
+    if (/huil|lubrifi|graiss|antigel|antifreeze|coolant|adblue|additif|\d+w\d+|\bsae\b|bidon|liquide de frein|liquide refroid|degrippant|wd.?40|spray silicone/.test(t)) return "huiles";
+    if (/nettoy|polish|\bcire\b|microfibr|shampo|lavage|chiffon|detail|koch|renov|brillant|lustr|decontamin|cera|\bwax\b|jante.*nettoy|plastique.*renov/.test(t)) return "detailing";
+    if (/\bcle\b|\bcles\b|\bclef\b|outil|visseus|perceuse|\bpince\b|tournevis|\bcric\b|chariot|douille|marteau|\bscie\b|meuleus|cliquet|serre.?joint|etabli|\bfraise\b|\bforet\b|\bmeche\b|coffret.*outil|kit.*outil|extracteur|manometre|compresseur|multimetre/.test(t)) return "outillage";
+    return "accessoires";
+  }
+  PRODUCTS.forEach(function (p) {
+    if (!p.category || !CATS_VALID[p.category] || p.category === "accessoires") {
+      p.category = guessCategory(p);
+    }
+  });
 
   /* =========================================================
      Cartes produits / services (génération HTML)

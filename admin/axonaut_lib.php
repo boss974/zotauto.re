@@ -191,6 +191,22 @@ function ax_slug(string $s): string
     return $s !== '' ? $s : ('p-' . substr(md5($s . microtime()), 0, 8));
 }
 
+/** Devine la catégorie du site (detailing|outillage|huiles|accessoires) d'après le texte produit. */
+function ax_guess_category(string $text): string
+{
+    $t = mb_strtolower($text);
+    if (preg_match('/huil|lubrifi|graiss|antigel|coolant|adblue|additif|\d+w\d+|bidon|liquide de frein|liquide refroid|degrippant|wd.?40/u', $t)) {
+        return 'huiles';
+    }
+    if (preg_match('/nettoy|polish|\bcire\b|microfibr|shampo|lavage|chiffon|detail|koch|renov|brillant|lustr|decontamin|cera|jante/u', $t)) {
+        return 'detailing';
+    }
+    if (preg_match('/\bcle\b|\bclef\b|outil|visseus|perceuse|\bpince\b|tournevis|\bcric\b|chariot|douille|marteau|\bscie\b|meuleus|cliquet|coffret|extracteur|manometre|compresseur/u', $t)) {
+        return 'outillage';
+    }
+    return 'accessoires';
+}
+
 /** Convertit une quantité Axonaut en statut de stock du site. */
 function ax_stock_status($row): string
 {
@@ -218,7 +234,7 @@ function ax_map_product(array $row, ?array $existing): array
         'id'          => ax_slug($ref !== '' ? $ref : $name),
         'name'        => $name,
         'brand'       => (string) ax_pick($row, ['brand', 'supplier_name', 'manufacturer'], ''),
-        'category'    => 'accessoires',
+        'category'    => ax_guess_category($name . ' ' . $ref),
         'reference'   => $ref,
         'price'       => $price,
         'oldPrice'    => null,
