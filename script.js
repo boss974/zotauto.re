@@ -960,6 +960,7 @@
 
   // ── Countdown promo J+7 ──
   (function () {
+    if (!document.getElementById('cdDays')) return; // section #promo supprimée
     var TARGET_KEY = 'zotauto_promo_end';
     var MS_7_DAYS  = 7 * 24 * 60 * 60 * 1000;
     function getTarget() {
