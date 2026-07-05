@@ -62,6 +62,16 @@ $conf['last_result'] = sprintf(
 );
 axonaut_save_conf($conf);
 
+// Diagnostic : champs numériques du 1er produit Axonaut (pour repérer le prix).
+$sampleFields = [];
+if (!empty($fetch['sample']) && is_array($fetch['sample'])) {
+    foreach ($fetch['sample'] as $k => $v) {
+        if (is_scalar($v) && (is_numeric($v) || preg_match('/price|prix|tarif|pv|pu|cost|amount|montant/i', (string) $k))) {
+            $sampleFields[$k] = $v;
+        }
+    }
+}
+
 echo json_encode([
     'ok'       => true,
     'mode'     => $mode,
@@ -70,4 +80,5 @@ echo json_encode([
     'added'    => $apply['added'],
     'total'    => $apply['total'],
     'message'  => $conf['last_result'],
+    'sample'   => $sampleFields, // champs prix/nombres du 1er produit (diagnostic)
 ], JSON_UNESCAPED_UNICODE);

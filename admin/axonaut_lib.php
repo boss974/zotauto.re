@@ -217,16 +217,96 @@ function ax_stock_status($row): string
     return ((float) $qty) > 0 ? 'in' : 'soon';
 }
 
+const AX_COSTS_FILE = __DIR__ . '/.axonaut_costs.php';
+
+/** Coût (prix HT brut Axonaut) depuis les champs possibles. */
+function ax_cost(array $row): float
+{
+    return (float) ax_pick($row, ['price', 'unit_price', 'price_ht', 'pu_ht', 'pv_ht', 'selling_price', 'prix', 'prix_ht', 'pv', 'tarif', 'amount'], 0);
+}
+
+/** Config de tarification (marge %, promo) — lue dans la config Axonaut. */
+function ax_pricing_conf(): array
+{
+    $conf = axonaut_conf();
+    return [
+        'margin'       => isset($conf['margin']) ? (float) $conf['margin'] : 40.0,
+        'promo_active' => !empty($conf['promo_active']),
+        'promo_pct'    => isset($conf['promo_pct']) ? (float) $conf['promo_pct'] : 0.0,
+    ];
+}
+
+/** Calcule le prix de vente depuis un coût : marge + promo éventuelle. */
+function ax_apply_pricing(float $cost, array $pc): array
+{
+    if ($cost <= 0) {
+        return ['price' => 0, 'oldPrice' => null, 'badge' => ''];
+    }
+    $normal = round($cost * (1 + $pc['margin'] / 100), 2);
+    if (!empty($pc['promo_active']) && $pc['promo_pct'] > 0) {
+        $promo = round($normal * (1 - $pc['promo_pct'] / 100), 2);
+        $pct   = rtrim(rtrim(number_format($pc['promo_pct'], 1, '.', ''), '0'), '.');
+        return ['price' => $promo, 'oldPrice' => $normal, 'badge' => '-' . $pct . '%'];
+    }
+    return ['price' => $normal, 'oldPrice' => null, 'badge' => ''];
+}
+
+/** Table privée des coûts {id: coût HT}. Jamais exposée au public. */
+function ax_costs_read(): array
+{
+    if (!is_file(AX_COSTS_FILE)) { return []; }
+    $c = @include AX_COSTS_FILE;
+    return is_array($c) ? $c : [];
+}
+
+/** Écrit la table des coûts (0600). */
+function ax_costs_write(array $map): bool
+{
+    $php = "<?php\n// Coûts HT Axonaut par produit — PRIVÉ (ne jamais exposer).\nreturn " . var_export($map, true) . ";\n";
+    $tmp = @tempnam(__DIR__, 'axc_');
+    if ($tmp === false || @file_put_contents($tmp, $php, LOCK_EX) === false) { return false; }
+    @chmod($tmp, 0600);
+    if (!@rename($tmp, AX_COSTS_FILE)) { @unlink($tmp); return false; }
+    @chmod(AX_COSTS_FILE, 0600);
+    return true;
+}
+
+/**
+ * Recalcule TOUS les prix du catalogue depuis les coûts privés + la tarification
+ * courante (marge/promo). Utilisé par la page Tarifs & Promos.
+ */
+function axonaut_recompute_prices(): array
+{
+    $cat   = catalogue_read();
+    $costs = ax_costs_read();
+    $pc    = ax_pricing_conf();
+    $with  = 0;
+    foreach ($cat['products'] as $i => $p) {
+        $id   = (string) ($p['id'] ?? '');
+        $cost = isset($costs[$id]) ? (float) $costs[$id] : 0.0;
+        if ($cost > 0) { $with++; }
+        $pr = ax_apply_pricing($cost, $pc);
+        $cat['products'][$i]['price']    = $pr['price'];
+        $cat['products'][$i]['oldPrice'] = $pr['oldPrice'];
+        $cat['products'][$i]['badge']    = $pr['badge'];
+    }
+    if (empty($cat['services'])) { $cat['services'] = ax_default_services(); }
+    $w = catalogue_write($cat);
+    if (!$w['ok']) { return ['ok' => false, 'error' => $w['error']]; }
+    return ['ok' => true, 'total' => count($cat['products']), 'withCost' => $with];
+}
+
 /**
  * Mappe un produit Axonaut brut vers le schéma produit du site.
  * $existing = produit du site déjà présent (même référence) pour préserver
  * les champs éditoriaux (image, description, featured, catégorie…).
+ * $pc = config de tarification (marge/promo) appliquée au coût.
  */
-function ax_map_product(array $row, ?array $existing): array
+function ax_map_product(array $row, ?array $existing, array $pc): array
 {
     $ref   = (string) ax_pick($row, ['product_code', 'reference', 'sku', 'code'], '');
     $name  = (string) ax_pick($row, ['name', 'label', 'title'], 'Produit');
-    $price = (float)  ax_pick($row, ['price', 'unit_price', 'price_ht', 'pu_ht'], 0);
+    $cost  = ax_cost($row);
     $desc  = (string) ax_pick($row, ['description', 'comments', 'comment', 'details'], '');
 
     // Base = produit existant si trouvé, sinon valeurs par défaut prudentes.
@@ -236,7 +316,7 @@ function ax_map_product(array $row, ?array $existing): array
         'brand'       => (string) ax_pick($row, ['brand', 'supplier_name', 'manufacturer'], ''),
         'category'    => ax_guess_category($name . ' ' . $ref),
         'reference'   => $ref,
-        'price'       => $price,
+        'price'       => 0,
         'oldPrice'    => null,
         'stock'       => 'in',
         'featured'    => false,
@@ -249,8 +329,11 @@ function ax_map_product(array $row, ?array $existing): array
         'reviews'     => 0,
     ];
 
-    // Champs TOUJOURS rafraîchis depuis Axonaut (prix + stock + réf).
-    $base['price']     = $price;
+    // Champs TOUJOURS rafraîchis depuis Axonaut (prix calculé + stock + réf).
+    $pr = ax_apply_pricing($cost, $pc);
+    $base['price']     = $pr['price'];
+    $base['oldPrice']  = $pr['oldPrice'];
+    $base['badge']     = $pr['badge'] !== '' ? $pr['badge'] : ($base['badge'] ?? '');
     $base['reference'] = $ref !== '' ? $ref : ($base['reference'] ?? '');
     $base['stock']     = ax_stock_status($row);
 
@@ -366,6 +449,8 @@ function axonaut_apply(array $axProducts, string $mode): array
 
     $updated = 0;
     $added   = 0;
+    $pc      = ax_pricing_conf();        // marge/promo courantes
+    $costs   = ax_costs_read();           // table privée des coûts {id: coût}
 
     if ($mode === 'stock') {
         foreach ($axProducts as $row) {
@@ -373,25 +458,35 @@ function axonaut_apply(array $axProducts, string $mode): array
             if ($ref === '' || !isset($byRef[$ref])) {
                 continue; // on ne touche qu'aux produits déjà sur le site
             }
-            $i = $byRef[$ref];
-            $before = $site[$i];
-            $site[$i]['price'] = (float) ax_pick($row, ['price', 'unit_price', 'price_ht', 'pu_ht'], $before['price'] ?? 0);
-            $site[$i]['stock'] = ax_stock_status($row);
+            $i    = $byRef[$ref];
+            $cost = ax_cost($row);
+            $costs[(string) ($site[$i]['id'] ?? '')] = $cost;
+            $pr = ax_apply_pricing($cost, $pc);
+            $site[$i]['price']    = $pr['price'];
+            $site[$i]['oldPrice'] = $pr['oldPrice'];
+            $site[$i]['badge']    = $pr['badge'] !== '' ? $pr['badge'] : ($site[$i]['badge'] ?? '');
+            $site[$i]['stock']    = ax_stock_status($row);
             $updated++;
         }
     } else { // full
         foreach ($axProducts as $row) {
-            $ref = strtolower(trim((string) ax_pick($row, ['product_code', 'reference', 'sku', 'code'], '')));
+            $ref  = strtolower(trim((string) ax_pick($row, ['product_code', 'reference', 'sku', 'code'], '')));
+            $cost = ax_cost($row);
             if ($ref !== '' && isset($byRef[$ref])) {
                 $i = $byRef[$ref];
-                $site[$i] = ax_map_product($row, $site[$i]);
+                $site[$i] = ax_map_product($row, $site[$i], $pc);
+                $costs[(string) ($site[$i]['id'] ?? '')] = $cost;
                 $updated++;
             } else {
-                $site[] = ax_map_product($row, null);
+                $prod = ax_map_product($row, null, $pc);
+                $site[] = $prod;
+                $costs[(string) ($prod['id'] ?? '')] = $cost;
                 $added++;
             }
         }
     }
+
+    ax_costs_write($costs); // coûts privés (jamais dans le catalogue public)
 
     $cat['products'] = $site;
     $w = catalogue_write($cat);
