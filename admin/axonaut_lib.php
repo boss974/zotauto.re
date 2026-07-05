@@ -60,15 +60,16 @@ function axonaut_fetch_products(string $key): array
         return ['ok' => false, 'error' => 'Clé API manquante.'];
     }
 
-    $all  = [];
-    $page = 1;
+    $all   = [];
+    $page  = 1;
     $guard = 0; // sécurité anti-boucle infinie
 
     do {
         $guard++;
-        $url = AXONAUT_API_BASE . '/products?page=' . $page;
-        $res = axonaut_http_get($url, $key);
+        // ⚠️ Axonaut pagine via un EN-TÊTE HTTP "page" (entier), PAS via ?page=.
+        $res = axonaut_http_get(AXONAUT_API_BASE . '/products', $key, $page);
         if (!$res['ok']) {
+            // Échec réel (clé, réseau, plan API…) → on remonte le message d'Axonaut.
             return ['ok' => false, 'error' => $res['error']];
         }
 
@@ -89,9 +90,9 @@ function axonaut_fetch_products(string $key): array
             }
         }
 
-        // On continue tant que la page renvoie un lot "plein" (heuristique).
+        // 500 résultats par page (results_per_page) → on continue tant que la page est pleine.
         $page++;
-    } while (count($batch) >= 50 && $guard < 40);
+    } while (count($batch) >= 500 && $guard < 60);
 
     return [
         'ok'       => true,
@@ -100,16 +101,21 @@ function axonaut_fetch_products(string $key): array
     ];
 }
 
-/** GET HTTP vers Axonaut avec la clé, via cURL si dispo sinon file_get_contents. */
-function axonaut_http_get(string $url, string $key): array
+/**
+ * GET HTTP vers Axonaut avec la clé + l'en-tête de pagination "page".
+ * @param int $page numéro de page (en-tête HTTP requis par Axonaut).
+ */
+function axonaut_http_get(string $url, string $key, int $page = 1): array
 {
+    $headers = ['userApiKey: ' . $key, 'page: ' . $page, 'Accept: application/json'];
+
     // --- Voie 1 : cURL ---
     if (function_exists('curl_init')) {
         $ch = curl_init($url);
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER     => ['userApiKey: ' . $key, 'Accept: application/json'],
-            CURLOPT_TIMEOUT        => 25,
+            CURLOPT_HTTPHEADER     => $headers,
+            CURLOPT_TIMEOUT        => 30,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_SSL_VERIFYPEER => true,
         ]);
@@ -121,27 +127,40 @@ function axonaut_http_get(string $url, string $key): array
         if ($body === false) {
             return ['ok' => false, 'error' => 'Connexion Axonaut échouée : ' . $err];
         }
-        if ($code === 401 || $code === 403) {
-            return ['ok' => false, 'error' => 'Clé API refusée par Axonaut (HTTP ' . $code . '). Vérifiez la clé.'];
-        }
-        if ($code >= 400) {
-            return ['ok' => false, 'error' => 'Axonaut a répondu HTTP ' . $code . '.'];
-        }
-        return ['ok' => true, 'body' => (string) $body];
+        return axonaut_interpret($code, (string) $body);
     }
 
     // --- Voie 2 : file_get_contents (si allow_url_fopen) ---
     $ctx = stream_context_create([
         'http' => [
             'method'        => 'GET',
-            'header'        => "userApiKey: {$key}\r\nAccept: application/json\r\n",
-            'timeout'       => 25,
+            'header'        => implode("\r\n", $headers) . "\r\n",
+            'timeout'       => 30,
             'ignore_errors' => true,
         ],
     ]);
     $body = @file_get_contents($url, false, $ctx);
     if ($body === false) {
         return ['ok' => false, 'error' => 'Connexion Axonaut impossible (cURL et allow_url_fopen indisponibles).'];
+    }
+    $code = 200;
+    if (isset($http_response_header[0]) && preg_match('/\s(\d{3})\s/', $http_response_header[0], $m)) {
+        $code = (int) $m[1];
+    }
+    return axonaut_interpret($code, $body);
+}
+
+/** Interprète le code + corps HTTP d'Axonaut en résultat exploitable. */
+function axonaut_interpret(int $code, string $body): array
+{
+    if ($code === 401) {
+        return ['ok' => false, 'error' => 'Clé API refusée par Axonaut (HTTP 401). Vérifiez la clé.'];
+    }
+    if ($code >= 400) {
+        // Axonaut renvoie parfois un 403 avec un message métier (ex. pagination) : on le remonte tel quel.
+        $j   = json_decode($body, true);
+        $msg = (is_array($j) && isset($j['error']['message'])) ? $j['error']['message'] : ('Axonaut a répondu HTTP ' . $code . '.');
+        return ['ok' => false, 'error' => $msg, 'http' => $code];
     }
     return ['ok' => true, 'body' => $body];
 }
