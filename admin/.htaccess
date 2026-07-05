@@ -2,7 +2,7 @@ DirectoryIndex index.php
 
 # Empêche l'accès direct à l'éditeur brut et aux fichiers sensibles :
 # tout doit passer par index.php (qui vérifie la session).
-<FilesMatch "^(editor\.html|\.auth\.php|config\.php|_shell\.php)$">
+<FilesMatch "^(editor\.html|\.auth\.php|config\.php|_shell\.php|axonaut_lib\.php|axonaut_cron\.php)$">
     <IfModule mod_authz_core.c>
         Require all denied
     </IfModule>

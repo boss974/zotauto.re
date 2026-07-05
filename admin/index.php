@@ -44,6 +44,7 @@ $logoutBar = '<div style="position:fixed;top:0;right:0;z-index:99999;background:
     . 'color:#fff;font:600 .75rem/1 -apple-system,Segoe UI,sans-serif;'
     . 'padding:8px 14px;border-bottom-left-radius:10px;display:flex;align-items:center;gap:10px;">'
     . '<span>Connecté</span>'
+    . '<a href="axonaut.php" style="color:#7dffa1;text-decoration:none;">🔄 Axonaut</a>'
     . '<a href="logout.php" style="color:#ffcb00;text-decoration:none;">Se déconnecter</a>'
     . '</div>'
     . '<script>window.__ZOTADMIN = { csrf: "' . h(csrf_token()) . '", saveUrl: "save.php" };</script>';
