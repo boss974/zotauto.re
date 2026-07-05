@@ -8,13 +8,49 @@
   var WA = "262693057012";
   var DATA = window.ZOTAUTO || { products: [], services: [] };
   var PRODUCTS = (DATA.products || []).slice(); // copie de travail
-  var SERVICES = (DATA.services || []).slice();
+  // Services : ceux du catalogue, ou repli sur les services par défaut si la
+  // synchro Axonaut a écrasé le catalogue sans services.
+  var DEFAULT_SERVICES = [
+    { id: "montage", name: "Montage & pose d'accessoires", icon: "🔧", description: "Pose de vos accessoires, balais, éclairage et petites pièces par nos soins.", price: "Sur devis", badge: "", featured: true },
+    { id: "vidange", name: "Vidange & entretien", icon: "🛢️", description: "Vidange avec huile Euroatlantic et conseils adaptés à votre véhicule.", price: "Dès 39 €", badge: "Populaire", featured: true },
+    { id: "detailing", name: "Detailing / lavage premium", icon: "✨", description: "Nettoyage intérieur & extérieur avec les produits pro Koch-Chemie.", price: "Sur devis", badge: "", featured: false },
+    { id: "recherche-piece", name: "Recherche de pièce", icon: "🔎", description: "Vous cherchez une référence précise ? Envoyez la carte grise, on la trouve.", price: "Gratuit", badge: "", featured: false }
+  ];
+  var SERVICES = (DATA.services && DATA.services.length) ? DATA.services.slice() : DEFAULT_SERVICES.slice();
   var PAGE_SIZE = 8; // nb de produits affichés par lot ("Voir plus")
   var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var $ = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var wa = function (text) { return "https://wa.me/" + WA + "?text=" + encodeURIComponent(text); };
   var euro = function (n) { return Number(n).toFixed(2).replace(".", ",") + " €"; };
+  // Prix affiché : « Prix sur demande » si 0 ou vide (produits Axonaut sans tarif public).
+  var priceLabel = function (p) {
+    var v = Number(p);
+    return (!v || isNaN(v)) ? "Prix sur demande" : euro(v);
+  };
+  // Visuel produit : la vraie photo si elle existe, sinon un visuel généré
+  // (couleur par catégorie + icône + nom) — pour que les produits importés
+  // sans image restent présentables. Retourne une valeur prête pour src="".
+  var PH_LOGO = "assets/brands/logo-zotauto.png";
+  var CAT_VISUAL = {
+    detailing:   { c: "#7c3aed", ic: "✨" },
+    outillage:   { c: "#ea580c", ic: "🔧" },
+    huiles:      { c: "#16a34a", ic: "🛢️" },
+    accessoires: { c: "#2a52e0", ic: "🚗" }
+  };
+  var phImg = function (p) {
+    var img = p && p.image ? String(p.image) : "";
+    if (img && img.indexOf(PH_LOGO) === -1) { return esc(img); } // vraie photo
+    var cv = CAT_VISUAL[p && p.category] || { c: "#2a52e0", ic: "📦" };
+    var name = String((p && p.name) || "").slice(0, 46);
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">' +
+      '<rect width="400" height="300" fill="' + cv.c + '"/>' +
+      '<rect width="400" height="300" fill="#000" opacity="0.06"/>' +
+      '<text x="200" y="150" font-size="96" text-anchor="middle" dominant-baseline="central">' + cv.ic + '</text>' +
+      '<text x="200" y="250" font-size="20" fill="#fff" font-family="Arial,sans-serif" text-anchor="middle">' + esc(name) + '</text>' +
+      '</svg>';
+    return "data:image/svg+xml," + encodeURIComponent(svg);
+  };
   var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
   var stars = function (n) { n = Math.max(0, Math.min(5, Math.round(n || 0))); return "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n); };
   // normalisation pour la recherche (insensible à la casse et aux accents)
@@ -47,7 +83,7 @@
         ' data-cat="' + esc(p.category) + '" data-name="' + esc(p.name) + '" data-price="' + esc(p.price) + '" data-brand="' + esc(p.brand) + '">' +
         '<button class="product__open" type="button" aria-label="Aperçu rapide : ' + esc(p.name) + '"></button>' +
         '<div class="' + media + '">' + badgesHtml(p) +
-          '<img src="' + esc(p.image) + '" alt="' + esc(p.brand + " " + p.name) + '" loading="lazy" />' +
+          '<img src="' + phImg(p) + '" alt="' + esc(p.brand + " " + p.name) + '" loading="lazy" />' +
         "</div>" +
         '<div class="product__body">' +
           '<span class="product__brand">' + esc(p.brand) + "</span>" +
@@ -56,7 +92,7 @@
           '<div class="product__rating"><span class="stars">' + stars(p.rating) + "</span><small>(" + (p.reviews || 0) + ")</small></div>" +
           '<div class="product__stock ' + (p.stock === "soon" ? "soon" : "in") + '">' + stockLabel + "</div>" +
           '<div class="product__foot">' +
-            '<div class="product__price"><span class="now">' + euro(p.price) + "</span>" + was + "</div>" +
+            '<div class="product__price"><span class="now">' + priceLabel(p.price) + "</span>" + was + "</div>" +
             '<button class="btn-add" data-add aria-label="Ajouter ' + esc(p.name) + ' au panier">Ajouter</button>' +
           "</div>" +
         "</div>" +
@@ -73,14 +109,14 @@
         '<span class="fcard__heart" aria-hidden="true">❤</span>' +
         '<div class="fcard__media' + (p.contain ? " fcard__media--logo" : "") + '">' +
           (p.nouveau ? '<span class="pbadge pbadge--new">Nouveau</span>' : "") +
-          '<img src="' + esc(p.image) + '" alt="' + esc(p.brand + " " + p.name) + '" loading="lazy" />' +
+          '<img src="' + phImg(p) + '" alt="' + esc(p.brand + " " + p.name) + '" loading="lazy" />' +
         "</div>" +
         '<div class="fcard__body">' +
           '<span class="fcard__brand">' + esc(p.brand) + "</span>" +
           '<h3 class="fcard__name">' + esc(p.name) + "</h3>" +
           '<div class="product__rating"><span class="stars">' + stars(p.rating) + "</span><small>(" + (p.reviews || 0) + ")</small></div>" +
           '<div class="fcard__foot">' +
-            '<div class="product__price"><span class="now">' + euro(p.price) + "</span>" + was + "</div>" +
+            '<div class="product__price"><span class="now">' + priceLabel(p.price) + "</span>" + was + "</div>" +
             '<button class="btn-add" data-add-id="' + esc(p.id) + '" aria-label="Ajouter ' + esc(p.name) + ' au panier">Ajouter</button>' +
           "</div>" +
         "</div>" +

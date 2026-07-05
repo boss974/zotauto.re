@@ -249,6 +249,17 @@ function ax_map_product(array $row, ?array $existing): array
     return $base;
 }
 
+/** Services par défaut du site (jamais gérés par Axonaut). */
+function ax_default_services(): array
+{
+    return [
+        ['id' => 'montage', 'name' => "Montage & pose d'accessoires", 'icon' => '🔧', 'description' => "Pose de vos accessoires, balais, éclairage et petites pièces par nos soins.", 'price' => 'Sur devis', 'badge' => '', 'featured' => true],
+        ['id' => 'vidange', 'name' => 'Vidange & entretien', 'icon' => '🛢️', 'description' => "Vidange avec huile Euroatlantic et conseils adaptés à votre véhicule.", 'price' => 'Dès 39 €', 'badge' => 'Populaire', 'featured' => true],
+        ['id' => 'detailing', 'name' => 'Detailing / lavage premium', 'icon' => '✨', 'description' => "Nettoyage intérieur & extérieur avec les produits pro Koch-Chemie.", 'price' => 'Sur devis', 'badge' => '', 'featured' => false],
+        ['id' => 'recherche-piece', 'name' => 'Recherche de pièce', 'icon' => '🔎', 'description' => "Vous cherchez une référence précise ? Envoyez la carte grise, on la trouve.", 'price' => 'Gratuit', 'badge' => '', 'featured' => false],
+    ];
+}
+
 /** Lit le catalogue actuel du site → tableau ['products'=>[], 'services'=>[]]. */
 function catalogue_read(): array
 {
@@ -320,6 +331,13 @@ function axonaut_apply(array $axProducts, string $mode): array
 {
     $cat = catalogue_read();
     $site = $cat['products'];
+
+    // Les services ne sont PAS gérés par Axonaut : on ne doit jamais les perdre.
+    // Si le catalogue courant n'en a plus (ancien format JS illisible, écrasement…),
+    // on rétablit les services par défaut du site.
+    if (empty($cat['services'])) {
+        $cat['services'] = ax_default_services();
+    }
 
     // Index des produits du site par référence (normalisée).
     $byRef = [];
