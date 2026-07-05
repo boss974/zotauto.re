@@ -78,6 +78,8 @@
     if (!p.category || !CATS_VALID[p.category] || p.category === "accessoires") {
       p.category = guessCategory(p);
     }
+    // Index de recherche pré-calculé (recherche instantanée même sur 1300+ produits).
+    p._hay = norm([p.name, p.brand, p.reference, p.description, p.category].join(" "));
   });
 
   /* =========================================================
@@ -207,7 +209,7 @@
     var list = PRODUCTS.filter(function (p) {
       if (state.filter !== "all" && p.category !== state.filter) return false;
       if (!q) return true;
-      var hay = norm([p.name, p.brand, p.reference, p.description, p.category].join(" "));
+      var hay = p._hay || norm([p.name, p.brand, p.reference, p.description, p.category].join(" "));
       return hay.indexOf(q) !== -1;
     });
     list.sort(function (a, b) {
@@ -346,10 +348,21 @@
     update({ query: q });
     if (scroll && q.trim()) scrollToProducts();
   }
+  // Les produits sont-ils déjà visibles à l'écran ? (évite un défilement inutile)
+  function productsInView() {
+    var sec = document.getElementById("bestsellers");
+    if (!sec) return true;
+    var r = sec.getBoundingClientRect();
+    return r.top < (window.innerHeight * 0.7) && r.bottom > 0;
+  }
   if (searchInput) {
     searchInput.addEventListener("input", function () {
       clearTimeout(searchDebounce);
-      searchDebounce = setTimeout(function () { runSearch(false); }, 120);
+      searchDebounce = setTimeout(function () {
+        runSearch(false);
+        // Dès qu'on tape, on amène doucement les résultats à l'écran s'ils sont plus bas.
+        if (searchInput.value.trim() && !productsInView()) scrollToProducts();
+      }, 140);
     });
   }
   if (searchForm) searchForm.addEventListener("submit", function (e) {
