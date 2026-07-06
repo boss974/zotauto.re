@@ -48,6 +48,7 @@ $logoutBar = '<div style="position:fixed;top:0;right:0;z-index:99999;background:
     . '<a href="axonaut.php" style="color:#7dffa1;text-decoration:none;">🔄 Axonaut</a>'
     . '<a href="axonaut_pricing.php" style="color:#ffb3f0;text-decoration:none;">💶 Tarifs</a>'
     . '<a href="axonaut_photos.php" style="color:#ffd27d;text-decoration:none;">🖼️ Photos</a>'
+    . '<a href="photos_web.php" style="color:#7de3ff;text-decoration:none;">🌐 PhotosWeb</a>'
     . '<a href="axonaut_schedule.php" style="color:#9ecbff;text-decoration:none;">🗓️ Planif</a>'
     . '<a href="logout.php" style="color:#ffcb00;text-decoration:none;">Se déconnecter</a>'
     . '</div>'
