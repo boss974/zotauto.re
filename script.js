@@ -182,6 +182,22 @@
   var featuredWrap = $("#featuredGrid");
   var featuredSection = $("#coupsdecoeur");
   var featuredList = PRODUCTS.filter(function (p) { return p.featured; });
+  // Si aucun produit n'est marqué "coup de cœur" (ex. après un import Axonaut),
+  // on met en avant automatiquement les meilleurs : en stock, avec un prix, un par
+  // catégorie d'abord pour la variété, jusqu'à 8. La section ne reste jamais vide.
+  if (!featuredList.length) {
+    var pool = PRODUCTS.filter(function (p) { return p.stock === "in" && Number(p.price) > 0; });
+    if (pool.length < 4) {
+      pool = PRODUCTS.filter(function (p) { return p.stock === "in"; });
+    }
+    if (pool.length < 4) { pool = PRODUCTS.slice(); }
+    var seenCat = {}, pick = [], rest = [];
+    pool.forEach(function (p) {
+      if (!seenCat[p.category]) { seenCat[p.category] = 1; pick.push(p); }
+      else { rest.push(p); }
+    });
+    featuredList = pick.concat(rest).slice(0, 8);
+  }
   if (featuredWrap && featuredList.length) {
     featuredWrap.innerHTML = featuredList.map(featuredCard).join("");
     if (featuredSection) featuredSection.hidden = false;
