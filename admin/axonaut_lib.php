@@ -219,10 +219,51 @@ function ax_stock_status($row): string
 
 const AX_COSTS_FILE = __DIR__ . '/.axonaut_costs.php';
 
-/** Coût (prix HT brut Axonaut) depuis les champs possibles. */
+/** Clés à ignorer quand on cherche un prix par balayage (jamais des prix). */
+const AX_NON_PRICE_KEYS = [
+    'id', 'quantity', 'qty', 'stock', 'real_stock', 'available_stock', 'stock_quantity',
+    'vat_rate', 'tax_rate', 'tva', 'weight', 'poids', 'width', 'height', 'depth',
+    'longueur', 'largeur', 'hauteur', 'reviews', 'rating', 'category_id', 'supplier_id',
+    'company_id', 'created_at', 'updated_at', 'position', 'sort', 'ean', 'ean13', 'barcode',
+];
+
+/** Coût (prix HT brut Axonaut) depuis les champs possibles, avec repli intelligent. */
 function ax_cost(array $row): float
 {
-    return (float) ax_pick($row, ['price', 'unit_price', 'price_ht', 'pu_ht', 'pv_ht', 'selling_price', 'prix', 'prix_ht', 'pv', 'tarif', 'amount'], 0);
+    // 1) Noms de champs connus/probables (FR + EN + variantes API).
+    $named = ax_pick($row, [
+        'price', 'unit_price', 'price_ht', 'pu_ht', 'pv_ht', 'pre_tax_price', 'selling_price',
+        'sale_price', 'sell_price', 'unit_price_pre_tax', 'prix', 'prix_ht', 'prix_vente', 'pv',
+        'tarif', 'amount', 'cost_price', 'purchase_price', 'buying_price', 'wholesale_price',
+        'prix_achat', 'cout', 'cost',
+    ], null);
+    $v = (float) $named;
+    if ($named !== null && $v > 0) {
+        return $v;
+    }
+
+    // 2) Repli : balaye les champs numériques restants et prend le plus plausible
+    //    (valeur > 0, pas une clé technique connue, format "prix" décimal).
+    $best = 0.0;
+    foreach ($row as $k => $val) {
+        if (!is_scalar($val) || $val === '' || $val === null) {
+            continue;
+        }
+        $key = strtolower((string) $k);
+        foreach (AX_NON_PRICE_KEYS as $skip) {
+            if (strpos($key, $skip) !== false) {
+                continue 2;
+            }
+        }
+        if (!is_numeric($val)) {
+            continue;
+        }
+        $num = (float) $val;
+        if ($num > 0 && $num < 1000000 && (strpos($key, 'price') !== false || strpos($key, 'prix') !== false || strpos($key, 'tarif') !== false || strpos($key, 'pv') !== false || strpos($key, 'pu') !== false)) {
+            $best = max($best, $num);
+        }
+    }
+    return $best;
 }
 
 /** Config de tarification (marge %, promo) — lue dans la config Axonaut. */
