@@ -33,25 +33,35 @@
   // sans image restent présentables. Retourne une valeur prête pour src="".
   var PH_LOGO = "assets/brands/logo-zotauto.png";
   var CAT_VISUAL = {
-    detailing:   { c: "#7c3aed", ic: "✨" },
-    outillage:   { c: "#ea580c", ic: "🔧" },
-    huiles:      { c: "#16a34a", ic: "🛢️" },
-    accessoires: { c: "#2a52e0", ic: "🚗" }
+    detailing:   { c: "#7c3aed", c2: "#a274f0", ic: "✨", lbl: "Detailing" },
+    outillage:   { c: "#ea580c", c2: "#f59e42", ic: "🔧", lbl: "Outillage" },
+    huiles:      { c: "#16a34a", c2: "#4ade80", ic: "🛢️", lbl: "Huiles" },
+    accessoires: { c: "#2a52e0", c2: "#6b8cff", ic: "🚗", lbl: "Accessoires" }
   };
   var phImg = function (p) {
     var img = p && p.image ? String(p.image) : "";
     if (img && img.indexOf(PH_LOGO) === -1) { return esc(img); } // vraie photo
-    var cv = CAT_VISUAL[p && p.category] || { c: "#2a52e0", ic: "📦" };
-    var name = String((p && p.name) || "").slice(0, 46);
+    var cv = CAT_VISUAL[p && p.category] || { c: "#2a52e0", c2: "#6b8cff", ic: "📦", lbl: "Produit" };
+    var name = String((p && p.name) || "").slice(0, 42);
+    var brand = String((p && p.brand) || "").slice(0, 22);
+    var gid = "g" + Math.abs((name.length * 31 + cv.c.charCodeAt(1)) % 9999);
     var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">' +
-      '<rect width="400" height="300" fill="' + cv.c + '"/>' +
-      '<rect width="400" height="300" fill="#000" opacity="0.06"/>' +
+      '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + cv.c2 + '"/><stop offset="1" stop-color="' + cv.c + '"/></linearGradient></defs>' +
+      '<rect width="400" height="300" fill="url(#' + gid + ')"/>' +
       // filigrane ZOT AUTO en diagonale
-      '<text x="200" y="165" font-size="46" fill="#fff" opacity="0.13" font-weight="bold" font-family="Arial,sans-serif" text-anchor="middle" transform="rotate(-20 200 165)">ZOT AUTO</text>' +
-      '<text x="200" y="138" font-size="92" text-anchor="middle" dominant-baseline="central">' + cv.ic + '</text>' +
-      '<text x="200" y="236" font-size="19" fill="#fff" font-family="Arial,sans-serif" text-anchor="middle">' + esc(name) + '</text>' +
+      '<text x="200" y="170" font-size="52" fill="#fff" opacity="0.10" font-weight="bold" font-family="Arial,sans-serif" text-anchor="middle" transform="rotate(-20 200 170)">ZOT AUTO</text>' +
+      // pastille catégorie (haut)
+      '<text x="24" y="38" font-size="14" fill="#fff" opacity="0.9" font-weight="bold" font-family="Arial,sans-serif">' + esc(cv.lbl) + '</text>' +
+      (brand ? '<text x="376" y="38" font-size="14" fill="#fff" opacity="0.85" font-family="Arial,sans-serif" text-anchor="end">' + esc(brand) + '</text>' : '') +
+      // cadre blanc arrondi + icône (effet "photo")
+      '<rect x="140" y="74" width="120" height="120" rx="22" fill="#ffffff" opacity="0.93"/>' +
+      '<text x="200" y="140" font-size="66" text-anchor="middle" dominant-baseline="central">' + cv.ic + '</text>' +
+      // barre nom (bas)
+      '<rect x="0" y="242" width="400" height="58" fill="#0d1220" opacity="0.22"/>' +
+      '<text x="200" y="270" font-size="18" fill="#fff" font-weight="600" font-family="Arial,sans-serif" text-anchor="middle">' + esc(name) + '</text>' +
       // tag site (coin bas-droit)
-      '<text x="390" y="290" font-size="13" fill="#fff" opacity="0.8" font-weight="bold" font-family="Arial,sans-serif" text-anchor="end">zotauto.re</text>' +
+      '<text x="390" y="293" font-size="12" fill="#fff" opacity="0.85" font-weight="bold" font-family="Arial,sans-serif" text-anchor="end">zotauto.re</text>' +
       '</svg>';
     return "data:image/svg+xml," + encodeURIComponent(svg);
   };
