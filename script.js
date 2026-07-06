@@ -40,7 +40,12 @@
   };
   var phImg = function (p) {
     var img = p && p.image ? String(p.image) : "";
-    if (img && img.indexOf(PH_LOGO) === -1) { return esc(img); } // vraie photo
+    // Placeholder = vide, logo, ou visuel SVG généré (régénéré ici en version premium).
+    // Une vraie photo (png/jpg/webp, ou dossier assets/products) est respectée.
+    var isPlaceholder = !img
+      || img.indexOf(PH_LOGO) !== -1
+      || (img.indexOf("assets/generated/") !== -1 && /\.svg(\?|$)/i.test(img));
+    if (!isPlaceholder) { return esc(img); } // vraie photo
     var cv = CAT_VISUAL[p && p.category] || { c: "#2a52e0", c2: "#6b8cff", ic: "📦", lbl: "Produit" };
     var name = String((p && p.name) || "").slice(0, 42);
     var brand = String((p && p.brand) || "").slice(0, 22);
