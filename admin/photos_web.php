@@ -45,22 +45,47 @@ function needs_web_photo(array $p): bool
         || strpos($img, 'assets/generated/') !== false; // visuel filigrané = remplaçable
 }
 
-/** Lit/écrit la config Google Search (clé + cx), privée 0600. */
+/** Lit/écrit la config sources d'images (Pixabay gratuit + Google), privée 0600. */
 function gs_read(): array
 {
-    if (!is_file(GS_FILE)) { return ['key' => '', 'cx' => '']; }
+    $def = ['key' => '', 'cx' => '', 'pxkey' => ''];
+    if (!is_file(GS_FILE)) { return $def; }
     $c = @include GS_FILE;
-    return is_array($c) ? ($c + ['key' => '', 'cx' => '']) : ['key' => '', 'cx' => ''];
+    return is_array($c) ? ($c + $def) : $def;
 }
 function gs_write(array $c): bool
 {
-    $php = "<?php\n// Google Custom Search — PRIVÉ.\nreturn " . var_export($c, true) . ";\n";
+    $php = "<?php\n// Sources images (Pixabay/Google) — PRIVÉ.\nreturn " . var_export($c, true) . ";\n";
     $tmp = @tempnam(__DIR__, 'gs_');
     if ($tmp === false || @file_put_contents($tmp, $php, LOCK_EX) === false) { return false; }
     @chmod($tmp, 0600);
     if (!@rename($tmp, GS_FILE)) { @unlink($tmp); return false; }
     @chmod(GS_FILE, 0600);
     return true;
+}
+
+/** Recherche image PIXABAY (gratuit, usage commercial autorisé, sans attribution). */
+function pixabay_search_image(string $key, string $query): array
+{
+    if (!function_exists('curl_init')) { return ['ok' => false, 'error' => 'cURL indisponible.']; }
+    $url = 'https://pixabay.com/api/?' . http_build_query([
+        'key' => $key, 'q' => $query, 'image_type' => 'photo', 'per_page' => 3,
+        'safesearch' => 'true', 'lang' => 'fr',
+    ]);
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20, CURLOPT_CONNECTTIMEOUT => 10]);
+    $body = curl_exec($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+    if ($body === false) { return ['ok' => false, 'error' => 'Connexion Pixabay échouée.']; }
+    if ($code === 400 || $code === 401) { return ['ok' => false, 'error' => 'Clé Pixabay invalide.', 'stop' => true]; }
+    if ($code === 429) { return ['ok' => false, 'error' => 'Quota Pixabay atteint (réessayez plus tard).', 'stop' => true]; }
+    $j = json_decode($body, true);
+    if (!is_array($j) || empty($j['hits'][0])) { return ['ok' => false, 'error' => 'Aucune image Pixabay.']; }
+    $hit = $j['hits'][0];
+    $u = $hit['largeImageURL'] ?? ($hit['webformatURL'] ?? '');
+    if ($u === '') { return ['ok' => false, 'error' => 'URL image Pixabay absente.']; }
+    return ['ok' => true, 'url' => $u];
 }
 
 /** Requête image Google Custom Search → URL de la meilleure image, ou ''. */
@@ -133,7 +158,9 @@ $total = count($prod);
 $done  = 0; $todo = 0;
 foreach ($prod as $p) { if (has_web_photo($p)) { $done++; } elseif (needs_web_photo($p)) { $todo++; } }
 $gs = gs_read();
-$hasKey = $gs['key'] !== '' && $gs['cx'] !== '';
+$hasPixabay = ($gs['pxkey'] ?? '') !== '';
+$hasGoogle  = ($gs['key'] ?? '') !== '' && ($gs['cx'] ?? '') !== '';
+$hasKey = $hasPixabay || $hasGoogle;
 $notice = ''; $error = '';
 
 // --- Actions ------------------------------------------------------------
@@ -141,11 +168,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     if (!csrf_check()) {
         $error = 'Session expirée.';
     } elseif (($_POST['action'] ?? '') === 'save_gs') {
-        $k = trim((string) ($_POST['gkey'] ?? '')); $cx = trim((string) ($_POST['gcx'] ?? ''));
-        if ($k === '' && $gs['key'] !== '') { $k = $gs['key']; }
-        if ($cx === '' && $gs['cx'] !== '') { $cx = $gs['cx']; }
-        if ($k === '' || $cx === '') { $error = 'Clé API et ID moteur (CX) requis.'; }
-        elseif (gs_write(['key' => $k, 'cx' => $cx])) { $notice = 'Configuration Google enregistrée.'; $gs = gs_read(); $hasKey = true; }
+        $k  = trim((string) ($_POST['gkey'] ?? ''));  if ($k === '') { $k = (string) $gs['key']; }
+        $cx = trim((string) ($_POST['gcx'] ?? ''));   if ($cx === '') { $cx = (string) $gs['cx']; }
+        $px = trim((string) ($_POST['pxkey'] ?? ''));  if ($px === '') { $px = (string) $gs['pxkey']; }
+        if ($k === '' && $cx === '' && $px === '') { $error = 'Renseignez au moins la clé Pixabay (gratuite) ou Google + CX.'; }
+        elseif (gs_write(['key' => $k, 'cx' => $cx, 'pxkey' => $px])) { $notice = 'Configuration enregistrée.'; $gs = gs_read(); }
         else { $error = 'Enregistrement impossible (permissions).'; }
     } elseif (($_POST['action'] ?? '') === 'fetch') {
         if (!$hasKey) {
@@ -163,8 +190,20 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                 $p = $prod[$i];
                 if (has_web_photo($p) || !needs_web_photo($p)) { continue; }
                 if ($onlyPriced && (float) ($p['price'] ?? 0) <= 0) { continue; }
-                $q = trim(($p['brand'] ?? '') . ' ' . ($p['name'] ?? '') . ' ' . ($p['reference'] ?? ''));
-                $s = gs_search_image($gs['key'], $gs['cx'], $q);
+                // Pixabay (gratuit) : requête plutôt "thématique" (marque + nom, sans la réf).
+                // Google : requête précise (marque + nom + réf).
+                if ($hasPixabay) {
+                    $q = trim(($p['brand'] ?? '') . ' ' . ($p['name'] ?? ''));
+                    $s = pixabay_search_image((string) $gs['pxkey'], $q);
+                    // Repli : mot-clé de catégorie si rien trouvé (photo d'ambiance).
+                    if (!$s['ok'] && empty($s['stop'])) {
+                        $catKw = ['detailing' => 'nettoyage voiture', 'outillage' => 'outils atelier', 'huiles' => 'huile moteur', 'accessoires' => 'pièce automobile'][$p['category'] ?? ''] ?? 'pièce automobile';
+                        $s = pixabay_search_image((string) $gs['pxkey'], $catKw);
+                    }
+                } else {
+                    $q = trim(($p['brand'] ?? '') . ' ' . ($p['name'] ?? '') . ' ' . ($p['reference'] ?? ''));
+                    $s = gs_search_image((string) $gs['key'], (string) $gs['cx'], $q);
+                }
                 if (!$s['ok']) { $fail++; $lastErr = $s['error']; if (!empty($s['stop'])) { break; } continue; }
                 $dl = download_image($s['url']);
                 if (!$dl['ok']) { $fail++; $lastErr = 'Téléchargement image échoué.'; continue; }
@@ -229,26 +268,38 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
   <?php if ($error !== ''): ?><div class="msg msg--err"><?= h($error) ?></div><?php endif; ?>
 
   <div class="msg msg--warn">
-    ⚖️ Les images du web sont souvent protégées (droits d'auteur). En tant que revendeur,
-    privilégie les visuels officiels des marques que tu vends et <strong>vérifie tes best-sellers</strong> :
-    une recherche automatique peut se tromper de photo. Tu restes responsable des droits.
+    ℹ️ <strong>Pixabay = images gratuites &amp; légales</strong> (usage commercial, sans attribution), mais
+    <strong>thématiques</strong> : elles illustrent le type de produit, pas la référence exacte.
+    L'option Google trouve des photos plus précises mais souvent <strong>sous copyright</strong> (à réserver aux
+    visuels officiels des marques que tu vends). Dans tous les cas, <strong>vérifie tes best-sellers</strong>.
   </div>
 
   <div class="card">
-    <h2>1️⃣ Connexion Google Custom Search</h2>
-    <ol class="steps">
-      <li>Va sur <strong>console.cloud.google.com</strong> → active <em>Custom Search API</em> → crée une <strong>clé API</strong>.</li>
-      <li>Va sur <strong>programmablesearchengine.google.com</strong> → crée un moteur → active <em>Recherche d'images</em> + <em>tout le Web</em> → copie l'<strong>ID du moteur (CX)</strong>.</li>
-    </ol>
+    <h2>1️⃣ Source d'images</h2>
     <form method="post" autocomplete="off">
       <?= csrf_field() ?><input type="hidden" name="action" value="save_gs">
-      <label for="gkey">Clé API Google <?= $hasKey ? '(enregistrée — laisser vide pour garder)' : '' ?></label>
-      <input type="password" id="gkey" name="gkey" placeholder="AIza..." autocomplete="new-password">
-      <label for="gcx">ID moteur (CX)</label>
-      <input type="text" id="gcx" name="gcx" placeholder="a1b2c3d4e5..." value="<?= h($gs['cx']) ?>">
+
+      <p style="margin:0 0 4px;font-weight:700;color:var(--teal)">🆓 Pixabay <?= $hasPixabay ? '✅ (active)' : '(recommandé, gratuit)' ?></p>
+      <ol class="steps" style="margin-top:4px">
+        <li>Crée un compte gratuit sur <strong>pixabay.com</strong> (sans carte bancaire).</li>
+        <li>Va sur <strong>pixabay.com/api/docs</strong> → copie ta <strong>clé API</strong>.</li>
+      </ol>
+      <label for="pxkey">Clé API Pixabay <?= $hasPixabay ? '(enregistrée — laisser vide pour garder)' : '' ?></label>
+      <input type="password" id="pxkey" name="pxkey" placeholder="00000000-xxxxxxxxxxxxxxxxxxxx" autocomplete="new-password">
+      <p class="hint">Images <strong>gratuites pour usage commercial, sans attribution</strong> (thématiques, pas la pièce exacte).</p>
+
+      <details style="margin:14px 0 6px">
+        <summary style="cursor:pointer;font-weight:600;color:#5b6376">Option avancée : Google Custom Search (photos plus précises, ~5 $/1000)</summary>
+        <label for="gkey" style="margin-top:10px">Clé API Google</label>
+        <input type="password" id="gkey" name="gkey" placeholder="AIza..." autocomplete="new-password">
+        <label for="gcx">ID moteur (CX)</label>
+        <input type="text" id="gcx" name="gcx" placeholder="a1b2c3d4e5..." value="<?= h($gs['cx']) ?>">
+        <p class="hint">console.cloud.google.com (Custom Search API) + programmablesearchengine.google.com (moteur images).</p>
+      </details>
+
       <p style="margin-top:12px"><button class="btn btn--primary" type="submit">💾 Enregistrer</button></p>
     </form>
-    <p class="hint">🔒 Stocké en privé (<code>.gsearch.php</code>, 0600). Gratuit : 100 recherches/jour.</p>
+    <p class="hint">🔒 Clés stockées en privé (<code>.gsearch.php</code>, 0600). Si les deux sont renseignées, <strong>Pixabay (gratuit) est utilisé en priorité</strong>.</p>
   </div>
 
   <div class="card">
