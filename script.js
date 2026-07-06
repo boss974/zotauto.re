@@ -82,6 +82,19 @@
     p._hay = norm([p.name, p.brand, p.reference, p.description, p.category].join(" "));
   });
 
+  // Badge hero « +N références en stock » : toujours à jour avec le vrai catalogue
+  // (arrondi en dessous à la centaine pour un affichage propre, ex. 1327 -> "+1300").
+  (function () {
+    var badge = document.getElementById("heroLiveBadge");
+    if (!badge || !PRODUCTS.length) return;
+    var rounded = Math.floor(PRODUCTS.length / 100) * 100;
+    var label = rounded >= 100 ? rounded : PRODUCTS.length;
+    var dot = badge.querySelector(".hero__live-badge__dot");
+    badge.textContent = "";
+    if (dot) badge.appendChild(dot);
+    badge.appendChild(document.createTextNode(" 🌺 +" + label + " références en stock"));
+  }());
+
   /* =========================================================
      Cartes produits / services (génération HTML)
      ========================================================= */
