@@ -76,6 +76,37 @@ if (!is_writable($dataDir)) {
     fail(500, 'Dossier data non inscriptible (permissions serveur).');
 }
 
+// --- Garde-fou anti-écrasement massif ------------------------------------
+// Si le catalogue en ligne a beaucoup plus de produits que ce qu'on s'apprête
+// à publier (ex. éditeur ouvert avec un catalogue.js périmé en cache), on
+// refuse par sécurité — sauf confirmation explicite (force=1).
+$newCount = count($data['products']);
+$curContent = is_file($target) ? (string) @file_get_contents($target) : '';
+$curCount = 0;
+if ($curContent !== '') {
+    $ca = strpos($curContent, '{'); $cb = strrpos($curContent, '}');
+    if ($ca !== false && $cb !== false && $cb > $ca) {
+        $curData = json_decode(substr($curContent, $ca, $cb - $ca + 1), true);
+        if (is_array($curData) && isset($curData['products'])) {
+            $curCount = count($curData['products']);
+        }
+    }
+}
+$force = !empty($_POST['force']);
+if ($curCount >= 20 && $newCount < (int) ($curCount * 0.5) && !$force) {
+    fail(409, sprintf(
+        'Sécurité : le catalogue en ligne a %d produits, celui-ci n\'en a que %d (souvent un éditeur ouvert '
+        . 'avec des données périmées en cache). Rechargez la page (Ctrl+Maj+R) pour repartir du catalogue à jour, '
+        . 'ou republiez volontairement avec confirmation.',
+        $curCount, $newCount
+    ));
+}
+
+// Sauvegarde de l'ancien catalogue avant écrasement (filet de sécurité, 1 niveau).
+if ($curContent !== '') {
+    @file_put_contents($dataDir . '/catalogue.backup.js', $curContent, LOCK_EX);
+}
+
 $tmp = @tempnam($dataDir, 'cat_');
 if ($tmp === false) {
     fail(500, 'Impossible de créer le fichier temporaire.');

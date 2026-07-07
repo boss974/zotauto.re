@@ -39,6 +39,16 @@ if (!is_file($editorPath)) {
 
 $html = file_get_contents($editorPath);
 
+// Anti-cache : force le rechargement du VRAI catalogue en ligne à chaque ouverture
+// de l'éditeur (sinon le navigateur peut servir une vieille copie en cache, et un
+// "Publier" écraserait le catalogue réel avec des données périmées).
+$html = preg_replace(
+    '/<script\s+src=["\']\.\.\/data\/catalogue\.js["\']><\/script>/i',
+    '<script src="../data/catalogue.js?t=' . time() . '"></script>',
+    $html,
+    1
+);
+
 // Injecte un petit bandeau "Se déconnecter" juste après <body ...>.
 $logoutBar = '<div style="position:fixed;top:0;right:0;z-index:99999;background:#1a2033;'
     . 'color:#fff;font:600 .75rem/1 -apple-system,Segoe UI,sans-serif;'

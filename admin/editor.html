@@ -2712,7 +2712,7 @@
     var GITHUB_UPLOAD_URL = "https://github.com/boss974/zotauto.re/upload/main/data";
     var SITE_URL = "https://zotauto-re.pages.dev";
 
-    function autoPublish(btn, msgEl) {
+    function autoPublish(btn, msgEl, force) {
       if (!window.__ZOTADMIN || !window.__ZOTADMIN.saveUrl) return;
       var text = exportText();
       var origLabel = btn ? btn.textContent : "";
@@ -2720,7 +2720,8 @@
       if (msgEl) { msgEl.style.display = "none"; msgEl.textContent = ""; }
 
       var body = "csrf_token=" + encodeURIComponent(window.__ZOTADMIN.csrf) +
-                 "&catalogue=" + encodeURIComponent(text);
+                 "&catalogue=" + encodeURIComponent(text) +
+                 (force ? "&force=1" : "");
 
       fetch(window.__ZOTADMIN.saveUrl, {
         method: "POST",
@@ -2728,14 +2729,26 @@
         credentials: "same-origin",
         body: body
       }).then(function (res) {
-        return res.json().catch(function () { return { ok: false, error: "Réponse serveur illisible (HTTP " + res.status + ")." }; });
-      }).then(function (data) {
+        return res.json().catch(function () { return { ok: false, error: "Réponse serveur illisible (HTTP " + res.status + ")." }; }).then(function (data) {
+          return { status: res.status, data: data };
+        });
+      }).then(function (r) {
         if (btn) { btn.disabled = false; btn.textContent = origLabel; }
+        var data = r.data;
         if (data && data.ok) {
           if (typeof createBackup === "function") createBackup("publication auto", true);
           if (msgEl) { msgEl.style.display = "block"; msgEl.style.color = "#1a7f37"; msgEl.textContent = "✅ Publié ! Le site est à jour (rafraîchis dans ~1 min)."; }
           toast("✅ Publié ! Le site est à jour (rafraîchis dans ~1 min).");
           if (typeof confetti === "function") confetti();
+        } else if (r.status === 409) {
+          // Garde-fou anti-écrasement massif : on propose de forcer après confirmation explicite.
+          var msg409 = (data && data.error) ? data.error : "Le catalogue en ligne semble bien plus complet que celui-ci.";
+          if (confirm("⚠️ " + msg409 + "\n\nPublier quand même en écrasant le catalogue en ligne ?")) {
+            autoPublish(btn, msgEl, true);
+          } else if (msgEl) {
+            msgEl.style.display = "block"; msgEl.style.color = "#c0392b";
+            msgEl.textContent = "⏸️ Publication annulée par sécurité. Rechargez la page (Ctrl+Maj+R) pour repartir du catalogue à jour.";
+          }
         } else {
           var err = (data && data.error) ? data.error : "Erreur inconnue.";
           if (msgEl) { msgEl.style.display = "block"; msgEl.style.color = "#c0392b"; msgEl.textContent = "❌ Échec : " + err + " — Utilise la publication manuelle ci-dessous."; }
