@@ -394,7 +394,6 @@ function ax_default_services(): array
 {
     return [
         ['id' => 'montage', 'name' => "Montage & pose d'accessoires", 'icon' => '🔧', 'description' => "Pose de vos accessoires, balais, éclairage et petites pièces par nos soins.", 'price' => 'Sur devis', 'badge' => '', 'featured' => true],
-        ['id' => 'vidange', 'name' => 'Vidange & entretien', 'icon' => '🛢️', 'description' => "Vidange avec huile Euroatlantic et conseils adaptés à votre véhicule.", 'price' => 'Dès 39 €', 'badge' => 'Populaire', 'featured' => false],
         ['id' => 'detailing', 'name' => 'Detailing / lavage premium', 'icon' => '✨', 'description' => "Nettoyage intérieur & extérieur avec les produits pro Koch-Chemie.", 'price' => 'Sur devis', 'badge' => '', 'featured' => false],
         ['id' => 'recherche-piece', 'name' => 'Recherche de pièce', 'icon' => '🔎', 'description' => "Vous cherchez une référence précise ? Envoyez-nous votre carte grise, nous identifions la référence exacte.", 'price' => 'Gratuit', 'badge' => '', 'featured' => false],
     ];

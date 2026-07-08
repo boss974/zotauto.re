@@ -12,7 +12,6 @@
   // synchro Axonaut a écrasé le catalogue sans services.
   var DEFAULT_SERVICES = [
     { id: "montage", name: "Montage & pose d'accessoires", icon: "🔧", description: "Pose de vos accessoires, balais, éclairage et petites pièces par nos soins.", price: "Sur devis", badge: "", featured: true },
-    { id: "vidange", name: "Vidange & entretien", icon: "🛢️", description: "Vidange avec huile Euroatlantic et conseils adaptés à votre véhicule.", price: "Dès 39 €", badge: "Populaire", featured: false },
     { id: "detailing", name: "Detailing / lavage premium", icon: "✨", description: "Nettoyage intérieur & extérieur avec les produits pro Koch-Chemie.", price: "Sur devis", badge: "", featured: false },
     { id: "recherche-piece", name: "Recherche de pièce", icon: "🔎", description: "Vous cherchez une référence précise ? Envoyez-nous votre carte grise, nous identifions la référence exacte.", price: "Gratuit", badge: "", featured: false }
   ];
@@ -36,7 +35,7 @@
     detailing:   { c: "#7c3aed", c2: "#a274f0", ic: "✨", lbl: "Detailing" },
     outillage:   { c: "#ea580c", c2: "#f59e42", ic: "🔧", lbl: "Outillage" },
     huiles:      { c: "#16a34a", c2: "#4ade80", ic: "🛢️", lbl: "Huiles" },
-    accessoires: { c: "#2a52e0", c2: "#6b8cff", ic: "🚗", lbl: "Accessoires" }
+    accessoires: { c: "#1753e0", c2: "#6b8cff", ic: "🚗", lbl: "Accessoires" }
   };
   var phImg = function (p) {
     var img = p && p.image ? String(p.image) : "";
@@ -46,7 +45,7 @@
       || img.indexOf(PH_LOGO) !== -1
       || (img.indexOf("assets/generated/") !== -1 && /\.svg(\?|$)/i.test(img));
     if (!isPlaceholder) { return esc(img); } // vraie photo
-    var cv = CAT_VISUAL[p && p.category] || { c: "#2a52e0", c2: "#6b8cff", ic: "📦", lbl: "Produit" };
+    var cv = CAT_VISUAL[p && p.category] || { c: "#1753e0", c2: "#6b8cff", ic: "📦", lbl: "Produit" };
     var name = String((p && p.name) || "").slice(0, 42);
     var brand = String((p && p.brand) || "").slice(0, 22);
     var gid = "g" + Math.abs((name.length * 31 + cv.c.charCodeAt(1)) % 9999);
@@ -724,7 +723,10 @@
 
   // ── Statut boutique ouvert/fermé (heure Réunion) ──
   (function () {
-    var SCHEDULE = { 0: null, 1: [510,1050], 2: [510,1050], 3: [510,1050], 4: [510,1050], 5: [510,1050], 6: [510,750] };
+    // Horaires réels (minutes depuis minuit) : lundi 13h30–17h30 ;
+    // mardi→samedi 9h–12h puis 13h30–17h30 ; dimanche fermé.
+    var AM = [540, 720], PM = [810, 1050];
+    var SCHEDULE = { 0: null, 1: [PM], 2: [AM, PM], 3: [AM, PM], 4: [AM, PM], 5: [AM, PM], 6: [AM, PM] };
     var DAY_NAMES = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
     function getReunionNow() {
       try {
@@ -742,11 +744,13 @@
     function nextOpening(day, minutes) {
       for (var i = 0; i < 7; i++) {
         var d = (day + i) % 7;
-        var slot = SCHEDULE[d];
-        if (!slot) continue;
-        if (i === 0 && minutes >= slot[0]) continue;
-        var label = i === 0 ? "aujourd'hui" : (i === 1 ? 'demain' : DAY_NAMES[d]);
-        return label + ' ' + formatTime(slot[0]);
+        var slots = SCHEDULE[d];
+        if (!slots) continue;
+        for (var s = 0; s < slots.length; s++) {
+          if (i === 0 && minutes >= slots[s][0]) continue; // créneau déjà commencé/passé
+          var label = i === 0 ? "aujourd'hui" : (i === 1 ? 'demain' : DAY_NAMES[d]);
+          return label + ' ' + formatTime(slots[s][0]);
+        }
       }
       return null;
     }
@@ -770,8 +774,8 @@
     });
     var statusEl = document.getElementById('shopStatus');
     if (!statusEl) return;
-    var slot = SCHEDULE[now.day];
-    var isOpen = !!slot && now.minutes >= slot[0] && now.minutes < slot[1];
+    var slots = SCHEDULE[now.day];
+    var isOpen = !!slots && slots.some(function (s) { return now.minutes >= s[0] && now.minutes < s[1]; });
     if (isOpen) {
       statusEl.textContent = '● Ouvert maintenant';
       statusEl.classList.remove('is-closed');
