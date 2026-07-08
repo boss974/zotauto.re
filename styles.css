@@ -122,8 +122,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
    ========================================================= */
 .header { position: sticky; top: 0; z-index: 100; background: #fff; box-shadow: var(--shadow-sm); }
 .header.is-stuck { box-shadow: var(--shadow); }
-.header__inner { display: flex; align-items: center; gap: 22px; height: 84px; }
-.logo img { height: 56px; width: auto; }
+.header__inner { display: flex; align-items: center; gap: 22px; height: 96px; }
+.logo img { height: 72px; width: auto; }
 
 .search { flex: 1; display: flex; align-items: center; gap: 8px; max-width: 620px; background: var(--soft); border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 6px 5px 16px; transition: border-color 0.2s, box-shadow 0.2s; }
 .search:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(42,82,224,0.14); background: #fff; }
@@ -167,7 +167,7 @@ body.dark .catnav a.is-current { background: rgba(42,82,224,.18); color: #93b0ff
 /* =========================================================
    Hero + sélecteur
    ========================================================= */
-.hero { position: relative; background: linear-gradient(120deg, #16308f 0%, var(--blue) 55%, #3a63ec 100%); color: #fff; overflow: hidden; }
+.hero { position: relative; background: linear-gradient(120deg, #1f3fc4 0%, var(--blue) 50%, #4a72f0 100%); color: #fff; overflow: hidden; }
 .hero__bg { position: absolute; inset: 0; opacity: 0.5; background-image: radial-gradient(circle at 85% 15%, rgba(255,203,0,0.25), transparent 40%), radial-gradient(circle at 10% 90%, rgba(224,31,43,0.25), transparent 45%), linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: auto, auto, 46px 46px, 46px 46px; }
 .hero__inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items: center; padding: clamp(40px, 6vw, 76px) 0; }
 .hero__eyebrow { display: inline-block; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); padding: 6px 14px; border-radius: 999px; font-size: 0.82rem; font-weight: 500; margin-bottom: 18px; }
@@ -288,7 +288,7 @@ body.dark .catnav a.is-current { background: rgba(42,82,224,.18); color: #93b0ff
 .service:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: transparent; }
 .service__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .service__ic { font-size: 2rem; line-height: 1; }
-.service__badge { background: #fff5d6; color: var(--ink); border: 1px solid var(--yellow); font-family: var(--font-display); font-weight: 700; font-size: 0.7rem; padding: 4px 9px; border-radius: 999px; }
+.service__badge { background: #fff5d6; color: #5c3d00; border: 1px solid var(--yellow); font-family: var(--font-display); font-weight: 700; font-size: 0.7rem; padding: 4px 9px; border-radius: 999px; }
 .service__name { font-size: 1.08rem; margin-bottom: 8px; }
 .service__desc { color: var(--muted); font-size: 0.9rem; flex: 1; }
 .service__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; }
@@ -912,12 +912,6 @@ body.dark .testimonials-soft { color: #94a3b8; }
 .service:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(42,82,224,0.13); border-color: transparent; }
 .service__ic { font-size: 1.7rem; width: 52px; height: 52px; border-radius: 14px; background: var(--blue-050); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
 .service.is-featured { border-color: var(--yellow); }
-.service[data-popular]::after {
-  content: "⭐ Populaire"; position: absolute; top: -10px; right: 14px;
-  background: var(--blue); color: #fff; font-family: var(--font-display);
-  font-weight: 700; font-size: 0.67rem; padding: 3px 10px; border-radius: 999px;
-  box-shadow: 0 2px 6px rgba(42,82,224,.25);
-}
 
 /* =========================================================
    Footer améliorations
@@ -2429,7 +2423,7 @@ body.menu-open .menu-overlay { display: block; opacity: 1; }
    HERO REDESIGN — gradient animé + particules + CTA pulse
    ========================================================= */
 .hero {
-  background: linear-gradient(120deg, #16308f 0%, var(--blue) 30%, #3a63ec 60%, #2a1a6e 100%);
+  background: linear-gradient(120deg, #1f3fc4 0%, var(--blue) 35%, #4a72f0 70%, #2a52e0 100%);
   background-size: 300% 300%;
   animation: hero-gradient 12s ease infinite;
 }
@@ -2567,7 +2561,10 @@ body.menu-open .menu-overlay { display: block; opacity: 1; }
 }
 
 /* Links — underline animée slide gauche → droite */
-.footer__col a,
+.footer__col a {
+  position: relative;
+  display: block; /* un lien par ligne (ne pas repasser en inline-block, sinon les liens se collent) */
+}
 .catnav a,
 .shead__link,
 .blog-card__link {

@@ -12,9 +12,9 @@
   // synchro Axonaut a écrasé le catalogue sans services.
   var DEFAULT_SERVICES = [
     { id: "montage", name: "Montage & pose d'accessoires", icon: "🔧", description: "Pose de vos accessoires, balais, éclairage et petites pièces par nos soins.", price: "Sur devis", badge: "", featured: true },
-    { id: "vidange", name: "Vidange & entretien", icon: "🛢️", description: "Vidange avec huile Euroatlantic et conseils adaptés à votre véhicule.", price: "Dès 39 €", badge: "Populaire", featured: true },
+    { id: "vidange", name: "Vidange & entretien", icon: "🛢️", description: "Vidange avec huile Euroatlantic et conseils adaptés à votre véhicule.", price: "Dès 39 €", badge: "Populaire", featured: false },
     { id: "detailing", name: "Detailing / lavage premium", icon: "✨", description: "Nettoyage intérieur & extérieur avec les produits pro Koch-Chemie.", price: "Sur devis", badge: "", featured: false },
-    { id: "recherche-piece", name: "Recherche de pièce", icon: "🔎", description: "Vous cherchez une référence précise ? Envoyez la carte grise, on la trouve.", price: "Gratuit", badge: "", featured: false }
+    { id: "recherche-piece", name: "Recherche de pièce", icon: "🔎", description: "Vous cherchez une référence précise ? Envoyez-nous votre carte grise, nous identifions la référence exacte.", price: "Gratuit", badge: "", featured: false }
   ];
   var SERVICES = (DATA.services && DATA.services.length) ? DATA.services.slice() : DEFAULT_SERVICES.slice();
   var PAGE_SIZE = 8; // nb de produits affichés par lot ("Voir plus")
@@ -175,13 +175,13 @@
   }
 
   function serviceCard(s) {
+    // Un seul indicateur "Populaire" (texte du badge) — pas d'étoile en plus, pour éviter la redondance.
     var badge = s.badge ? '<span class="service__badge">' + esc(s.badge) + "</span>" : "";
-    var star = s.featured ? '<span class="service__star" title="Service phare" aria-label="Service phare">★</span>' : "";
     var price = s.price ? '<span class="service__price">' + esc(s.price) + "</span>" : "<span></span>";
     var link = wa("Bonjour ZOT AUTO, je suis intéressé(e) par le service : " + s.name + ".");
     return (
       '<article class="service reveal' + (s.featured ? " is-featured" : "") + '">' +
-        '<div class="service__top"><span class="service__ic">' + esc(s.icon || "🔧") + "</span>" + star + badge + "</div>" +
+        '<div class="service__top"><span class="service__ic">' + esc(s.icon || "🔧") + "</span>" + badge + "</div>" +
         '<h3 class="service__name">' + esc(s.name) + "</h3>" +
         '<p class="service__desc">' + esc(s.description) + "</p>" +
         '<div class="service__foot">' + price +
@@ -658,18 +658,8 @@
     });
   }());
 
-  // ── Badge "Populaire" sur les services featured ─────────────────
-  (function () {
-    var grid = document.getElementById("servicesGrid");
-    if (!grid) return;
-    // Le grid est rempli après DOMContentLoaded — on observe avec MutationObserver
-    var mo = new MutationObserver(function () {
-      grid.querySelectorAll(".service.is-featured").forEach(function (card) {
-        card.setAttribute("data-popular", "");
-      });
-    });
-    mo.observe(grid, { childList: true });
-  }());
+  // (Le badge "Populaire" est géré directement dans serviceCard() via s.badge —
+  // pas de 2e indicateur superposé, pour éviter la redondance visuelle.)
 
   // ── Compteurs animés stats ──
   (function () {
