@@ -6,7 +6,7 @@
    - Assets statiques (css/js/images/polices) → cache d'abord.
    ⚠️ Incrémentez CACHE pour forcer la mise à jour après un déploiement.
    ========================================================= */
-var CACHE = "zotauto-v16";
+var CACHE = "zotauto-v17";
 var CORE = [
   "./",
   "./index.html",
@@ -41,7 +41,7 @@ self.addEventListener("fetch", function (e) {
   if (url.origin !== self.location.origin) return; // laisse passer Google Fonts, wa.me, etc.
 
   var isDoc = req.mode === "navigate" || url.pathname.endsWith(".html") || url.pathname === "/" || url.pathname.endsWith("/");
-  var isData = url.pathname.indexOf("catalogue.js") !== -1;
+  var isData = url.pathname.indexOf("catalogue.js") !== -1 || url.pathname.indexOf("offres.js") !== -1;
 
   if (isDoc || isData) {
     // réseau d'abord

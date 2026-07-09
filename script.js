@@ -1503,3 +1503,40 @@
   }());
 
 })();
+
+/* =========================================================
+   Offres du moment — rendu depuis data/offres.js (éditable via /admin/offres.php)
+   Si window.ZOTAUTO_OFFERS est absent, le HTML statique de secours reste affiché.
+   ========================================================= */
+(function () {
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  }
+  function renderOffers() {
+    var data = window.ZOTAUTO_OFFERS;
+    var section = document.getElementById("offres");
+    var grid = document.getElementById("offersGrid");
+    if (!section || !grid || !Array.isArray(data)) return; // garde le secours statique
+    var items = data.filter(function (o) {
+      return o && o.active !== false && (o.title || o.text);
+    });
+    if (items.length === 0) { section.hidden = true; section.style.display = "none"; return; }
+    var WA = "https://wa.me/262693057012";
+    grid.innerHTML = items.map(function (o) {
+      var href = WA + (o.wa ? "?text=" + encodeURIComponent(o.wa) : "");
+      return '<article class="offer-card' + (o.accent ? " offer-card--accent" : "") + '">'
+        + (o.tag ? '<span class="offer-card__tag">' + esc(o.tag) + "</span>" : "")
+        + "<h3>" + esc(o.title) + "</h3>"
+        + "<p>" + esc(o.text) + "</p>"
+        + '<a class="offer-card__btn" href="' + href + '" target="_blank" rel="noopener">' + esc(o.btn || "Nous contacter") + "</a>"
+        + "</article>";
+    }).join("");
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", renderOffers);
+  } else {
+    renderOffers();
+  }
+})();
