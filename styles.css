@@ -591,6 +591,11 @@ body.dark .footer__credit { border-top-color: #334155; }
   .qv__media { min-height: 220px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
 }
 @media (max-width: 560px) {
+  /* Barre du haut allégée : on masque les horaires (dispo dans la section boutique)
+     pour éviter le débordement ; on garde téléphone + Facebook, bien centrés. */
+  .topbar__loc { display: none; }
+  .topbar__inner { justify-content: center; }
+  .topbar__right { width: 100%; justify-content: center; gap: 18px; }
   .topbar__right a[href="#avis"], .topbar__right .topbar__sep { display: none; }
   .cats { grid-template-columns: 1fr; }
   .footer__top { grid-template-columns: 1fr 1fr; }
@@ -602,7 +607,14 @@ body.dark .footer__credit { border-top-color: #334155; }
   .ptools__sort { justify-content: space-between; }
   .ptools__sort select { flex: 1; }
   .qv__actions .btn { flex: 1 1 100%; }
+  /* Hero : atouts en colonne (plus de texte coupé), bandeau confiance qui s'enroule */
+  .hero__usp { flex-direction: column; gap: 12px; }
+  .hero__usp li { font-size: 0.9rem; }
+  .hero__trust { flex-wrap: wrap; row-gap: 8px; }
+  .hero__trust-sep { display: none; }
 }
+/* Anti-débordement horizontal global (aucun élément ne dépasse la largeur écran) */
+html, body { overflow-x: hidden; max-width: 100%; }
 @media (max-width: 420px) {
   .products { grid-template-columns: 1fr; }
   .featured { grid-template-columns: 1fr; }

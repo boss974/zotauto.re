@@ -6,7 +6,7 @@
    - Assets statiques (css/js/images/polices) → cache d'abord.
    ⚠️ Incrémentez CACHE pour forcer la mise à jour après un déploiement.
    ========================================================= */
-var CACHE = "zotauto-v18";
+var CACHE = "zotauto-v19";
 var CORE = [
   "./",
   "./index.html",
