@@ -2825,3 +2825,24 @@ body.dark .skeleton-line {
   .hero .btn--blue.btn--cta-pulse { animation: none; }
   .btn::after { display: none; }
 }
+
+/* =========================================================
+   Offres du moment (relais page Facebook)
+   ========================================================= */
+.shead__sub { margin: 4px 0 0; color: var(--muted); font-size: 0.92rem; }
+.shead__sub a { color: var(--blue); font-weight: 600; }
+.offers { padding: clamp(36px, 4.5vw, 56px) 0; }
+.offers__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.offer-card { position: relative; display: flex; flex-direction: column; gap: 10px; background: #fff; border: 1px solid var(--line-2, #e6e8ef); border-radius: 16px; padding: 22px; transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease); }
+.offer-card:hover { transform: translateY(-4px); box-shadow: 0 16px 34px -18px rgba(23,83,224,0.35); }
+.offer-card--accent { background: linear-gradient(160deg, var(--blue) 0%, #0f3fb5 100%); border-color: transparent; color: #fff; }
+.offer-card__tag { align-self: flex-start; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--blue); background: var(--blue-050); padding: 4px 10px; border-radius: 999px; }
+.offer-card--accent .offer-card__tag { color: #fff; background: rgba(255,255,255,0.18); }
+.offer-card h3 { font-size: 1.08rem; line-height: 1.3; margin: 2px 0 0; }
+.offer-card p { margin: 0; font-size: 0.92rem; line-height: 1.5; color: var(--muted); flex: 1; }
+.offer-card--accent p { color: rgba(255,255,255,0.9); }
+.offer-card__btn { align-self: flex-start; margin-top: 6px; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.9rem; color: #fff; background: var(--wa, #25d366); padding: 9px 16px; border-radius: 10px; transition: filter 0.2s; }
+.offer-card__btn:hover { filter: brightness(1.05); }
+.offer-card--accent .offer-card__btn { background: #fff; color: var(--blue); }
+
+body.dark .offer-card { background: #1e293b; border-color: #334155; }
