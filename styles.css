@@ -122,8 +122,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
    ========================================================= */
 .header { position: sticky; top: 0; z-index: 100; background: #fff; box-shadow: var(--shadow-sm); }
 .header.is-stuck { box-shadow: var(--shadow); }
-.header__inner { display: flex; align-items: center; gap: 22px; height: 96px; }
-.logo img { height: 72px; width: auto; }
+.header__inner { display: flex; align-items: center; gap: 22px; height: 136px; }
+.logo img { height: 120px; width: auto; }
 
 .search { flex: 1; display: flex; align-items: center; gap: 8px; max-width: 620px; background: var(--soft); border: 1.5px solid var(--line); border-radius: 999px; padding: 5px 6px 5px 16px; transition: border-color 0.2s, box-shadow 0.2s; }
 .search:focus-within { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(23,83,224,0.14); background: #fff; }
@@ -479,7 +479,7 @@ body.dark .catnav a.is-current { background: rgba(23,83,224,.18); color: #93b0ff
    ========================================================= */
 .footer { background: #fff; border-top: 1px solid var(--line); }
 .footer__top { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 36px; padding: clamp(40px, 5vw, 64px) 0 36px; }
-.footer__brand img { height: 56px; width: auto; margin-bottom: 14px; }
+.footer__brand img { height: 110px; width: auto; margin-bottom: 14px; }
 .footer__brand p { color: var(--muted); font-size: 0.9rem; max-width: 320px; }
 .socials { display: flex; gap: 10px; margin-top: 16px; }
 .socials a { width: 40px; height: 40px; border-radius: 11px; border: 1px solid var(--line); display: grid; place-items: center; color: var(--ink-2); transition: all 0.2s; }
@@ -565,6 +565,7 @@ body.dark .footer__credit { border-top-color: #334155; }
 @media (max-width: 860px) {
   .search { order: 3; flex-basis: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
   .header__inner { flex-wrap: wrap; height: auto; padding: 12px 0; gap: 12px; }
+  .logo img { height: 88px; } /* grand logo, adapté au header mobile */
   .iconbtn--call { display: none; }
   .burger { display: flex; }
   .catnav { display: none; }

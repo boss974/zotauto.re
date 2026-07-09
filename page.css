@@ -1,7 +1,7 @@
 /* Styles partagés des pages secondaires (légales, 404) */
 .subhead { background: #fff; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; }
-.subhead__in { display: flex; align-items: center; justify-content: space-between; height: 72px; }
-.subhead__in img { height: 46px; width: auto; }
+.subhead__in { display: flex; align-items: center; justify-content: space-between; height: 96px; }
+.subhead__in img { height: 80px; width: auto; }
 .subhead__back { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-weight: 600; color: var(--blue); }
 .subhead__back:hover { text-decoration: underline; }
 
