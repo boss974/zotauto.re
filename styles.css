@@ -99,6 +99,9 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 .btn--wa { background: var(--wa); color: #fff; }
 .btn--wa:hover { background: var(--wa-600); }
 .btn--wa svg { fill: #fff; }
+.btn--fb { background: #1877f2; color: #fff; }
+.btn--fb:hover { background: #0f66d8; }
+.btn--fb svg { fill: #fff; width: 20px; height: 20px; }
 .btn--light { background: #fff; color: var(--ink); border-color: var(--line-2); }
 .btn--light:hover { border-color: var(--blue); color: var(--blue); }
 .btn--ghost { background: transparent; color: var(--ink); border-color: var(--line-2); }
@@ -116,7 +119,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 .topbar__right a { display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s; }
 .topbar__right a:hover { color: #fff; }
 .topbar__sep { width: 1px; height: 14px; background: rgba(255,255,255,0.2); }
-.topbar__fb svg { fill: var(--yellow); stroke: none; }
+.topbar__fb svg { width: 18px; height: 18px; fill: var(--yellow); stroke: none; }
+.topbar__fb { font-weight: 700; }
 .topbar__fb:hover svg { fill: #fff; }
 
 /* =========================================================
@@ -540,7 +544,7 @@ body.dark .footer__credit { border-top-color: #334155; }
 .toast::before { content: "✓"; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--ok); color: #fff; font-size: 0.7rem; }
 
 /* WhatsApp flottant */
-.fab-wa { position: fixed; right: 18px; bottom: 18px; z-index: 90; width: 56px; height: 56px; border-radius: 50%; background: var(--wa); display: grid; place-items: center; box-shadow: 0 12px 28px -8px rgba(37,211,102,0.7); transition: transform 0.25s var(--ease); }
+.fab-wa { position: fixed; right: 20px; bottom: 20px; z-index: 90; width: 56px; height: 56px; border-radius: 50%; background: var(--wa); display: grid; place-items: center; box-shadow: 0 12px 28px -8px rgba(37,211,102,0.7); transition: transform 0.25s var(--ease); }
 .fab-wa svg { width: 30px; height: 30px; fill: #fff; }
 .fab-wa::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: 0 0 0 0 rgba(37,211,102,0.5); animation: ring 2.4s infinite; }
 .fab-wa:hover { transform: scale(1.08); }
@@ -1649,7 +1653,8 @@ body.dark .delivery-zones__desc { color: #94a3b8; }
 #readingProgress { position: fixed; bottom: 0; left: 0; width: 0%; height: 4px; background: linear-gradient(to right, var(--blue,#1753e0), var(--red,#e01f2b)); z-index: 9999; pointer-events: none; }
 
 /* ── Scroll-top wrapper with SVG ring ── */
-.scroll-top-wrapper { position: fixed; bottom: 2rem; right: 2rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 900; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+/* Empilé AU-DESSUS du bouton WhatsApp flottant (qui est à bottom:20px, h56) — centres alignés (WA centre = right 48px). */
+.scroll-top-wrapper { position: fixed; bottom: 92px; right: 23px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 900; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
 .scroll-top-wrapper.visible { opacity: 1; visibility: visible; }
 .scroll-progress-ring { position: absolute; top: 0; left: 0; width: 50px; height: 50px; transform: rotate(-90deg); pointer-events: none; }
 .scroll-progress-ring__track { fill: none; stroke: rgba(23,83,224,0.15); stroke-width: 3; }
@@ -2846,3 +2851,12 @@ body.dark .skeleton-line {
 .offer-card--accent .offer-card__btn { background: #fff; color: var(--blue); }
 
 body.dark .offer-card { background: #1e293b; border-color: #334155; }
+
+/* =========================================================
+   Boutons flottants sur mobile — au-dessus de la barre de nav (.mob-bar, 60px)
+   ========================================================= */
+@media (max-width: 767px) {
+  .fab-wa { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); right: 16px; }
+  /* Le "retour en haut" fait doublon avec le bouton Accueil de la barre mobile → masqué */
+  .scroll-top-wrapper { display: none !important; }
+}
