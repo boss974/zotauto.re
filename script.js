@@ -106,7 +106,7 @@
     var dot = badge.querySelector(".hero__live-badge__dot");
     badge.textContent = "";
     if (dot) badge.appendChild(dot);
-    badge.appendChild(document.createTextNode(" 🌺 +" + label + " références en stock"));
+    badge.appendChild(document.createTextNode(" +" + label + " références en stock"));
   }());
 
   /* =========================================================
@@ -999,9 +999,9 @@
     var el = document.getElementById('heroSubtitle');
     if (!el) return;
     var phrases = [
-      "Pièces auto pour tous véhicules à La Réunion 🏝️",
-      "Huiles, batteries, filtres aux meilleurs prix 974 💰",
-      "Livraison rapide Saint-Denis → Saint-Pierre 🚚"
+      "Pièces auto pour tous véhicules à La Réunion",
+      "Huiles, batteries, filtres aux meilleurs prix (974)",
+      "Livraison rapide Saint-Denis → Saint-Pierre"
     ];
     var phraseIndex = 0, charIndex = 0, isDeleting = false;
     var SPEED_TYPE = 80, SPEED_DEL = 40, PAUSE_END = 2000, PAUSE_START = 400;
@@ -1025,13 +1025,13 @@
   // ── Social proof notifications ──
   (function () {
     var notifications = [
-      { emoji: "🌺", name: "Matthieu", ville: "Saint-Pierre", produit: "Huile moteur 5W-40 Euroatlantic" },
+      { emoji: "🚗", name: "Matthieu", ville: "Saint-Pierre", produit: "Huile moteur 5W-40 Euroatlantic" },
       { emoji: "🔧", name: "Cindy", ville: "Saint-Denis", produit: "Lot de 5 microfibres Koch-Chemie" },
-      { emoji: "🌺", name: "Dorian", ville: "Le Tampon", produit: "Visseuse sans-fil Worcraft" },
+      { emoji: "🚗", name: "Dorian", ville: "Le Tampon", produit: "Visseuse sans-fil Worcraft" },
       { emoji: "🔧", name: "Priscilla", ville: "Saint-Paul", produit: "Shampoing auto Green Star" },
-      { emoji: "🌺", name: "Kévin", ville: "Saint-André", produit: "Meuleuse d'angle Power Maxx" },
+      { emoji: "🚗", name: "Kévin", ville: "Saint-André", produit: "Meuleuse d'angle Power Maxx" },
       { emoji: "🔧", name: "Nathalie", ville: "Sainte-Marie", produit: "Huile moteur 5W-30 Euroatlantic" },
-      { emoji: "🌺", name: "Damien", ville: "Saint-Leu", produit: "Detailing / lavage premium" },
+      { emoji: "🚗", name: "Damien", ville: "Saint-Leu", produit: "Detailing / lavage premium" },
       { emoji: "🔧", name: "Sandrine", ville: "Saint-Louis", produit: "Vidange & entretien" }
     ];
     var el = document.getElementById("socialProof");
