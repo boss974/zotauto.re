@@ -65,13 +65,14 @@ function gs_write(array $c): bool
     return true;
 }
 
-/** Recherche image PIXABAY (gratuit, usage commercial autorisé, sans attribution). */
-function pixabay_search_image(string $key, string $query): array
+/** Recherche image PIXABAY (gratuit, usage commercial autorisé, sans attribution).
+ *  $page permet de varier les résultats (pagination) ; $pick choisit le rang du résultat. */
+function pixabay_search_image(string $key, string $query, int $page = 1, int $pick = 0): array
 {
     if (!function_exists('curl_init')) { return ['ok' => false, 'error' => 'cURL indisponible.']; }
     $url = 'https://pixabay.com/api/?' . http_build_query([
-        'key' => $key, 'q' => $query, 'image_type' => 'photo', 'per_page' => 3,
-        'safesearch' => 'true', 'lang' => 'fr',
+        'key' => $key, 'q' => $query, 'image_type' => 'photo', 'per_page' => 20,
+        'page' => max(1, $page), 'safesearch' => 'true', 'lang' => 'fr', 'order' => 'popular',
     ]);
     $ch = curl_init($url);
     curl_setopt_array($ch, [CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 20, CURLOPT_CONNECTTIMEOUT => 10]);
@@ -82,8 +83,9 @@ function pixabay_search_image(string $key, string $query): array
     if ($code === 400 || $code === 401) { return ['ok' => false, 'error' => 'Clé Pixabay invalide.', 'stop' => true]; }
     if ($code === 429) { return ['ok' => false, 'error' => 'Quota Pixabay atteint (réessayez plus tard).', 'stop' => true]; }
     $j = json_decode($body, true);
-    if (!is_array($j) || empty($j['hits'][0])) { return ['ok' => false, 'error' => 'Aucune image Pixabay.']; }
-    $hit = $j['hits'][0];
+    if (!is_array($j) || empty($j['hits'])) { return ['ok' => false, 'error' => 'Aucune image Pixabay.']; }
+    $hits = $j['hits'];
+    $hit  = $hits[$pick % count($hits)];
     $u = $hit['largeImageURL'] ?? ($hit['webformatURL'] ?? '');
     if ($u === '') { return ['ok' => false, 'error' => 'URL image Pixabay absente.']; }
     return ['ok' => true, 'url' => $u];
@@ -191,15 +193,23 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                 $p = $prod[$i];
                 if (has_web_photo($p) || !needs_web_photo($p)) { continue; }
                 if ($onlyPriced && (float) ($p['price'] ?? 0) <= 0) { continue; }
-                // Pixabay (gratuit) : requête plutôt "thématique" (marque + nom, sans la réf).
-                // Google : requête précise (marque + nom + réf).
+                // Pixabay (gratuit) : requête par CATÉGORIE en français (fiable, toujours
+                // pertinente), avec variété via la pagination — le nom exact des produits est
+                // trop ambigu ("servante" → tasse de thé). Google reste précis (marque+nom+réf).
                 if ($hasPixabay) {
-                    $q = trim(($p['brand'] ?? '') . ' ' . ($p['name'] ?? ''));
-                    $s = pixabay_search_image((string) $gs['pxkey'], $q);
-                    // Repli : mot-clé de catégorie si rien trouvé (photo d'ambiance).
+                    $catTerms = [
+                        'huiles'      => ['huile moteur', 'bidon huile moteur', 'lubrifiant automobile', 'vidange moteur'],
+                        'detailing'   => ['lavage automobile', 'nettoyage voiture', 'polish carrosserie', 'detailing voiture'],
+                        'outillage'   => ['outils atelier', 'boîte à outils', 'outillage mécanique', 'clé à outils'],
+                        'accessoires' => ['pièces automobiles', 'garage automobile', 'atelier mécanique auto', 'moteur voiture'],
+                    ][$p['category'] ?? ''] ?? ['pièce automobile', 'garage automobile'];
+                    $k    = $done + $n;                       // compteur global (continuité entre lots)
+                    $q    = $catTerms[$k % count($catTerms)];
+                    $page = 1 + intdiv($k, count($catTerms)) % 8;
+                    $pick = $k % 20;
+                    $s = pixabay_search_image((string) $gs['pxkey'], $q, $page, $pick);
                     if (!$s['ok'] && empty($s['stop'])) {
-                        $catKw = ['detailing' => 'nettoyage voiture', 'outillage' => 'outils atelier', 'huiles' => 'huile moteur', 'accessoires' => 'pièce automobile'][$p['category'] ?? ''] ?? 'pièce automobile';
-                        $s = pixabay_search_image((string) $gs['pxkey'], $catKw);
+                        $s = pixabay_search_image((string) $gs['pxkey'], $catTerms[0], 1, $k % 10);
                     }
                 } else {
                     $q = trim(($p['brand'] ?? '') . ' ' . ($p['name'] ?? '') . ' ' . ($p['reference'] ?? ''));
