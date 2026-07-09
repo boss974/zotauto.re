@@ -614,8 +614,10 @@ body.dark .footer__credit { border-top-color: #334155; }
   .hero__trust { flex-wrap: wrap; row-gap: 8px; }
   .hero__trust-sep { display: none; }
 }
-/* Anti-débordement horizontal global (aucun élément ne dépasse la largeur écran) */
-html, body { overflow-x: hidden; max-width: 100%; }
+/* Anti-débordement horizontal — `clip` clippe SANS créer de conteneur de défilement,
+   donc l'en-tête `position: sticky` continue de fonctionner (contrairement à `hidden`).
+   Aucun impact desktop (vérifié : sticky OK, 0 débordement à 1280px). */
+body { overflow-x: clip; }
 @media (max-width: 420px) {
   .products { grid-template-columns: 1fr; }
   .featured { grid-template-columns: 1fr; }
