@@ -562,6 +562,7 @@ body.dark .footer__credit { border-top-color: #334155; }
    ========================================================= */
 @media (max-width: 1080px) {
   .hero__inner { grid-template-columns: 1fr; }
+  .hero__inner > *, .hero__text { min-width: 0; max-width: 100%; }
   .finder { max-width: 520px; }
   .products { grid-template-columns: repeat(3, 1fr); }
   .featured { grid-template-columns: repeat(2, 1fr); }
