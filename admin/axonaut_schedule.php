@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/config.php';
 require __DIR__ . '/axonaut_lib.php';
+require __DIR__ . '/ui.php';
 
 // --- Garde d'accès (même logique que index.php) ------------------------
 if (!file_exists(AUTH_FILE)) {
@@ -81,144 +82,17 @@ $cronCmd  = $cronExpr !== null
 $lastResult      = (string) ($conf['last_result'] ?? '');
 $scheduleUpdated = (string) ($conf['schedule_updated'] ?? '');
 ?>
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="noindex,nofollow">
-    <title>Planification synchro Axonaut — Zotauto</title>
-    <style>
-        :root {
-            --bleu: #2a52e0;
-            --encre: #1a2033;
-            --fond: #f4f6fb;
-            --bord: #e2e6f0;
-            --muted: #6b7280;
-        }
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background: var(--fond);
-            color: var(--encre);
-            line-height: 1.5;
-        }
-        .wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
-        .topbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 24px;
-            font-size: 14px;
-        }
-        .topbar a { color: var(--bleu); text-decoration: none; font-weight: 600; }
-        .topbar a:hover { text-decoration: underline; }
-        .topbar .sep { color: var(--muted); }
-        h1 { font-size: 24px; margin: 0 0 8px; }
-        .lead { color: var(--muted); margin: 0 0 24px; }
-        .card {
-            background: #fff;
-            border: 1px solid var(--bord);
-            border-radius: 14px;
-            padding: 22px;
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(26, 32, 51, .04);
-        }
-        .card h2 { font-size: 17px; margin: 0 0 14px; }
-        label.freq {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            border: 1px solid var(--bord);
-            border-radius: 10px;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-        label.freq:hover { border-color: var(--bleu); }
-        label.freq input { accent-color: var(--bleu); }
-        .btn {
-            display: inline-block;
-            background: var(--bleu);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 11px 20px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 6px;
-        }
-        .btn:hover { filter: brightness(1.05); }
-        .notice, .error {
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-        .notice { background: #e7f6ec; color: #14663a; border: 1px solid #b8e6c8; }
-        .error  { background: #fdeaea; color: #922; border: 1px solid #f3c2c2; }
-        .cronbox {
-            display: flex;
-            gap: 8px;
-            align-items: stretch;
-            margin-top: 6px;
-        }
-        .cronbox code {
-            flex: 1;
-            background: #0f1526;
-            color: #e6ecff;
-            padding: 12px 14px;
-            border-radius: 10px;
-            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 13px;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-        .copybtn {
-            background: var(--encre);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 0 16px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .copybtn:hover { filter: brightness(1.15); }
-        .status-row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--bord); font-size: 14px; }
-        .status-row:last-child { border-bottom: none; }
-        .status-row .k { color: var(--muted); }
-        .status-row .v { font-weight: 600; text-align: right; }
-        .help { font-size: 13.5px; color: #444; }
-        .help ol { padding-left: 20px; }
-        .help code { background: #eef1f8; padding: 1px 5px; border-radius: 5px; font-size: 12.5px; }
-        .off-note { color: var(--muted); font-style: italic; }
-    </style>
-</head>
-<body>
-<div class="wrap">
-
-    <!-- Barre de navigation admin -->
-    <div class="topbar">
-        <a href="index.php">← Retour à l'éditeur</a>
-        <span class="sep">·</span>
-        <a href="axonaut.php">🔄 Axonaut</a>
-        <span class="sep">·</span>
-        <a href="logout.php">Se déconnecter</a>
-    </div>
-
-    <h1>Planification de la synchronisation Axonaut</h1>
-    <p class="lead">Choisissez à quelle fréquence le stock doit être synchronisé, puis créez la tâche cron correspondante dans votre panel LWS.</p>
+<?php admin_head('Planification', 'schedule'); ?>
+<div class="page-head">
+  <h1>🗓️ Planification</h1>
+  <p class="lead">Programme une synchronisation Axonaut automatique via une tâche planifiée LWS.</p>
+</div>
 
     <?php if ($notice !== ''): ?>
-        <div class="notice"><?= h($notice) ?></div>
+        <div class="banner banner--ok"><?= h($notice) ?></div>
     <?php endif; ?>
     <?php if ($error !== ''): ?>
-        <div class="error"><?= h($error) ?></div>
+        <div class="banner banner--err"><?= h($error) ?></div>
     <?php endif; ?>
 
     <!-- Formulaire : choix de la fréquence -->
@@ -227,11 +101,13 @@ $scheduleUpdated = (string) ($conf['schedule_updated'] ?? '');
         <form method="post" action="axonaut_schedule.php">
             <?= csrf_field() ?>
             <?php foreach ($FREQS as $slug => $meta): ?>
-                <label class="freq">
-                    <input type="radio" name="schedule_freq" value="<?= h($slug) ?>"
-                        <?= $slug === $currentFreq ? 'checked' : '' ?>>
-                    <span><?= h($meta['label']) ?></span>
-                </label>
+                <div class="row">
+                    <label class="toggle">
+                        <input type="radio" name="schedule_freq" value="<?= h($slug) ?>"
+                            <?= $slug === $currentFreq ? 'checked' : '' ?>>
+                        <span><?= h($meta['label']) ?></span>
+                    </label>
+                </div>
             <?php endforeach; ?>
             <button type="submit" class="btn">Enregistrer la fréquence</button>
         </form>
@@ -249,7 +125,7 @@ $scheduleUpdated = (string) ($conf['schedule_updated'] ?? '');
                 <button type="button" class="copybtn" id="copyBtn">Copier</button>
             </div>
         <?php else: ?>
-            <p class="off-note">Synchronisation automatique désactivée : aucune tâche cron n'est nécessaire.
+            <p class="hint">Synchronisation automatique désactivée : aucune tâche cron n'est nécessaire.
             Supprimez l'éventuelle tâche existante dans votre panel LWS pour arrêter la synchro planifiée.</p>
         <?php endif; ?>
     </div>
@@ -289,8 +165,6 @@ $scheduleUpdated = (string) ($conf['schedule_updated'] ?? '');
         Si vous changez de fréquence ici, pensez à <strong>mettre à jour la même tâche cron</strong> côté LWS.</p>
     </div>
 
-</div>
-
 <script>
     // Bouton « Copier » : copie la commande cron dans le presse-papiers.
     (function () {
@@ -317,5 +191,4 @@ $scheduleUpdated = (string) ($conf['schedule_updated'] ?? '');
         });
     })();
 </script>
-</body>
-</html>
+<?php admin_foot('schedule'); ?>

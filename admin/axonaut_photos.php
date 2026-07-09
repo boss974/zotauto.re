@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/config.php';
 require __DIR__ . '/axonaut_lib.php';
+require __DIR__ . '/ui.php';
 
 // --- Garde d'accès ------------------------------------------------------
 if (!file_exists(AUTH_FILE)) { header('Location: setup.php'); exit; }
@@ -246,56 +247,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 $aiTodo   = $total - $withAi;
 $estCost  = number_format($aiTodo * AI_COST_UNIT, 2, ',', ' ');
 $gdOk     = function_exists('imagecreatefromstring');
-?><!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Photos produits — ZOT AUTO Admin</title>
+?>
+<?php admin_head('Photos produits', 'photos'); ?>
 <style>
-  :root { --blue:#2a52e0; --ink:#1a2033; --line:#e3e7f0; --ok:#0a7d33; --err:#c0392b; --violet:#7c3aed; }
-  * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif; background:#f4f6fb; color:var(--ink); }
-  .wrap { max-width:720px; margin:0 auto; padding:26px 18px 60px; }
-  .top { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
-  .top a { color:var(--blue); text-decoration:none; font-weight:600; font-size:.9rem; }
-  h1 { font-size:1.5rem; margin:.2em 0 .1em; }
-  .sub { color:#5b6376; margin:0 0 22px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; margin-bottom:18px; box-shadow:0 3px 14px rgba(20,30,60,.04); }
-  .card h2 { font-size:1.1rem; margin:0 0 6px; }
-  label { display:block; font-weight:600; font-size:.9rem; margin:12px 0 5px; }
-  input[type=text], input[type=password] { width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:9px; font-size:.95rem; }
-  .btn { display:inline-flex; align-items:center; gap:8px; border:0; border-radius:10px; padding:12px 20px; font-weight:700; font-size:.95rem; cursor:pointer; }
-  .btn--primary { background:var(--blue); color:#fff; }
-  .btn--go { background:var(--ok); color:#fff; }
-  .btn--ai { background:var(--violet); color:#fff; }
-  .btn:disabled { opacity:.6; cursor:progress; }
-  .big { font-size:2rem; font-weight:800; }
-  .msg { padding:11px 14px; border-radius:9px; margin:0 0 16px; font-size:.9rem; }
-  .msg--ok { background:#e7f6ec; color:var(--ok); border:1px solid #b6e2c4; }
-  .msg--err { background:#fdecea; color:var(--err); border:1px solid #f3c2bc; }
-  .msg--warn { background:#fff7e6; border:1px solid #ffe0a3; color:#8a6d1a; }
-  .hint { font-size:.83rem; color:#5b6376; }
   .bar { height:12px; background:#eef1fa; border-radius:99px; overflow:hidden; margin:10px 0; }
   .bar > i { display:block; height:100%; background:var(--blue); }
   .prev { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
   .prev img { width:120px; height:90px; border-radius:8px; border:1px solid var(--line); }
 </style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <a href="index.php">← Éditeur</a>
-    <a href="axonaut.php">🔄 Axonaut</a>
-    <a href="axonaut_pricing.php">💶 Tarifs</a>
-    <a href="axonaut_schedule.php">🗓️ Planif</a>
-    <a href="logout.php">Se déconnecter</a>
-  </div>
-
+<div class="page-head">
   <h1>🖼️ Photos produits</h1>
-  <p class="sub">Deux options : un <strong>visuel filigrané gratuit</strong> (immédiat) ou de
-     <strong>vraies photos par IA</strong> (OpenAI, payant).</p>
+  <p class="lead">Visuel généré gratuit par catégorie, ou vraies photos par IA pour les produits importants.</p>
+</div>
 
   <?php if ($notice !== ''): ?><div class="msg msg--ok"><?= $notice /* déjà échappé au besoin */ ?></div><?php endif; ?>
   <?php if ($error !== ''): ?><div class="msg msg--err"><?= h($error) ?></div><?php endif; ?>
@@ -358,7 +321,6 @@ $gdOk     = function_exists('imagecreatefromstring');
     <p class="hint">🔒 Clé OpenAI et coûts d'achat stockés en privé (fichiers <code>.openai.php</code> / <code>.axonaut_costs.php</code>, 0600).
        💡 Tu peux aussi remplacer la photo d'un produit à la main dans l'éditeur.</p>
   </div>
-</div>
 <script>
   function autoChain(formId, autoId, storeKey) {
     var form = document.getElementById(formId), auto = document.getElementById(autoId);
@@ -375,5 +337,4 @@ $gdOk     = function_exists('imagecreatefromstring');
   autoChain('svgForm', 'svgAuto', 'zot_svg_auto');
   autoChain('aiForm', 'aiAuto', 'zot_ai_auto');
 </script>
-</body>
-</html>
+<?php admin_foot('photos'); ?>

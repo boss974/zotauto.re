@@ -7,6 +7,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/config.php';
+require __DIR__ . '/ui.php';
 
 // --- Garde d'accès ------------------------------------------------------
 if (!file_exists(AUTH_FILE)) { header('Location: setup.php'); exit; }
@@ -92,59 +93,12 @@ $offers = offers_read();
 for ($i = count($offers); $i < MAX_SLOTS; $i++) {
     $offers[$i] = ['active' => false, 'accent' => false, 'tag' => '', 'title' => '', 'text' => '', 'btn' => '', 'wa' => ''];
 }
-?><!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Offres du moment — ZOT AUTO Admin</title>
-<style>
-  :root { --blue:#1753e0; --ink:#1a2033; --line:#e3e7f0; --ok:#0a7d33; }
-  * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif; background:#f4f6fb; color:var(--ink); }
-  .wrap { max-width:820px; margin:0 auto; padding:26px 18px 60px; }
-  .top { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
-  .top a { color:var(--blue); text-decoration:none; font-weight:600; font-size:.9rem; }
-  .top .sp { flex:1; }
-  h1 { font-size:1.55rem; margin:.1em 0 .2em; }
-  .lead { color:#5b6376; margin:0 0 22px; font-size:.95rem; }
-  .banner { border-radius:12px; padding:12px 16px; margin-bottom:20px; font-size:.92rem; }
-  .banner--ok { background:#e7f6ec; border:1px solid #b6e2c4; color:var(--ok); }
-  .banner--err { background:#fdecec; border:1px solid #f5b5b5; color:#b42318; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:20px; margin-bottom:18px; box-shadow:0 3px 14px rgba(20,30,60,.04); }
-  .card.on { border-color:#bcd0ff; }
-  .card__head { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
-  .card__num { width:28px; height:28px; border-radius:8px; background:var(--blue); color:#fff; display:grid; place-items:center; font-weight:800; font-size:.9rem; }
-  .card__head h2 { font-size:1.05rem; margin:0; flex:1; }
-  .row { margin-bottom:12px; }
-  .row label { display:block; font-weight:600; font-size:.82rem; margin-bottom:4px; color:#3a4256; }
-  .row input[type=text], .row textarea { width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:9px; font:inherit; background:#fff; }
-  .row textarea { resize:vertical; min-height:60px; }
-  .row .hint { font-size:.76rem; color:#8a93a6; margin-top:3px; }
-  .cols { display:flex; gap:12px; flex-wrap:wrap; }
-  .cols .row { flex:1; min-width:180px; }
-  .toggles { display:flex; gap:18px; flex-wrap:wrap; }
-  .toggle { display:inline-flex; align-items:center; gap:7px; font-size:.88rem; font-weight:600; cursor:pointer; }
-  .toggle input { width:18px; height:18px; accent-color:var(--blue); }
-  .actions { position:sticky; bottom:0; background:#f4f6fb; padding:16px 0; margin-top:6px; }
-  .btn { display:inline-flex; align-items:center; gap:8px; background:var(--blue); color:#fff; border:none; padding:13px 26px; border-radius:11px; font:inherit; font-weight:700; cursor:pointer; box-shadow:0 6px 18px rgba(23,83,224,.28); }
-  .btn:hover { filter:brightness(1.05); }
-  .note { font-size:.82rem; color:#5b6376; margin-top:10px; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <strong style="font-size:1.05rem">🛠️ ZOT AUTO — Admin</strong>
-    <span class="sp"></span>
-    <a href="dashboard.php">← Tableau de bord</a>
-    <a href="../index.html#offres" target="_blank">🌐 Voir sur le site</a>
-    <a href="logout.php">Se déconnecter</a>
-  </div>
-
+?>
+<?php admin_head('Offres du moment', 'offres'); ?>
+<div class="page-head">
   <h1>📣 Offres du moment</h1>
-  <p class="lead">Ces cartes s'affichent sur la page d'accueil, dans la section « En ce moment chez ZOT AUTO ». Remplis jusqu'à <?= MAX_SLOTS ?> offres, coche « Afficher » pour les publier, puis clique sur <strong>Publier</strong>.</p>
+  <p class="lead">Ces cartes s'affichent sur la page d'accueil. Remplis jusqu'à 4 offres, coche « Afficher », puis Publie.</p>
+</div>
 
   <?php if ($notice): ?><div class="banner banner--ok"><?= h($notice) ?></div><?php endif; ?>
   <?php if ($error):  ?><div class="banner banner--err"><?= h($error) ?></div><?php endif; ?>
@@ -197,6 +151,4 @@ for ($i = count($offers); $i < MAX_SLOTS; $i++) {
       <p class="note">Astuce : laisse une offre vide (sans titre) pour ne pas l'afficher. Décoche « Afficher » pour la mettre en pause sans la supprimer.</p>
     </div>
   </form>
-</div>
-</body>
-</html>
+<?php admin_foot('offres'); ?>

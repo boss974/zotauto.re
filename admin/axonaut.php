@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/config.php';
 require __DIR__ . '/axonaut_lib.php';
+require __DIR__ . '/ui.php';
 
 // --- Garde d'accès (même logique que index.php) ------------------------
 if (!file_exists(AUTH_FILE)) {
@@ -62,54 +63,12 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['action'] ?? '') ==
 $hasKey    = ($conf['key'] ?? '') !== '';
 $maskedKey = $hasKey ? (substr($conf['key'], 0, 4) . str_repeat('•', 12) . substr($conf['key'], -3)) : '';
 $mode      = $conf['mode'] ?? 'stock';
-?><!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>Synchronisation Axonaut — ZOT AUTO Admin</title>
-<style>
-  :root { --blue:#2a52e0; --ink:#1a2033; --line:#e3e7f0; --ok:#0a7d33; --err:#c0392b; }
-  * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif; background:#f4f6fb; color:var(--ink); }
-  .wrap { max-width:680px; margin:0 auto; padding:26px 18px 60px; }
-  .top { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
-  .top a { color:var(--blue); text-decoration:none; font-weight:600; font-size:.9rem; }
-  h1 { font-size:1.5rem; margin:.2em 0 .1em; }
-  .sub { color:#5b6376; margin:0 0 22px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px 22px; margin-bottom:18px; box-shadow:0 3px 14px rgba(20,30,60,.04); }
-  .card h2 { font-size:1.05rem; margin:0 0 12px; display:flex; align-items:center; gap:8px; }
-  label { display:block; font-weight:600; font-size:.9rem; margin:12px 0 5px; }
-  input[type=text], input[type=password] { width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:9px; font-size:.95rem; }
-  .radio { display:flex; gap:12px; flex-wrap:wrap; margin-top:6px; }
-  .radio label { display:flex; gap:9px; align-items:flex-start; font-weight:500; border:1px solid var(--line); border-radius:10px; padding:12px 14px; cursor:pointer; flex:1 1 260px; margin:0; }
-  .radio input { margin-top:3px; }
-  .radio small { display:block; color:#5b6376; font-weight:400; }
-  .btn { display:inline-flex; align-items:center; gap:8px; border:0; border-radius:10px; padding:12px 20px; font-weight:700; font-size:.95rem; cursor:pointer; }
-  .btn--primary { background:var(--blue); color:#fff; }
-  .btn--go { background:var(--ok); color:#fff; }
-  .btn:disabled { opacity:.6; cursor:progress; }
-  .msg { padding:11px 14px; border-radius:9px; margin:0 0 16px; font-size:.9rem; }
-  .msg--ok { background:#e7f6ec; color:var(--ok); border:1px solid #b6e2c4; }
-  .msg--err { background:#fdecea; color:var(--err); border:1px solid #f3c2bc; }
-  .keytag { font-family:ui-monospace,Menlo,monospace; background:#eef1fa; padding:3px 8px; border-radius:6px; font-size:.85rem; }
-  .hint { font-size:.82rem; color:#5b6376; margin-top:8px; }
-  #result { white-space:pre-wrap; }
-  .steps { font-size:.86rem; color:#5b6376; margin:6px 0 0; padding-left:18px; }
-  .steps li { margin:3px 0; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <a href="index.php">← Retour à l'éditeur</a>
-    <a href="logout.php">Se déconnecter</a>
-  </div>
-
-  <h1>🔄 Synchronisation Axonaut</h1>
-  <p class="sub">Reliez votre stock Axonaut au site. Axonaut reste votre référence ;
-     le site affiche le stock et les prix récupérés depuis Axonaut.</p>
+?>
+<?php admin_head('Synchro Axonaut', 'axonaut'); ?>
+<div class="page-head">
+  <h1>🔄 Synchro Axonaut</h1>
+  <p class="lead">Connecte ta clé API Axonaut et importe tes produits, prix et stocks.</p>
+</div>
 
   <?php if ($notice !== ''): ?><div class="msg msg--ok"><?= h($notice) ?></div><?php endif; ?>
   <?php if ($error !== ''): ?><div class="msg msg--err"><?= h($error) ?></div><?php endif; ?>
@@ -175,7 +134,6 @@ $mode      = $conf['mode'] ?? 'stock';
     <p class="hint">Le décrément automatique du stock se fait dans Axonaut au moment de la facturation :
        chaque vente facturée dans Axonaut baisse le stock, et le site le reflète à la synchro suivante.</p>
   </div>
-</div>
 
 <script>
 (function () {
@@ -213,5 +171,4 @@ $mode      = $conf['mode'] ?? 'stock';
   });
 })();
 </script>
-</body>
-</html>
+<?php admin_foot('axonaut'); ?>

@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/config.php';
 require __DIR__ . '/axonaut_lib.php';
+require __DIR__ . '/ui.php';
 
 // --- Garde d'accès ------------------------------------------------------
 if (!file_exists(AUTH_FILE)) { header('Location: setup.php'); exit; }
@@ -229,38 +230,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     foreach ($prod as $p) { if (has_web_photo($p)) { $done++; } elseif (needs_web_photo($p)) { $todo++; } }
     $gs = gs_read(); $hasKey = $gs['key'] !== '' && $gs['cx'] !== '';
 }
-?><!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><title>Photos web — ZOT AUTO Admin</title>
+?>
+<?php admin_head('Photos web', 'photosweb'); ?>
 <style>
-  :root { --blue:#2a52e0; --ink:#1a2033; --line:#e3e7f0; --ok:#0a7d33; --err:#c0392b; --teal:#0d9488; }
-  * { box-sizing:border-box; } body { margin:0; font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif; background:#f4f6fb; color:var(--ink); }
-  .wrap { max-width:720px; margin:0 auto; padding:26px 18px 60px; }
-  .top { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; } .top a { color:var(--blue); text-decoration:none; font-weight:600; font-size:.9rem; }
-  h1 { font-size:1.5rem; margin:.2em 0 .1em; } .sub { color:#5b6376; margin:0 0 22px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; margin-bottom:18px; box-shadow:0 3px 14px rgba(20,30,60,.04); }
-  .card h2 { font-size:1.1rem; margin:0 0 6px; } label { display:block; font-weight:600; font-size:.9rem; margin:12px 0 5px; }
-  input[type=text], input[type=password] { width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:9px; font-size:.95rem; }
-  .btn { display:inline-flex; align-items:center; gap:8px; border:0; border-radius:10px; padding:12px 20px; font-weight:700; font-size:.95rem; cursor:pointer; }
-  .btn--primary { background:var(--blue); color:#fff; } .btn--go { background:var(--teal); color:#fff; } .btn:disabled { opacity:.6; cursor:progress; }
   .big { font-size:2rem; font-weight:800; }
-  .msg { padding:11px 14px; border-radius:9px; margin:0 0 16px; font-size:.9rem; }
-  .msg--ok { background:#e7f6ec; color:var(--ok); border:1px solid #b6e2c4; } .msg--err { background:#fdecea; color:var(--err); border:1px solid #f3c2bc; }
-  .msg--warn { background:#fff7e6; border:1px solid #ffe0a3; color:#8a6d1a; }
   .bar { height:12px; background:#eef1fa; border-radius:99px; overflow:hidden; margin:10px 0; } .bar > i { display:block; height:100%; background:var(--teal); }
-  .hint { font-size:.83rem; color:#5b6376; } code { background:#eef1fa; padding:1px 5px; border-radius:4px; }
-  ol.steps { font-size:.88rem; color:#41485a; padding-left:20px; } ol.steps li { margin:5px 0; }
 </style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <a href="dashboard.php">📊 Dashboard</a><a href="index.php">📝 Éditeur</a>
-    <a href="axonaut_photos.php">🖼️ Photos IA</a><a href="logout.php">Se déconnecter</a>
-  </div>
-  <h1>🌐 Photos web (par référence)</h1>
+<div class="page-head">
+  <h1>🌐 Photos web</h1>
+  <p class="lead">Cherche de vraies photos par référence, rangées par catégorie, à associer à tes produits.</p>
+</div>
   <p class="sub">Cherche une vraie photo pour chaque produit et la range dans une base
      organisée par catégorie (<code>assets/products/…</code>).</p>
 
@@ -318,11 +297,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
       <p class="hint">➡️ Configure la clé Google + CX ci-dessus pour activer.</p>
     <?php endif; ?>
   </div>
-</div>
 <script>
   (function(){var f=document.getElementById('webForm'),a=document.getElementById('webAuto');if(!f||!a)return;
    if(sessionStorage.getItem('zot_web_auto')==='1'){a.checked=true;setTimeout(function(){f.submit();},800);}
    f.addEventListener('submit',function(){sessionStorage.setItem('zot_web_auto',a.checked?'1':'0');var b=document.getElementById('webBtn');if(b){b.disabled=true;b.textContent='⏳ Recherche…';}});}());
 </script>
-</body>
-</html>
+<?php admin_foot('photosweb'); ?>

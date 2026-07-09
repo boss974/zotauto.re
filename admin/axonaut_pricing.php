@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/config.php';
 require __DIR__ . '/axonaut_lib.php';
+require __DIR__ . '/ui.php';
 
 // --- Garde d'accès ------------------------------------------------------
 if (!file_exists(AUTH_FILE)) { header('Location: setup.php'); exit; }
@@ -75,57 +76,12 @@ $nCosts = count(ax_costs_read());
 // Exemple de calcul (coût 100 €).
 $exNormal = round(100 * (1 + $margin / 100), 2);
 $exPromo  = $promoPct > 0 ? round($exNormal * (1 - $promoPct / 100), 2) : $exNormal;
-?><!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>Tarifs & Promos — ZOT AUTO Admin</title>
-<style>
-  :root { --blue:#2a52e0; --ink:#1a2033; --line:#e3e7f0; --ok:#0a7d33; --err:#c0392b; --amber:#b8860b; }
-  * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.55 -apple-system,Segoe UI,Roboto,sans-serif; background:#f4f6fb; color:var(--ink); }
-  .wrap { max-width:720px; margin:0 auto; padding:26px 18px 60px; }
-  .top { display:flex; gap:16px; margin-bottom:20px; flex-wrap:wrap; }
-  .top a { color:var(--blue); text-decoration:none; font-weight:600; font-size:.9rem; }
-  h1 { font-size:1.5rem; margin:.2em 0 .1em; }
-  .sub { color:#5b6376; margin:0 0 22px; }
-  .card { background:#fff; border:1px solid var(--line); border-radius:14px; padding:22px; margin-bottom:18px; box-shadow:0 3px 14px rgba(20,30,60,.04); }
-  .card h2 { font-size:1.1rem; margin:0 0 6px; }
-  label { display:block; font-weight:600; font-size:.9rem; margin:12px 0 5px; }
-  input[type=text], input[type=number], input[type=date] { width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:9px; font-size:.95rem; }
-  .row { display:flex; gap:14px; flex-wrap:wrap; }
-  .row > div { flex:1 1 160px; }
-  .btn { display:inline-flex; align-items:center; gap:8px; border:0; border-radius:10px; padding:12px 20px; font-weight:700; font-size:.95rem; cursor:pointer; }
-  .btn--primary { background:var(--blue); color:#fff; }
-  .btn--go { background:var(--ok); color:#fff; }
-  .btn--amber { background:var(--amber); color:#fff; }
-  .msg { padding:11px 14px; border-radius:9px; margin:0 0 16px; font-size:.9rem; }
-  .msg--ok { background:#e7f6ec; color:var(--ok); border:1px solid #b6e2c4; }
-  .msg--err { background:#fdecea; color:var(--err); border:1px solid #f3c2bc; }
-  .hint { font-size:.83rem; color:#5b6376; }
-  .ex { background:#f0f3fb; border-radius:10px; padding:12px 14px; margin-top:12px; font-size:.9rem; }
-  .ex b { color:var(--blue); }
-  .pill { display:inline-block; padding:3px 10px; border-radius:99px; font-size:.78rem; font-weight:700; }
-  .pill--on { background:#e7f6ec; color:var(--ok); }
-  .pill--off { background:#eef1fa; color:#5b6376; }
-  .check { display:flex; align-items:center; gap:9px; font-weight:600; margin-top:10px; }
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="top">
-    <a href="index.php">← Éditeur</a>
-    <a href="axonaut.php">🔄 Axonaut</a>
-    <a href="axonaut_photos.php">🖼️ Photos</a>
-    <a href="axonaut_schedule.php">🗓️ Planif</a>
-    <a href="logout.php">Se déconnecter</a>
-  </div>
-
-  <h1>💶 Tarifs & Promos</h1>
-  <p class="sub">Fixe ta marge sur les prix Axonaut et lance des promos en un clic.
-     Les prix sont recalculés depuis les coûts (gardés privés sur le serveur).</p>
+?>
+<?php admin_head('Tarifs & promos', 'pricing'); ?>
+<div class="page-head">
+  <h1>💶 Tarifs &amp; promos</h1>
+  <p class="lead">Règle ta marge de vente et active des remises en un clic.</p>
+</div>
 
   <?php if ($notice !== ''): ?><div class="msg msg--ok"><?= h($notice) ?></div><?php endif; ?>
   <?php if ($error !== ''): ?><div class="msg msg--err"><?= h($error) ?></div><?php endif; ?>
@@ -197,6 +153,4 @@ $exPromo  = $promoPct > 0 ? round($exNormal * (1 - $promoPct / 100), 2) : $exNor
        (<code>.axonaut_costs.php</code>, 0600) et ne sont <strong>jamais</strong> visibles sur le site public.
        Seuls les prix de vente calculés apparaissent.</p>
   </div>
-</div>
-</body>
-</html>
+<?php admin_foot('pricing'); ?>
