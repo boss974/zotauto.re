@@ -116,6 +116,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.12; letter-spa
 .topbar__right a { display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s; }
 .topbar__right a:hover { color: #fff; }
 .topbar__sep { width: 1px; height: 14px; background: rgba(255,255,255,0.2); }
+.topbar__fb svg { fill: var(--yellow); stroke: none; }
+.topbar__fb:hover svg { fill: #fff; }
 
 /* =========================================================
    Header
@@ -585,7 +587,7 @@ body.dark .footer__credit { border-top-color: #334155; }
   .qv__media { min-height: 220px; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
 }
 @media (max-width: 560px) {
-  .topbar__right a:last-child { display: none; }
+  .topbar__right a[href="#avis"], .topbar__right .topbar__sep { display: none; }
   .cats { grid-template-columns: 1fr; }
   .footer__top { grid-template-columns: 1fr 1fr; }
   .shead { flex-direction: column; align-items: flex-start; }
