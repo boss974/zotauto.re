@@ -26,6 +26,7 @@ const GEN_DIR      = __DIR__ . '/../assets/generated';
 const PH_LOGO      = 'assets/brands/logo-zotauto.png';
 const SVG_BATCH    = 250;   // visuels SVG par lot
 const AI_BATCH     = 6;     // photos IA par lot (coût + temps maîtrisés)
+const FREE_BATCH   = 8;     // photos IA GRATUITES (Pollinations) par lot
 const OPENAI_FILE  = __DIR__ . '/.openai.php';
 const AI_COST_UNIT = 0.04;  // estimation $ par image (gpt-image-1, indicatif)
 
@@ -153,6 +154,52 @@ function ai_generate_photo(string $key, array $p): array
     return ['ok' => true, 'png' => watermark_png($png)];
 }
 
+/**
+ * Génère une vraie photo produit via Pollinations.ai — 100% GRATUIT, sans clé API.
+ * @return array{ok:bool, png?:string, error?:string}
+ */
+function ai_generate_photo_free(array $p): array
+{
+    $name = trim((string) ($p['name'] ?? 'pièce auto'));
+    $cat  = (string) ($p['category'] ?? '');
+    $catEn = [
+        'detailing'   => 'car detailing / cleaning product',
+        'outillage'   => 'automotive workshop tool / equipment',
+        'huiles'      => 'automotive motor oil / lubricant bottle',
+        'accessoires' => 'automotive accessory / car part',
+    ][$cat] ?? 'automotive car part';
+    // Prompt en anglais (meilleurs résultats sur Pollinations/Flux).
+    $prompt = 'Professional e-commerce product photo of a ' . $catEn . ': ' . $name
+        . '. Centered object on clean white studio background, soft lighting, high detail, photorealistic, no text, no watermark, no logo.';
+    $url = 'https://image.pollinations.ai/prompt/' . rawurlencode($prompt)
+        . '?width=1024&height=1024&nologo=true&model=flux&seed=' . abs(crc32((string) ($p['id'] ?? $name)) % 100000);
+
+    if (!function_exists('curl_init')) {
+        return ['ok' => false, 'error' => 'cURL indisponible sur le serveur.'];
+    }
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_TIMEOUT        => 90,
+        CURLOPT_CONNECTTIMEOUT => 15,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_USERAGENT      => 'ZotAutoBot/1.0',
+    ]);
+    $img  = curl_exec($ch);
+    $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $type = (string) curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+    $err  = curl_error($ch);
+    curl_close($ch);
+
+    if ($img === false || $img === '') { return ['ok' => false, 'error' => 'Connexion Pollinations échouée : ' . $err]; }
+    if ($code >= 400) { return ['ok' => false, 'error' => 'Pollinations : HTTP ' . $code]; }
+    if (strpos($type, 'image/') !== 0 && strlen($img) < 2000) {
+        return ['ok' => false, 'error' => 'Réponse Pollinations non-image (réessayez).'];
+    }
+    return ['ok' => true, 'png' => watermark_png($img)];
+}
+
 // --- État ---------------------------------------------------------------
 $cat      = catalogue_read();
 $products = $cat['products'];
@@ -195,6 +242,44 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $w = catalogue_write($cat);
             $notice = $w['ok'] ? ($n . ' visuel(s) filigrané(s) générés.') : ($w['error'] ?? 'Écriture impossible.');
             if (!$w['ok']) { $error = $notice; $notice = ''; }
+        }
+    } elseif (($_POST['action'] ?? '') === 'gen_free') {
+        // IA GRATUITE (Pollinations) — pas de clé requise.
+        if (!is_dir(GEN_DIR) && !@mkdir(GEN_DIR, 0755, true)) {
+            $error = 'Dossier assets/generated/ non créable.';
+        } else {
+            @set_time_limit(0);
+            $n = 0; $fails = 0; $lastErr = '';
+            // Produits AVEC prix d'abord (les plus vendables).
+            $order = array_keys($products);
+            usort($order, function ($a, $b) use ($products) {
+                return (float) ($products[$b]['price'] ?? 0) <=> (float) ($products[$a]['price'] ?? 0);
+            });
+            foreach ($order as $i) {
+                if ($n >= FREE_BATCH) { break; }
+                $p = $products[$i];
+                if (has_ai_photo($p)) { continue; }                      // déjà une photo IA
+                if (!needs_photo($p) && !has_ai_photo($p)) { continue; }  // vraie photo importée : on respecte
+                $res = ai_generate_photo_free($p);
+                if ($res['ok']) {
+                    $fn = ax_slug((string) ($p['id'] ?? $p['name'] ?? 'p'));
+                    if (@file_put_contents(GEN_DIR . '/' . $fn . '.png', $res['png']) !== false) {
+                        $products[$i]['image'] = 'assets/generated/' . $fn . '.png';
+                        $products[$i]['contain'] = false;
+                        $n++;
+                    }
+                } else {
+                    $fails++; $lastErr = $res['error'];
+                    if ($fails >= 3) { break; }
+                }
+            }
+            $cat['products'] = $products;
+            $w = catalogue_write($cat);
+            if (!$w['ok']) { $error = $w['error'] ?? 'Écriture impossible.'; }
+            else {
+                $notice = $n . ' photo(s) IA gratuite(s) générée(s) et publiée(s).'
+                    . ($fails ? ' (' . $fails . ' échec(s) : ' . h($lastErr) . ')' : '');
+            }
         }
     } elseif (($_POST['action'] ?? '') === 'gen_ai') {
         $key = openai_key_read();
@@ -284,9 +369,30 @@ $gdOk     = function_exists('imagecreatefromstring');
     </div>
   </div>
 
-  <!-- Niveau 2 : IA -->
+  <!-- Niveau 2 : IA GRATUITE (Pollinations) -->
   <div class="card">
-    <h2>2️⃣ Vraies photos par IA (OpenAI) 🤖</h2>
+    <h2>2️⃣ Photos par IA — 100% GRATUIT ✨🤖</h2>
+    <p class="hint">Génère une vraie image par produit via <strong>Pollinations.ai</strong> — <strong>gratuit, sans clé, sans budget</strong>. Filigrane ZOT AUTO ajouté automatiquement<?= $gdOk ? '' : ' (GD absente → image brute)' ?>.</p>
+    <div class="msg msg--warn" style="margin-top:10px">
+      ⚠️ Ce sont des <strong>illustrations générées par IA</strong> (rendu réaliste, pas la photo exacte de l'article). Idéal pour habiller le catalogue&nbsp;; pour une pièce précise, une vraie photo reste préférable.
+    </div>
+    <div style="margin-top:10px"><span class="big"><?= (int) $withAi ?></span> produit(s) avec vraie photo · <strong><?= (int) $aiTodo ?></strong> à faire</div>
+    <div class="bar"><i style="width:<?= $total ? (int) round($withAi / $total * 100) : 0 ?>%"></i></div>
+    <?php if ($aiTodo > 0): ?>
+      <form method="post" id="freeForm">
+        <?= csrf_field() ?><input type="hidden" name="action" value="gen_free">
+        <button class="btn btn--go" id="freeBtn" type="submit">✨ Générer <?= min(FREE_BATCH, (int) $aiTodo) ?> photos gratuites</button>
+        <label style="display:inline-flex;align-items:center;gap:6px;margin-left:10px;font-weight:500"><input type="checkbox" id="freeAuto"> Enchaîner auto (tout le catalogue)</label>
+      </form>
+      <p class="hint" style="margin-top:8px">Chaque lot prend ~1 à 2 min (les produits <strong>avec prix</strong> d'abord). Coche « Enchaîner » et laisse tourner pour tout faire.</p>
+    <?php else: ?>
+      <p class="msg msg--ok" style="margin-top:14px">✅ Tous les produits ont une vraie photo.</p>
+    <?php endif; ?>
+  </div>
+
+  <!-- Niveau 3 : IA OpenAI (payant, qualité premium) -->
+  <div class="card">
+    <h2>3️⃣ Vraies photos par IA — OpenAI (payant, premium) 🤖</h2>
     <p class="hint">Génère une photo réaliste par produit via OpenAI (modèle <code>gpt-image-1</code>).
        Filigrane ZOT AUTO ajouté automatiquement<?= $gdOk ? '' : ' (indisponible : extension GD absente sur ce serveur → photo brute)' ?>.</p>
 
@@ -335,6 +441,7 @@ $gdOk     = function_exists('imagecreatefromstring');
     });
   }
   autoChain('svgForm', 'svgAuto', 'zot_svg_auto');
+  autoChain('freeForm', 'freeAuto', 'zot_free_auto');
   autoChain('aiForm', 'aiAuto', 'zot_ai_auto');
 </script>
 <?php admin_foot('photos'); ?>

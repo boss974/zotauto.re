@@ -49,18 +49,28 @@ $html = preg_replace(
     1
 );
 
-// Injecte un petit bandeau "Se déconnecter" juste après <body ...>.
-$logoutBar = '<div style="position:fixed;top:0;right:0;z-index:99999;background:#1a2033;'
-    . 'color:#fff;font:600 .75rem/1 -apple-system,Segoe UI,sans-serif;'
-    . 'padding:8px 14px;border-bottom-left-radius:10px;display:flex;align-items:center;gap:10px;">'
-    . '<span>Connecté</span>'
-    . '<a href="dashboard.php" style="color:#fff;text-decoration:none;">📊 Dashboard</a>'
-    . '<a href="axonaut.php" style="color:#7dffa1;text-decoration:none;">🔄 Axonaut</a>'
-    . '<a href="axonaut_pricing.php" style="color:#ffb3f0;text-decoration:none;">💶 Tarifs</a>'
-    . '<a href="axonaut_photos.php" style="color:#ffd27d;text-decoration:none;">🖼️ Photos</a>'
-    . '<a href="photos_web.php" style="color:#7de3ff;text-decoration:none;">🌐 PhotosWeb</a>'
-    . '<a href="axonaut_schedule.php" style="color:#9ecbff;text-decoration:none;">🗓️ Planif</a>'
-    . '<a href="logout.php" style="color:#ffcb00;text-decoration:none;">Se déconnecter</a>'
+// Injecte une barre de navigation admin homogène (grande, lisible) en haut de l'éditeur.
+$lk = 'color:#eaf0ff;text-decoration:none;display:inline-flex;align-items:center;gap:7px;'
+    . 'font-weight:600;font-size:.92rem;padding:8px 12px;border-radius:9px;transition:background .15s;white-space:nowrap;';
+$logoutBar = '<style>'
+    . '.zadminbar a:hover{background:rgba(255,255,255,.14);}'
+    . '.zadminbar .em{font-size:1.15rem;line-height:1;}'
+    . 'body{padding-top:56px !important;}'
+    . '.top{top:56px !important;}'
+    . '@media(max-width:760px){.zadminbar{overflow-x:auto;} .zadminbar__lbl{display:none;}}'
+    . '</style>'
+    . '<div class="zadminbar" style="position:fixed;top:0;left:0;right:0;z-index:99999;'
+    . 'background:linear-gradient(90deg,#1753e0,#0f3fb5);box-shadow:0 2px 12px rgba(15,25,60,.25);'
+    . 'font-family:-apple-system,Segoe UI,Roboto,sans-serif;'
+    . 'height:56px;display:flex;align-items:center;gap:4px;padding:0 14px;">'
+    . '<a href="dashboard.php" style="' . $lk . 'font-weight:800;font-size:1rem;color:#fff;"><span class="em">🛠️</span> ZOT AUTO</a>'
+    . '<span style="flex:1"></span>'
+    . '<a href="dashboard.php" style="' . $lk . '"><span class="em">📊</span> <span class="zadminbar__lbl">Tableau de bord</span></a>'
+    . '<a href="axonaut.php" style="' . $lk . '"><span class="em">🔄</span> <span class="zadminbar__lbl">Axonaut</span></a>'
+    . '<a href="axonaut_pricing.php" style="' . $lk . '"><span class="em">💶</span> <span class="zadminbar__lbl">Tarifs</span></a>'
+    . '<a href="axonaut_photos.php" style="' . $lk . '"><span class="em">🖼️</span> <span class="zadminbar__lbl">Photos</span></a>'
+    . '<a href="aide.php" style="' . $lk . '"><span class="em">❓</span> <span class="zadminbar__lbl">Aide</span></a>'
+    . '<a href="logout.php" style="' . $lk . 'color:#ffd75e;font-weight:700;"><span class="em">🔒</span> <span class="zadminbar__lbl">Déconnexion</span></a>'
     . '</div>'
     . '<script>window.__ZOTADMIN = { csrf: "' . h(csrf_token()) . '", saveUrl: "save.php" };</script>';
 

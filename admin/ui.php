@@ -75,9 +75,10 @@ function admin_help_data(): array
         'photos' => [
             'Photos produits',
             [
-                'Chaque produit sans photo reçoit un <strong>visuel généré</strong> aux couleurs de sa catégorie.',
-                'Vous pouvez générer de <strong>vraies photos par IA</strong> (nécessite une clé) pour les produits importants.',
-                'Les visuels se régénèrent automatiquement à l\'affichage : rien à refaire en cas de doute.',
+                '<strong>Niveau 1 — Visuel gratuit</strong> : chaque produit sans photo reçoit un visuel aux couleurs de sa catégorie (immédiat).',
+                '<strong>Niveau 2 — IA 100% gratuite</strong> : génère de vraies images par IA (Pollinations), <strong>sans clé ni budget</strong>. Coche « Enchaîner auto » et laisse tourner pour tout le catalogue.',
+                '<strong>Niveau 3 — IA OpenAI</strong> (option payante, qualité premium) si vous avez une clé.',
+                'Astuce : les images IA sont des illustrations réalistes, pas la photo exacte de l\'article. Vous pouvez toujours remplacer une photo à la main dans l\'éditeur.',
             ],
         ],
         'photosweb' => [

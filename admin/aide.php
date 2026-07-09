@@ -61,7 +61,8 @@ admin_head('Centre d\'aide', 'aide');
   <div class="card__head"><span class="card__num">4</span><h2>&#128181; Tarifs, photos &amp; planification</h2></div>
   <ol class="steps">
     <li><strong>Tarifs &amp; promos</strong> : réglez votre marge de vente et activez des remises en pourcentage.</li>
-    <li><strong>Photos produits / Photos web</strong> : associez des visuels à vos articles (un visuel par catégorie est généré automatiquement).</li>
+    <li><strong>Photos produits</strong> : visuel gratuit par catégorie, puis <strong>IA 100% gratuite (Pollinations, sans clé)</strong> pour générer de vraies images — cochez « Enchaîner auto » pour tout le catalogue. Option OpenAI (payante) pour une qualité premium.</li>
+    <li><strong>Éditeur catalogue</strong> : bouton <strong>« ＋ Nouveau produit / Nouveau service »</strong> en haut de la liste pour ajouter un article ; cliquez un produit pour le modifier, puis Publier.</li>
     <li><strong>Planification</strong> : programmez une synchro Axonaut automatique.</li>
   </ol>
 </div>
