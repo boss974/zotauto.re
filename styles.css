@@ -943,7 +943,7 @@ body.dark .testimonials-soft { color: #94a3b8; }
 /* =========================================================
    UX — pulse WA + scroll-to-top + overlay produit
    ========================================================= */
-.fab-wa { position: relative; }
+/* .fab-wa garde son position:fixed (defini plus haut) — ne PAS le repasser en relative sinon il retombe dans le flux */
 .fab-wa__ring { position: absolute; inset: 0; border-radius: 50%; pointer-events: none; }
 .fab-wa__ring::before, .fab-wa__ring::after {
   content: ''; position: absolute; inset: 0; border-radius: 50%;
