@@ -71,6 +71,7 @@ function pct(int $n, int $t): int { return $t > 0 ? (int) round($n / $t * 100) :
     <a class="tile" href="axonaut_pricing.php"><div class="ic">💶</div><h3>Tarifs &amp; Promos</h3><p>Marge de vente et remises en 1 clic.</p></a>
     <a class="tile" href="axonaut_photos.php"><div class="ic">🖼️</div><h3>Photos produits</h3><p>Visuel gratuit + <strong>IA 100% gratuite</strong> pour de vraies images.</p></a>
     <a class="tile" href="photos_web.php"><div class="ic">🌐</div><h3>Photos web</h3><p>Chercher de vraies photos par référence, rangées par catégorie.</p></a>
+    <a class="tile" href="phototheque.php"><div class="ic">🗂️</div><h3>Photothèque</h3><p>Bibliothèque d'images : tu choisis la bonne photo par produit.</p></a>
     <a class="tile" href="offres.php"><div class="ic">📣</div><h3>Offres du moment</h3><p>Gérer les promos affichées sur la page d'accueil.</p></a>
     <a class="tile" href="axonaut_schedule.php"><div class="ic">🗓️</div><h3>Planification</h3><p>Synchro automatique (tâche cron LWS).</p></a>
     <a class="tile" href="../index.html" target="_blank"><div class="ic">🌐</div><h3>Voir le site</h3><p>Ouvrir la boutique publique zotauto.re.</p></a>

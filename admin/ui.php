@@ -27,6 +27,7 @@ function admin_menu(): array
         'pricing'   => ['Tarifs &amp; promos', 'axonaut_pricing.php', '&#128181;'],
         'photos'    => ['Photos produits',  'axonaut_photos.php', '&#128444;'],
         'photosweb' => ['Photos web',       'photos_web.php', '&#127760;'],
+        'phototheque' => ['Photothèque',    'phototheque.php', '&#128193;'],
         'schedule'  => ['Planification',    'axonaut_schedule.php', '&#128197;'],
         'editor'    => ['Éditeur catalogue', 'index.php',    '&#128221;'],
         'aide'      => ['Aide',             'aide.php',      '&#10067;'],
@@ -87,6 +88,15 @@ function admin_help_data(): array
                 'Recherchez de vraies photos par <strong>référence</strong> ou mot-clé.',
                 'Les résultats sont rangés par <strong>catégorie</strong> pour retrouver facilement.',
                 'Associez la photo qui correspond le mieux à chaque produit.',
+            ],
+        ],
+        'phototheque' => [
+            'La photothèque',
+            [
+                '<strong>Le principe</strong> : une bibliothèque d\'images rangée par catégorie, où TU choisis la bonne photo pour chaque produit (jamais de photo fausse imposée).',
+                '<strong>1. Remplis</strong> la bibliothèque : ajoute tes propres photos (les meilleures) ou récupère des photos d\'ambiance Pixabay par catégorie.',
+                '<strong>2. Associe</strong> : cherche un produit, clique-le, clique la bonne image, puis « Associer & publier ».',
+                'La croix ✕ sur une image la retire de la bibliothèque.',
             ],
         ],
         'schedule' => [
