@@ -1540,3 +1540,42 @@
     renderOffers();
   }
 })();
+
+/* =========================================================
+   Bouton WhatsApp flottant — repliable sur mobile (petite croix).
+   Le choix est mémorisé (localStorage) pour ne pas réafficher à chaque visite.
+   ========================================================= */
+(function () {
+  function initFabWa() {
+    var wrap = document.getElementById("fabWaWrap");
+    var hideBtn = document.getElementById("fabWaHide");
+    if (!wrap || !hideBtn) return;
+    var KEY = "zot_wa_collapsed";
+    var link = wrap.querySelector(".fab-wa");
+
+    function setCollapsed(collapsed) {
+      wrap.classList.toggle("is-collapsed", collapsed);
+      try { localStorage.setItem(KEY, collapsed ? "1" : "0"); } catch (e) {}
+    }
+
+    if (localStorage.getItem(KEY) === "1") { setCollapsed(true); }
+
+    hideBtn.addEventListener("click", function (e) {
+      e.preventDefault(); e.stopPropagation();
+      setCollapsed(true);
+    });
+
+    // En mode replié, un tap sur la pastille la rouvre au lieu d'ouvrir WhatsApp direct.
+    link.addEventListener("click", function (e) {
+      if (wrap.classList.contains("is-collapsed")) {
+        e.preventDefault();
+        setCollapsed(false);
+      }
+    });
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initFabWa);
+  } else {
+    initFabWa();
+  }
+})();
